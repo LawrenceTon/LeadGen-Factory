@@ -144,20 +144,38 @@ class InspectorLogic:
             return f"AI Error: {str(e)[:30]}..."
 
     # --- THE MASTER AUDIT FUNCTION ---
-    def perform_audit(self, df=None, url_col=None, rules=None, limit_rows=0, limit_mins=0, *args):
+    # Fix: Matching signature to main.py call: (csv_path, active_rules, api_config, limits, callback)
+    def perform_audit(self, csv_path=None, rules_list=None, api_config=None, limits_dict=None, callback=None, *args):
         # 1. LOAD DATA & SANITIZE INPUTS
         self.stop_requested = False
         
-        if isinstance(df, str):
-            try: self.df = pd.read_csv(df)
+        # A. Handle Data
+        if isinstance(csv_path, str):
+            try: self.df = pd.read_csv(csv_path)
             except: pass
-        elif df is not None: 
-            self.df = df
-            
-        if isinstance(url_col, dict):
-            self.url_col = url_col.get("value", list(url_col.values())[0])
-        elif url_col:
-            self.url_col = str(url_col)
+        elif csv_path is not None: 
+            self.df = csv_path
+
+        # B. Handle Rules
+        if rules_list: self.rules = rules_list
+        
+        # C. Handle API (Optional)
+        if api_config: 
+            self.api_key = api_config.get('primary_key')
+
+        # D. Handle Limits (The Fix)
+        if isinstance(limits_dict, dict):
+            try:
+                self.limit_rows = int(limits_dict.get('batch_rows', 0))
+                self.limit_mins = int(limits_dict.get('batch_minutes', 0))
+                print(f"✅ Limit set to: {self.limit_rows} rows.", flush=True)
+            except:
+                self.limit_rows = 0
+        elif isinstance(limits_dict, int):
+             self.limit_rows = limits_dict # Fallback
+             
+        # E. URL Column is now ALWAYS Auto-Detected (We ignore legacy arg)
+        self.url_col = None
 
         # Auto-Detect Column (Smarter Sort)
         if not self.url_col or (self.df is not None and self.url_col not in self.df.columns):
