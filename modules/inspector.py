@@ -144,7 +144,15 @@ class InspectorLogic:
         # CASE B: Input is already a DataFrame -> Use it!
         elif df is not None: 
             self.df = df
-        if url_col: self.url_col = url_col
+            
+        # 2. SANITIZE URL COLUMN (The Fix)
+        # If url_col is a dictionary (from a dropdown), extract the string
+        if isinstance(url_col, dict):
+            # Try to get 'value' or just take the first value
+            self.url_col = url_col.get("value", list(url_col.values())[0])
+        elif url_col:
+            self.url_col = str(url_col)
+
         if rules: self.rules = rules
         
         # 2. SANITIZE LIMITS (The Fix)
