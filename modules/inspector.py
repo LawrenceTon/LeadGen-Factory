@@ -132,6 +132,7 @@ class InspectorLogic:
     # --- THE MASTER AUDIT FUNCTION ---
     def perform_audit(self, df=None, url_col=None, rules=None, limit_rows=0, limit_mins=0, *args):
         import pandas as pd # Ensure pandas is available here
+        import ast # Safe eval for string-dicts
 
         # 1. LOAD DATA ADAPTER (Smart Fix)
         # CASE A: Input is a Filename (String) -> Load it!
@@ -194,8 +195,13 @@ class InspectorLogic:
                     break
                 
                 # Check Database (Phoenix Protocol)
-                target_url = row.get(self.url_col)
-                if not str(target_url).startswith("http"): target_url = "https://" + str(target_url)
+                raw_url = row.get(self.url_col)
+                # FIX: SAFETY CHECK FOR URL
+                if pd.isna(raw_url) or not raw_url:
+                    continue
+
+                target_url = str(raw_url)
+                if not target_url.startswith("http"): target_url = "https://" + target_url
 
                 if self.check_log(target_url):
                      print(f"[Skipping] Already scanned: {target_url}")
@@ -231,6 +237,14 @@ class InspectorLogic:
 
                 # EXECUTE RULES (WATERFALL)
                 for rule in self.rules:
+                    # FIX: RULE SANITIZER
+                    if isinstance(rule, str):
+                        try:
+                            rule = ast.literal_eval(rule)
+                        except:
+                            print(f"⚠️ Skipped invalid rule: {rule}")
+                            continue
+
                     result = ""
                     
                     # LOGIC A: YES/NO
