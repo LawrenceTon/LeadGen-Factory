@@ -7,6 +7,7 @@ import uuid
 import google.generativeai as genai
 from datetime import datetime
 import sqlite3
+import ast
 
 class InspectorLogic:
     def __init__(self, db_path="leads.db"):
@@ -18,10 +19,11 @@ class InspectorLogic:
         self.limit_rows = 0
         self.limit_mins = 0
         self.timeout = 30
+        self.stop_requested = False  # <--- FIX: Stop Flag
         self.init_db()
 
     def init_db(self):
-        """Create the database table if it doesn't exist (Phoenix Protocol)"""
+        """Create the database table if it doesn't exist"""
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS audit_history 
@@ -31,6 +33,11 @@ class InspectorLogic:
 
     def set_api_key(self, key):
         self.api_key = key
+
+    def request_stop(self):
+        """Called when user clicks STOP button"""
+        print("🛑 Stop requested by user...")
+        self.stop_requested = True
 
     def check_log(self, url):
         """Check if URL was already scanned"""
@@ -63,23 +70,19 @@ class InspectorLogic:
 
     # --- TIER 1: THE SCRIPT SCOUT (Fast Regex) ---
     def extract_price_via_script(self, page):
-        """Extracts prices via Regex/Scoring to avoid using AI credits"""
+        """Extracts prices via Regex/Scoring"""
         try:
-            # 1. Grab all visible text (fast)
             text_content = page.locator("body").inner_text()
-            
-            # 2. Regex for Money ($2,500 | 5000 USD | etc)
             matches = re.findall(r'(\$|€|£|USD|EUR)\s?([\d,]+(?:\.\d{2})?)', text_content, re.IGNORECASE)
             
             best_price = None
-            highest_score = -1000 # Baseline
+            highest_score = -1000 
             
             for symbol, amount in matches:
                 full_str = f"{symbol}{amount}"
                 score = 0
                 lower_body = text_content.lower()
                 
-                # SCORING SYSTEM
                 if "buy now" in lower_body or "price" in lower_body: score += 100
                 if "lease" in lower_body or "rent" in lower_body or "/mo" in lower_body: score -= 5000 
                 
@@ -87,29 +90,24 @@ class InspectorLogic:
                     highest_score = score
                     best_price = full_str
             
-            # Only return if positive confidence
             if highest_score > 0:
                 return best_price
         except:
             pass
         return None
 
-    # --- TIER 2: THE AI EXPERT (Gemini) ---
+    # --- TIER 2: THE AI EXPERT ---
     def perform_ai_analysis(self, prompt, screenshot_path):
-        """Dynamic Model Discovery to prevent 404 Errors"""
-        if not self.api_key:
-            return "AI Error: No Key"
+        """Dynamic Model Discovery"""
+        if not self.api_key: return "AI Error: No Key"
 
         genai.configure(api_key=self.api_key)
-        
-        # 1. Upload File
         try:
             myfile = genai.upload_file(screenshot_path)
         except Exception as e:
             return f"AI Upload Error: {str(e)[:50]}"
 
-        # 2. AUTO-DETECT MODEL
-        valid_model = "models/gemini-1.5-flash" # Default fallback
+        valid_model = "models/gemini-1.5-flash"
         try:
             for m in genai.list_models():
                 if 'generateContent' in m.supported_generation_methods:
@@ -118,101 +116,68 @@ class InspectorLogic:
                         break 
         except: pass
         
-        # 3. Generate Content
         try:
             model = genai.GenerativeModel(valid_model)
             result = model.generate_content([myfile, prompt])
             return result.text.strip()
         except Exception as e:
-            err_msg = str(e)
-            if "404" in err_msg: return "AI Error: Model 404"
-            if "429" in err_msg: return "AI Error: Quota Limit"
-            return f"AI Error: {err_msg[:30]}..."
+            return f"AI Error: {str(e)[:30]}..."
 
     # --- THE MASTER AUDIT FUNCTION ---
     def perform_audit(self, df=None, url_col=None, rules=None, limit_rows=0, limit_mins=0, *args):
-        import pandas as pd # Ensure pandas is available here
-        import ast # Safe eval for string-dicts
-
-        # 1. LOAD DATA ADAPTER (Smart Fix)
-        # CASE A: Input is a Filename (String) -> Load it!
+        # 1. LOAD DATA & SANITIZE INPUTS
+        self.stop_requested = False # Reset stop flag
+        
         if isinstance(df, str):
-            try:
-                self.df = pd.read_csv(df)
-            except Exception as e:
-                print(f"❌ Error loading CSV: {e}")
-                return
-        # CASE B: Input is already a DataFrame -> Use it!
+            try: self.df = pd.read_csv(df)
+            except: pass
         elif df is not None: 
             self.df = df
             
-        # 2. SANITIZE URL COLUMN
         if isinstance(url_col, dict):
             self.url_col = url_col.get("value", list(url_col.values())[0])
         elif url_col:
             self.url_col = str(url_col)
 
-        # --- FIX: AUTO-DETECT DOMAIN COLUMN ---
-        # If no column is selected, or the selected one isn't in the CSV, try to find it.
+        # AUTO-DETECT COLUMN
         if not self.url_col or (self.df is not None and self.url_col not in self.df.columns):
             print("⚠️ No Domain column selected. Attempting Auto-Detect...")
-            possible_cols = [c for c in self.df.columns if "domain" in c.lower() or "url" in c.lower() or "website" in c.lower()]
-            if possible_cols:
-                self.url_col = possible_cols[0]
-                print(f"✅ Auto-selected column: '{self.url_col}'")
-            else:
-                print("❌ CRITICAL ERROR: Could not find a 'Domain' or 'URL' column in your CSV.")
-                print(f"   Available columns: {list(self.df.columns)}")
-                return
-        # --------------------------------------
+            possible = [c for c in self.df.columns if "domain" in c.lower() or "url" in c.lower() or "website" in c.lower()]
+            if possible: self.url_col = possible[0]
+            else: return
 
         if rules: self.rules = rules
+        try: self.limit_rows = int(limit_rows)
+        except: self.limit_rows = 0 
         
-        # 2. SANITIZE LIMITS (The Fix)
-        # We use try/except to safely handle cases where main.py passes a Dict/List by mistake
-        try:
-            self.limit_rows = int(limit_rows)
-        except (ValueError, TypeError):
-            self.limit_rows = 0 # Default to 0 if bad data received
-            
-        try:
-            self.limit_mins = int(limit_mins)
-        except (ValueError, TypeError):
-            self.limit_mins = 0 # Default to 0 if bad data received
-
         if not hasattr(self, 'df') or self.df is None:
             print("❌ Error: No CSV loaded.")
             return
 
-        # Force all columns to object to prevent float64 crash
         self.df = self.df.astype(object)
-
         print(f"[Starting] Found {len(self.df)} rows. Connecting to Neural Database...")
-        from modules import utils_browser
         
-        # 2. LAUNCH STEALTH BROWSER
+        from modules import utils_browser
         playwright, browser, context, page = utils_browser.launch_browser(
             headless=False, 
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
         )
         utils_browser.bypass_detection(page) 
 
-        start_time = time.time()
-
         try:
             for index, row in self.df.iterrows():
-                # LIMIT CHECKS
+                # STOP CHECK
+                if self.stop_requested:
+                    print("🛑 Audit Stopped by User.")
+                    break
+
+                # LIMIT CHECK
                 if self.limit_rows > 0 and (index + 1) > self.limit_rows:
                     print(f"🛑 Limit Reached: Stopped after {self.limit_rows} rows.")
                     break
                 
-                # Check Database (Phoenix Protocol)
-                raw_url = row.get(self.url_col)
-                # FIX: SAFETY CHECK FOR URL
-                if pd.isna(raw_url) or not raw_url:
-                    continue
-
-                target_url = str(raw_url)
+                target_url = str(row.get(self.url_col)).strip()
+                if not target_url or target_url.lower() == "nan": continue
                 if not target_url.startswith("http"): target_url = "https://" + target_url
 
                 if self.check_log(target_url):
@@ -221,52 +186,35 @@ class InspectorLogic:
 
                 print(f"[Scanning] Auditing ({index+1}/{len(self.df)}): {target_url}")
 
-                # HUMAN SHAKE
-                try: 
-                    page.mouse.move(random.randint(100, 500), random.randint(100, 500))
+                try: page.mouse.move(random.randint(100, 500), random.randint(100, 500))
                 except: pass
 
-                # NAVIGATION & CLOUDFLARE WAIT
                 screenshot_path = f"temp_{index}_{uuid.uuid4().hex[:8]}.jpg"
                 try:
                     response = page.goto(target_url, timeout=self.timeout * 1000, wait_until="domcontentloaded")
                     status_code = response.status if response else 0
-                    
-                    # *** CLOUDFLARE WAIT ***
-                    if "Just a moment" in page.title() or "Security" in page.title() or "Verify" in page.title():
+                    if "Just a moment" in page.title() or "Security" in page.title():
                         print("🛡️ Cloudflare detected. Waiting 10s...")
                         time.sleep(10)
-
-                    final_url = page.url
                     page.screenshot(path=screenshot_path)
-                        
-                except Exception:
+                except:
                     status_code = 404
-                    final_url = target_url
-                    # Create blank dummy screenshot to prevent AI crash
                     import shutil
-                    shutil.copy("modules/assets/blank.jpg", screenshot_path) if os.path.exists("modules/assets/blank.jpg") else None
+                    if os.path.exists("modules/assets/blank.jpg"): shutil.copy("modules/assets/blank.jpg", screenshot_path)
 
-                # EXECUTE RULES (WATERFALL)
+                # EXECUTE RULES
                 for rule in self.rules:
-                    # FIX: RULE SANITIZER
                     if isinstance(rule, str):
-                        try:
-                            rule = ast.literal_eval(rule)
-                        except:
-                            print(f"⚠️ Skipped invalid rule: {rule}")
-                            continue
+                        try: rule = ast.literal_eval(rule)
+                        except: continue
+                    
+                    # Skip invalid rules (like 'primary_key')
+                    if not isinstance(rule, dict) or 'type' not in rule: continue
 
                     result = ""
-                    
-                    # LOGIC A: YES/NO
                     if rule['type'] == 'status_check':
                         result = "Yes" if 200 <= status_code < 400 else "No"
-                    
-                    # LOGIC B: AI + SCRIPT
                     elif rule['type'] == 'ai_analysis':
-                        
-                        # Step 1: Script Scout (Price Only)
                         if "price" in rule['prompt'].lower():
                             print("   ⚡ Running Script Scout...")
                             script_price = self.extract_price_via_script(page)
@@ -274,29 +222,31 @@ class InspectorLogic:
                                 print(f"   ✅ Script found: {script_price}")
                                 result = script_price
                         
-                        # Step 2: AI Expert (Backup)
                         if not result and os.path.exists(screenshot_path):
                             print("   🤖 Calling AI Expert...")
-                            prompt = rule['prompt'] + " Answer in 1-2 words. If Price, just number. If Marketplace, name it. If generic, say 'Developed'."
+                            prompt = rule['prompt'] + " Answer in 1-2 words. If Price, just number."
                             result = self.perform_ai_analysis(prompt, screenshot_path)
 
                     print(f"   👉 {rule['target_column']}: {result}")
                     self.df.at[index, rule['target_column']] = result
                 
-                # Cleanup Screenshot
                 if os.path.exists(screenshot_path):
                     try: os.remove(screenshot_path)
                     except: pass
-                
-                # Save to DB
                 self.save_log(target_url, "Done")
                     
         finally:
             utils_browser.close_browser(context, browser, playwright)
             print("[Complete] Audit Finished.")
 
-    def export_results(self):
-        filename = "output/audit_results_FINAL.csv"
+    # --- FIX: EXPORT HISTORY (Required by Export Button) ---
+    def export_history(self):
+        """Export the final results to CSV"""
+        if self.df is None:
+            return False, "No data to export", ""
+            
+        filename = f"output/audit_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
         os.makedirs("output", exist_ok=True)
         self.df.to_csv(filename, index=False)
-        return filename
+        print(f"💾 Exported to: {filename}")
+        return True, "Export Successful", filename
