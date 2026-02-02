@@ -1,7 +1,8 @@
-from playwright_stealth import stealth_sync
+# modules/utils_browser.py
 
+# Dictionary of Browser Masks
 USER_AGENTS = {
-    "Chrome": None, # Default Playwright User-Agent
+    "Chrome": None, # Default
     "Edge": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
     "Mobile": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
 }
@@ -9,56 +10,40 @@ USER_AGENTS = {
 def setup_stealth(page):
     """
     Applies stealth settings to the page.
-    Attempts to use playwright-stealth, falls back to manual injection if it fails.
+    Uses a 'Safe Import' to prevent crashing if the library is missing.
     """
     try:
+        # We import INSIDE the function so the app launches even if this fails
+        from playwright_stealth import stealth_sync
         stealth_sync(page)
-    except Exception as e:
-        print(f"Stealth Import Error (Fallback Activated): {e}")
-        # Manual Fallback
+    except (ImportError, ModuleNotFoundError, AttributeError):
+        print("⚠️ Stealth Library not compatible. Using Manual Stealth Mode.")
+        
+        # --- Manual Fallback (The "Mask") ---
+        # 1. Hide the "I am a Robot" flag
         page.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        
+        # 2. Fake Plugins (Bots usually have 0 plugins)
+        page.add_init_script("Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]})")
 
 def nuke_popups(page):
     """
-    Attempts to close or hide common cookie/popup modals.
+    The 'Pop-up Assassin': Closes cookie banners and modals.
     """
+    selectors = [
+        '#accept-cookies', 'button[id*="cookie"]', 'button[class*="cookie"]', 
+        'button[class*="accept"]', '[aria-label="Close"]', '.modal-close'
+    ]
+    
+    # 1. Click Buttons
+    for sel in selectors:
+        try:
+            if page.is_visible(sel, timeout=200):
+                page.click(sel)
+                print(f"   ⚔️ Nuked popup: {sel}")
+        except: pass
+
+    # 2. Hide Overlays (CSS Injection)
     try:
-        # 1. Click common allow/close buttons
-        selectors = [
-            '#accept-cookies', 
-            '#onetrust-accept-btn-handler',
-            'button[class*="cookie"][class*="accept"]',
-            'button[class*="agree"]',
-            '[aria-label="Close"]', 
-            '.modal-close',
-            'button[name="agree"]'
-        ]
-        
-        for sel in selectors:
-            try:
-                if page.locator(sel).first.is_visible(timeout=200):
-                    page.locator(sel).first.click(timeout=200)
-            except:
-                pass
-
-        # 2. Inject CSS to hide sticky footers/modals
-        page.add_style_tag(content="""
-            div[class*='cookie'], 
-            div[class*='modal'], 
-            div[id*='cookie'], 
-            #onetrust-banner-sdk,
-            .cookie-banner { 
-                display: none !important; 
-                visibility: hidden !important;
-                z-index: -9999 !important;
-            }
-        """)
-    except Exception:
-        pass
-
-def block_media(route):
-    """Abort requests for heavy media to speed up scraping."""
-    if route.request.resource_type in ["image", "media", "font", "stylesheet"]:
-        route.abort()
-    else:
-        route.continue_()
+        page.add_style_tag(content="div[class*='cookie'], div[class*='modal'] { display: none !important; }")
+    except: pass
