@@ -272,26 +272,42 @@ class InspectorView(ctk.CTkFrame):
         self.rules_scroll.pack(fill="both", expand=True)
 
         # 4. Control Center
-        self.control_frame = ctk.CTkFrame(self, border_color="gray", border_width=2)
-        self.control_frame.grid(row=8, column=0, sticky="ew", pady=(0, 10))
-        self.control_frame.grid_columnconfigure(1, weight=1)
-        
-        self.btn_start = ctk.CTkButton(self.control_frame, text="▶ Start Audit", command=self.toggle_start_pause, fg_color="#FF9800", text_color="black", hover_color="#F57C00", width=100)
-        self.btn_start.grid(row=0, column=0, padx=10, pady=10)
-        
-        self.progress_bar = ctk.CTkProgressBar(self.control_frame)
-        self.progress_bar.grid(row=0, column=1, sticky="ew", padx=10)
-        self.progress_bar.set(0)
-        
-        self.lbl_status = ctk.CTkLabel(self.control_frame, text="Ready")
-        self.lbl_status.grid(row=0, column=2, padx=10)
-        
-        self.btn_stop = ctk.CTkButton(self.control_frame, text="⏹ Stop", command=self.stop_process, fg_color="red", width=80, state="disabled")
-        self.btn_stop.grid(row=0, column=3, padx=10)
+        self.create_execution_controls()
 
         # Log
         self.txt_log = ctk.CTkTextbox(self, height=100, fg_color="black", text_color="#00ff00")
         self.txt_log.grid(row=9, column=0, sticky="nsew")
+
+    def create_execution_controls(self):
+        self.control_panel = ctk.CTkFrame(self, border_color="gray", border_width=2)
+        self.control_panel.grid(row=8, column=0, sticky="ew", pady=10)
+        
+        # Status/Progress Section
+        self.status_frame = ctk.CTkFrame(self.control_panel, fg_color="transparent")
+        self.status_frame.pack(fill="x", padx=5, pady=5)
+        
+        self.progress_bar = ctk.CTkProgressBar(self.status_frame)
+        self.progress_bar.pack(side="left", fill="x", expand=True, padx=5)
+        self.progress_bar.set(0)
+        
+        self.lbl_status = ctk.CTkLabel(self.status_frame, text="Status: Ready")
+        self.lbl_status.pack(side="left", padx=5)
+
+        # Buttons Section
+        self.button_frame = ctk.CTkFrame(self.control_panel, fg_color="transparent")
+        self.button_frame.pack(fill="x", expand=True, padx=5, pady=5)
+        
+        self.btn_start = ctk.CTkButton(self.button_frame, text="▶ START AUDIT", command=self.start_audit_thread, 
+                                       fg_color="#2cc985", text_color="white")
+        self.btn_start.pack(side="left", padx=5, fill="x", expand=True)
+        
+        self.btn_pause = ctk.CTkButton(self.button_frame, text="⏸ PAUSE", command=self.toggle_pause, 
+                                       fg_color="#f39c12", text_color="white")
+        self.btn_pause.pack(side="left", padx=5, fill="x", expand=True)
+        
+        self.btn_stop = ctk.CTkButton(self.button_frame, text="⏹ STOP", command=self.stop_audit, 
+                                      fg_color="#e74c3c", width=80, state="disabled")
+        self.btn_stop.pack(side="left", padx=5, fill="x", expand=True)
 
     def select_file(self):
         f = filedialog.askopenfilename(filetypes=[("CSV", "*.csv")])
@@ -409,41 +425,46 @@ class InspectorView(ctk.CTkFrame):
         self.log_msg(f"[{status}] {msg}")
         
         if status in ["Stopped", "Complete"]:
-            self.btn_start.configure(text="▶ Start Audit", fg_color="#FF9800", state="normal")
-            self.btn_stop.configure(state="disabled")
             self.is_running_ui = False
+            self.btn_start.configure(state="normal")
+            self.btn_pause.configure(state="normal", text="⏸ PAUSE")
+            self.btn_stop.configure(state="disabled")
+            
         elif status == "Paused":
-            self.btn_start.configure(text="▶ Resume", fg_color="orange")
+            self.btn_pause.configure(text="▶ RESUME")
 
-    def toggle_start_pause(self):
-        if not self.is_running_ui:
-            # Start
-            if not self.csv_path or not self.active_rules:
-                self.log_msg("Error: Missing File or Rules")
-                return
-            
-            limits = {}
-            if self.limit_rows.get(): limits['batch_rows'] = int(self.limit_rows.get())
-            if self.limit_mins.get(): limits['batch_minutes'] = float(self.limit_mins.get())
-            
-            api_config = {'primary_key': self.entry_primary.get(), 'backup_key': self.entry_backup.get()}
-            
-            self.is_running_ui = True
-            self.btn_start.configure(text="Pause", fg_color="orange")
-            self.btn_stop.configure(state="normal")
-            
-            t = threading.Thread(target=self.logic.perform_audit, args=(self.csv_path, self.active_rules, api_config, limits, self.update_ui_hook))
-            t.start()
+    def start_audit_thread(self):
+        if self.is_running_ui: return
+        
+        if not self.csv_path or not self.active_rules:
+            self.log_msg("Error: Missing File or Rules")
+            return
+        
+        limits = {}
+        if self.limit_rows.get(): limits['batch_rows'] = int(self.limit_rows.get())
+        if self.limit_mins.get(): limits['batch_minutes'] = float(self.limit_mins.get())
+        
+        api_config = {'primary_key': self.entry_primary.get(), 'backup_key': self.entry_backup.get()}
+        
+        self.is_running_ui = True
+        self.btn_start.configure(state="disabled")
+        self.btn_pause.configure(state="normal", text="⏸ PAUSE")
+        self.btn_stop.configure(state="normal")
+        
+        t = threading.Thread(target=self.logic.perform_audit, args=(self.csv_path, self.active_rules, api_config, limits, self.update_ui_hook))
+        t.start()
+
+    def toggle_pause(self):
+        if not self.is_running_ui: return
+        
+        if "PAUSE" in self.btn_pause.cget("text"):
+            self.logic.request_pause()
+            self.btn_pause.configure(text="▶ RESUME")
         else:
-            # Toggle
-            if "Pause" in self.btn_start.cget("text"):
-                self.logic.request_pause()
-                self.btn_start.configure(text="Resume")
-            else:
-                self.logic.request_resume()
-                self.btn_start.configure(text="Pause")
+            self.logic.request_resume()
+            self.btn_pause.configure(text="⏸ PAUSE")
 
-    def stop_process(self):
+    def stop_audit(self):
         self.logic.request_stop()
         self.btn_stop.configure(state="disabled")
 

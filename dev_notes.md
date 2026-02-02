@@ -1,28 +1,23 @@
-# Developer Diary - LeadGen Factory
+# Developer Notes
 
-## 2026-02-02: The Transformation to V4
-Today was a massive sprint. We took the Inspector from a simple script to a robust, fault-tolerant application.
+## User-Agent Switching Strategy
+We implemented a "Truth Enforcer" logic in `inspector.py`. Instead of creating a new browser instance for every request, we group rules by their required User-Agent. 
+- **Chrome Group:** Runs first using default context.
+- **Edge Group:** Closes Chrome context, opens Edge context, visits URL again.
+- **Mobile Group:** Closes Edge context, opens Mobile context, visits URL again.
 
-### 🚧 The "Stealth" Crisis
-**Problem:** When upgrading to the Stealth Core, the app crashed immediately.
-**Root Cause:** I am running Python 3.14 (pre-release), and the third-party library `playwright-stealth` hasn't been updated for it yet. It threw an `ImportError`.
-**Solution:** We rewrote `utils_browser.py` to use a "Safe Import".
-- It *tries* to load the library.
-- If it fails, it catches the error and switches to "Manual Mode".
-- **Manual Mode:** We inject JavaScript (`Object.defineProperty`) to delete the `navigator.webdriver` flag manually. The app is now crash-proof.
+This ensures that we don't have conflicting headers in the same session, but it does mean multiple visits per URL if different masks are required.
 
-### 🦅 The Phoenix Protocol
-**Decision:** Using CSVs for storage was too risky. If the app crashed on row 99 of 100, we lost everything.
-**Implementation:** Switched to SQLite (`leads.db`).
-- **Benefit:** "Immortality." The app checks the DB before scanning. If a URL exists, it skips it. This saves API credits and time.
+## Phoenix Protocol (Database)
+- The database is `leads.db`. 
+- `check_record(url)` is the first step in `perform_audit`. If true, we skip.
+- `save_audit` uses `INSERT OR REPLACE` logic.
+- `ai_result` column stores the full JSON map of answers, which is then parsed during CSV export.
 
-### 🧙 The Smart Wizard
-**Idea:** Configuring rules manually is tedious.
-**Implementation:** Built a heuristic engine.
-- If it sees "Edge" in the CSV header -> It configures the bot to use the Microsoft Edge User-Agent.
-- If it sees "Price" -> It configures the AI to extract the price.
-- **Result:** I can now setup a complex audit in 1 click.
+## Stealth Core
+- `playwright-stealth` is great but can be flaky on some Python versions or specific setups.
+- We added a `try-except` block in `utils_browser.py` to blindly accept failure and fall back to manual JS injection (`navigator.webdriver` deletion) so the app never crashes on import.
 
-### 📝 Next Steps
-- Implement the "High Accuracy" verification to catch when the AI hallucinates.
-- Move the Harvester to use the new `utils_browser.py` core.
+## Bug Fixes
+- Fixed regression in InspectorView. The Wizard UI update overwrote the execution buttons. Re-implemented them as a dedicated 'Control Panel' frame.
+- Fixed UI regression where the Start button was overwritten by the Wizard update.
