@@ -272,18 +272,35 @@ class InspectorView(ctk.CTkFrame):
         self.rules_scroll.pack(fill="both", expand=True)
 
         # 4. Control Center
-        self.create_execution_controls()
+        self.create_control_panel()
 
         # Log
         self.txt_log = ctk.CTkTextbox(self, height=100, fg_color="black", text_color="#00ff00")
         self.txt_log.grid(row=9, column=0, sticky="nsew")
 
-    def create_execution_controls(self):
-        self.control_panel = ctk.CTkFrame(self, border_color="gray", border_width=2)
-        self.control_panel.grid(row=8, column=0, sticky="ew", pady=10)
+    def create_control_panel(self):
+        self.control_panel_frame = ctk.CTkFrame(self, border_color="gray", border_width=2)
+        self.control_panel_frame.grid(row=8, column=0, sticky="ew", pady=10)
+        # Assuming the instruction implies using pack *inside* a container or just packing the frame itself if it wasn't grid?
+        # The prompt says: "Create a CTkFrame named self.control_panel_frame. Pack it: fill="x", pady=10, padx=10"
+        # However, the outer structure uses grid(). I should probably stick to grid() for the frame placement to avoid geometry manager conflict 
+        # with siblings, OR check if I can switch to pack. siblings use grid. So I must use grid for self.control_panel_frame.
+        # BUT the prompt explicitly says "Pack it". 
+        # Let's look at __init__ layout strategy. It uses grid for everything (row 0 to 9). 
+        # If I use pack() for the frame, it will conflict with grid(). 
+        # I will use grid() but name it self.control_panel_frame and follow internal packing instructions.
+        # Wait, if I change the logic to call this method, I can't easily change the geometry manager of the whole class.
+        # I will use grid for the frame, but use pack for the contents as requested.
         
-        # Status/Progress Section
-        self.status_frame = ctk.CTkFrame(self.control_panel, fg_color="transparent")
+        # Actually, looking at the previous step, I used grid for the frame. 
+        # I will stick to grid for the frame placement in the parent, but use the specific button layout requested.
+        
+        # Status/Progress Section (Preserving this as it ensures UI completeness though not explicitly detailed in this specific prompt, 
+        # but likely needed). The prompt only details the BUTTONS.
+        # I'll include the status frame above or aside? Prompt says "Button 1... Position: ... centered".
+        # I will add the buttons as requested.
+        
+        self.status_frame = ctk.CTkFrame(self.control_panel_frame, fg_color="transparent")
         self.status_frame.pack(fill="x", padx=5, pady=5)
         
         self.progress_bar = ctk.CTkProgressBar(self.status_frame)
@@ -293,21 +310,17 @@ class InspectorView(ctk.CTkFrame):
         self.lbl_status = ctk.CTkLabel(self.status_frame, text="Status: Ready")
         self.lbl_status.pack(side="left", padx=5)
 
-        # Buttons Section
-        self.button_frame = ctk.CTkFrame(self.control_panel, fg_color="transparent")
-        self.button_frame.pack(fill="x", expand=True, padx=5, pady=5)
+        self.btn_start = ctk.CTkButton(self.control_panel_frame, text="▶ START AUDIT", command=self.start_audit_thread, 
+                                       fg_color="#2ecc71", width=140)
+        self.btn_start.pack(side="left", padx=5, expand=True)
         
-        self.btn_start = ctk.CTkButton(self.button_frame, text="▶ START AUDIT", command=self.start_audit_thread, 
-                                       fg_color="#2cc985", text_color="white")
-        self.btn_start.pack(side="left", padx=5, fill="x", expand=True)
+        self.btn_pause = ctk.CTkButton(self.control_panel_frame, text="⏸ PAUSE", command=self.toggle_pause, 
+                                       fg_color="#f1c40f", width=100)
+        self.btn_pause.pack(side="left", padx=5, expand=True)
         
-        self.btn_pause = ctk.CTkButton(self.button_frame, text="⏸ PAUSE", command=self.toggle_pause, 
-                                       fg_color="#f39c12", text_color="white")
-        self.btn_pause.pack(side="left", padx=5, fill="x", expand=True)
-        
-        self.btn_stop = ctk.CTkButton(self.button_frame, text="⏹ STOP", command=self.stop_audit, 
-                                      fg_color="#e74c3c", width=80, state="disabled")
-        self.btn_stop.pack(side="left", padx=5, fill="x", expand=True)
+        self.btn_stop = ctk.CTkButton(self.control_panel_frame, text="⏹ STOP", command=self.stop_audit, 
+                                      fg_color="#e74c3c", width=100)
+        self.btn_stop.pack(side="left", padx=5, expand=True)
 
     def select_file(self):
         f = filedialog.askopenfilename(filetypes=[("CSV", "*.csv")])
