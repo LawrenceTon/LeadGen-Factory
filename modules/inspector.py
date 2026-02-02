@@ -153,7 +153,7 @@ class InspectorLogic:
             pass
         return None
 
-    def perform_audit(self):
+    def perform_audit(self, *args):
         print(f"[Starting] Found {len(self.df)} rows. Connecting to Neural Database...")
         from modules import utils_browser
         import time
