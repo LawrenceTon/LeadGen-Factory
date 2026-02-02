@@ -1,14 +1,25 @@
+# Silence Google/Pydantic warnings
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
+
 import pandas as pd
 import os
 import re
 import time
+import threading
 import base64
 import requests
+import json
 from datetime import datetime
+from collections import defaultdict
 from playwright.sync_api import sync_playwright
 import google.generativeai as genai
 import openai
 from PIL import Image
+
+from modules.database import LeadDB
+from modules.utils_browser import USER_AGENTS, setup_stealth, nuke_popups
 
 class AIHandler:
     @staticmethod
@@ -26,10 +37,8 @@ class AIHandler:
     def call_openai(image_path, prompt, api_key):
         try:
             client = openai.OpenAI(api_key=api_key)
-            
             with open(image_path, "rb") as image_file:
                 base64_image = base64.b64encode(image_file.read()).decode('utf-8')
-
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
@@ -57,23 +66,38 @@ class InspectorLogic:
         self.output_dir = output_dir
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
+        
+        self.stop_event = threading.Event()
+        self.pause_event = threading.Event()
+        self.is_running = False
+        self.db = LeadDB()
 
-    def perform_audit(self, csv_path, rules, api_config, log_callback):
-        """
-        Executes audit with AI capabilities.
-        api_config: {'primary_key': str, 'backup_key': str}
-        """
+    def request_pause(self):
+        self.pause_event.set()
+
+    def request_resume(self):
+        self.pause_event.clear()
+
+    def request_stop(self):
+        self.stop_event.set()
+        self.request_resume()
+
+    def perform_audit(self, csv_path, rules, api_config, limits, callback):
+        self.stop_event.clear()
+        self.pause_event.clear()
+        self.is_running = True
+        
         if not os.path.exists(csv_path):
-            log_callback("Error: CSV file not found.")
+            callback(0, "Error", "CSV file not found.")
             return
 
         try:
             df = pd.read_csv(csv_path)
         except Exception as e:
-            log_callback(f"Error reading CSV: {e}")
+            callback(0, "Error", f"Error reading CSV: {e}")
             return
 
-        # Find URL column
+        # URL Column Discovery
         url_col = None
         for col in df.columns:
             if "url" in col.lower() or "website" in col.lower() or "link" in col.lower():
@@ -81,108 +105,151 @@ class InspectorLogic:
                 break
         
         if not url_col:
-            log_callback("Error: Could not find a 'URL' column.")
+            callback(0, "Error", "Could not find a 'URL' column.")
             return
 
         urls = df[url_col].dropna().astype(str).tolist()
-        log_callback(f"Starting audit on {len(urls)} URLs...")
+        total = len(urls)
+        callback(0, "Starting", f"Found {total} URLs. Connecting to Neural Database...")
 
-        results = []
+        batch_limit = limits.get('batch_rows', 0)
+        time_limit_min = limits.get('batch_minutes', 0)
+        start_time = time.time()
+        newly_processed = 0
         
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
-            context = browser.new_context()
             
-            for url in urls:
+            for i, url in enumerate(urls):
                 url = url.strip()
                 if not url: continue
-
-                log_callback(f"Auditing: {url}...")
-                row_data = {"Original_URL": url}
                 
-                try:
-                    page = context.new_page()
-                    response = page.goto(url, timeout=30000, wait_until="domcontentloaded")
+                # --- PHOENIX PROTOCOL CHECK ---
+                if self.db.record_exists(url):
+                    callback((i+1)/total, "Skipping", f"Already scanned: {url}")
+                    continue
+
+                if self.stop_event.is_set():
+                    callback((i/total), "Stopped", "Audit stopped by user.")
+                    break
+                
+                while self.pause_event.is_set():
+                    callback((i/total), "Paused", "Audit Paused. Waiting...")
+                    time.sleep(1);
+                    if self.stop_event.is_set(): break
+                
+                # Limits Loop
+                elapsed_min = (time.time() - start_time) / 60
+                if (batch_limit > 0 and newly_processed >= batch_limit) or (time_limit_min > 0 and elapsed_min >= time_limit_min):
+                    self.pause_event.set()
+                    newly_processed = 0
+                    start_time = time.time()
+                    callback((i/total), "Paused", "Auto-Pause: Limit Reached.")
+                    while self.pause_event.is_set():
+                         if self.stop_event.is_set(): break
+                         time.sleep(1)
+
+                newly_processed += 1
+                callback((i+1)/total, "Scanning", f"Auditing ({i+1}/{total}): {url}")
+                
+                results_map = {}
+                
+                # --- GROUP RULES BY USER AGENT ---
+                # Sort rules into buckets: Chrome, Edge, Mobile
+                rules_by_ua = defaultdict(list)
+                for r in rules:
+                    ua_key = r.get('user_agent', 'Chrome')
+                    rules_by_ua[ua_key].append(r)
+                
+                # --- THE TRUTH ENFORCER (SWITCH MASKS) ---
+                for ua_name, ua_rules in rules_by_ua.items():
+                    actual_ua = USER_AGENTS.get(ua_name, None)
                     
-                    status = response.status if response else "Error"
-                    final_url = page.url
-                    page_text = page.inner_text("body").lower()
+                    callback((i+1)/total, "Switching", f"🎭 Switching Mask to {ua_name}...")
+                    
+                    context = None
+                    try:
+                        # Create Fresh Context with specific UA
+                        context = browser.new_context(user_agent=actual_ua)
+                        page = context.new_page()
+                        setup_stealth(page)
 
-                    for rule in rules:
-                        r_type = rule.get('type')
-                        
-                        if r_type == 'status_check':
-                            row_data['Status_Code'] = status
-                            row_data['Final_URL'] = final_url
-                            
-                        elif r_type == 'keyword':
-                            val = rule.get('value', '').lower()
-                            col_name = f"Has_{rule['value']}"
-                            row_data[col_name] = str(val in page_text)
-                                
-                        elif r_type == 'extract_price':
-                            price_pattern = r'(\$[\d,]+(\.\d{2})?)|(\b\d{1,3}(,\d{3})*(\.\d{2})?\s*USD\b)'
-                            matches = re.search(price_pattern, page_text)
-                            row_data['Detected_Price'] = matches.group(0) if matches else "N/A"
-                            
-                        elif r_type == 'ai_analysis':
-                            prompt = rule.get('prompt', 'Describe this page.')
-                            col_name = f"AI_{prompt[:10].replace(' ', '_')}"
-                            
-                            # Take Screenshot
-                            temp_shot = "temp_screenshot.jpg"
-                            page.screenshot(path=temp_shot, quality=70) # optimize size
-                            
-                            ai_response = "Error"
-                            
-                            # Attempt Primary (Gemini assumed default for now as requested)
+                        # Navigation
+                        try:
+                            response = page.goto(url, timeout=30000, wait_until="domcontentloaded")
+                            nuke_popups(page)
+                            status_code = response.status if response else "Error"
+                            # Basic Text Extraction
                             try:
-                                key = api_config.get('primary_key')
-                                if not key: raise Exception("No Primary Key")
-                                log_callback("  > Asking Gemini...")
-                                ai_response = AIHandler.call_gemini(temp_shot, prompt, key)
-                            except Exception as e_primary:
-                                log_callback(f"  > Primary AI Failed: {e_primary}")
-                                
-                                # Failover
-                                key_backup = api_config.get('backup_key')
-                                if key_backup:
-                                    log_callback("  > Switching to Backup (OpenAI/Gemini)...")
-                                    try:
-                                        # Simple logic: If backup provided, try OpenAI as secondary?
-                                        # Or just try Gemini again with different key? 
-                                        # User request implies Provider switching.
-                                        # We will assume Backup is OpenAI for this implementation based on requirements.
-                                        ai_response = AIHandler.call_openai(temp_shot, prompt, key_backup)
-                                    except Exception as e_backup:
-                                       ai_response = f"Backup Failed: {e_backup}"
-                                else:
-                                    ai_response = f"Failed: {e_primary}"
-                            
-                            row_data[col_name] = ai_response
-                            
-                            # Clean up
-                            if os.path.exists(temp_shot):
-                                os.remove(temp_shot)
+                                page_text = page.inner_text("body").lower()
+                            except:
+                                page_text = ""
+                        except Exception:
+                            status_code = "Error"
+                            page_text = ""
 
-                    page.close()
-                    log_callback(f"Success: {url}")
+                        # Execute Rules for this Mask
+                        for rule in ua_rules:
+                            r_type = rule.get('type')
+                            result_val = "N/A"
+                            
+                            if r_type == 'status_check':
+                                result_val = str(status_code)
+                            elif r_type == 'keyword':
+                                val = rule.get('value', '').lower()
+                                result_val = str(val in page_text)
+                            elif r_type == 'extract_price':
+                                price_pattern = r'(\$[\d,]+(\.\d{2})?)|(\b\d{1,3}(,\d{3})*(\.\d{2})?\s*USD\b)'
+                                matches = re.search(price_pattern, page_text)
+                                result_val = matches.group(0) if matches else "N/A"
+                            elif r_type == 'ai_analysis':
+                                prompt = rule.get('prompt', 'Describe this page.')
+                                temp_shot = f"temp_{i}_{ua_name}.jpg"
+                                try:
+                                    page.screenshot(path=temp_shot, quality=70)
+                                    key = api_config.get('primary_key')
+                                    if not key: raise Exception("No Primary Key")
+                                    result_val = AIHandler.call_gemini(temp_shot, prompt, key)
+                                except Exception as e_ai:
+                                    key_bk = api_config.get('backup_key')
+                                    if key_bk:
+                                        try:
+                                            result_val = AIHandler.call_openai(temp_shot, prompt, key_bk)
+                                        except:
+                                            result_val = f"AI Error: {e_ai}"
+                                    else:
+                                        result_val = f"AI Error: {e_ai}"
+                                finally:
+                                    if os.path.exists(temp_shot): os.remove(temp_shot)
+                            
+                            # Persistent Write
+                            t_col = rule.get('target_column')
+                            if t_col:
+                                results_map[t_col] = result_val
+                            else:
+                                results_map[f"{r_type}_{ua_name}"] = result_val
 
-                except Exception as e:
-                    log_callback(f"Failed: {url} - {e}")
-                    row_data['Error'] = str(e)
-                
-                results.append(row_data)
+                        page.close()
+                        context.close()
+                    except Exception as e_mask:
+                        callback((i+1)/total, "Error", f"Mask {ua_name} error: {e_mask}")
+                        if context: 
+                            try: context.close()
+                            except: pass
+
+                # --- SAVE DATA ---
+                self.db.save_audit(url, "Scanned", json.dumps(results_map))
+                callback((i+1)/total, "Saved", f"Results persisted for {url}")
 
             browser.close()
 
-        if results:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"audit_{timestamp}.csv"
-            out_path = os.path.join(self.output_dir, filename)
-            
-            result_df = pd.DataFrame(results)
-            result_df.to_csv(out_path, index=False)
-            log_callback(f"Audit Complete! Saved to: {out_path}")
-        else:
-             log_callback("Audit finished with no results.")
+        callback(1.0, "Complete", "Audit Finished. Data stored in leads.db (Phoenix Protocol).")
+        self.is_running = False
+
+    def export_history(self):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"export_full_history_{timestamp}.csv"
+        out_path = os.path.join(self.output_dir, filename)
+        
+        success, msg = self.db.export_to_csv(out_path)
+        return success, msg if success else f"Export Failed: {msg}", out_path
