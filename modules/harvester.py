@@ -1,111 +1,102 @@
-import os
-import json
-import datetime
 import pandas as pd
+import json
+import os
+from datetime import datetime
 from playwright.sync_api import sync_playwright
+import threading
+import time
 
 class HarvesterLogic:
-    def __init__(self, recipes_dir="recipes", output_dir="output"):
-        self.recipes_dir = recipes_dir
-        self.output_dir = output_dir
-        self.ensure_dirs()
-
-    def ensure_dirs(self):
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
-            
     def get_recipe_names(self):
-        """Returns a list of available recipe names (without .json extension)"""
-        try:
-            files = [f.replace(".json", "") for f in os.listdir(self.recipes_dir) if f.endswith('.json')]
-            return files
-        except Exception:
+        """Returns a list of JSON files in the recipes folder."""
+        if not os.path.exists("recipes"):
             return []
+        files = [f for f in os.listdir("recipes") if f.endswith(".json")]
+        return files
 
-    def perform_harvest(self, urls, recipe_name, log_callback):
+    def perform_harvest(self, urls, recipe_name, log_callback, human_mode=False):
         """
-        Executes the scraping process.
+        Executes the scraping logic.
+        urls: List of URL strings.
+        recipe_name: The filename of the recipe (e.g., 'CEO Search.json').
+        log_callback: Function to send text updates to the GUI.
+        human_mode: Boolean. If True, shows browser and slows down.
+        """
+        recipe_path = os.path.join("recipes", recipe_name)
         
-        Args:
-            urls: List of URL strings.
-            recipe_name: Name of the recipe to use.
-            log_callback: Function to send status updates (msg: str).
-        """
-        recipe_path = os.path.join(self.recipes_dir, f"{recipe_name}.json")
-        if not os.path.exists(recipe_path):
-            log_callback(f"Error: Recipe '{recipe_name}' not found.")
-            return
-
         # Load Recipe
         try:
-            with open(recipe_path, 'r') as f:
-                recipe_data = json.load(f)
-                columns_config = recipe_data.get("columns", [])
+            with open(recipe_path, "r") as f:
+                recipe = json.load(f)
         except Exception as e:
             log_callback(f"Error loading recipe: {e}")
             return
 
+        # Prepare Output CSV
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = os.path.join("output", f"harvest_{timestamp}.csv")
         results = []
-        log_callback(f"Starting harvest for {len(urls)} URLs using recipe: {recipe_name}")
+
+        log_callback(f"Starting harvest ({'HUMAN MODE (Visible)' if human_mode else 'Headless'}) for {len(urls)} URLs using recipe: {recipe.get('name', 'Unknown')}")
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            # LAUNCH BROWSER (Human vs Robot)
+            if human_mode:
+                browser = p.chromium.launch(headless=False, slow_mo=1000) # 1s delay
+            else:
+                browser = p.chromium.launch(headless=True)
+                
             context = browser.new_context()
-            
+            page = context.new_page()
+
             for url in urls:
                 url = url.strip()
-                if not url:
+                if not url: 
                     continue
-                    
-                log_callback(f"Scraping: {url}...")
                 
-                row_data = {"URL": url, "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+                log_callback(f"Scraping: {url}...")
+                row = {"URL": url, "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
                 
                 try:
-                    page = context.new_page()
-                    # Timeout after 30s
-                    page.goto(url, timeout=30000, wait_until="domcontentloaded")
-                    page_text = page.inner_text().lower() 
+                    page.goto(url, timeout=30000) # 30s timeout
                     
-                    # Universal Search Logic
-                    for col_def in columns_config:
-                        col_name = col_def.get("col_name", "Unknown")
-                        keywords = col_def.get("keywords", "").lower()
+                    # --- THE CRITICAL FIX IS HERE ---
+                    # We MUST use "body" as the selector
+                    page_text = page.inner_text("body") 
+                    # --------------------------------
+
+                    # Search for Columns
+                    for col in recipe.get("columns", []):
+                        col_name = col.get("col_name", "Unknown")
+                        keywords = col.get("keywords", "").split(",")
                         
-                        if keywords in page_text:
-                            # Simple extraction: Grab context around keyword
-                            idx = page_text.find(keywords)
-                            start = max(0, idx - 50)
-                            end = min(len(page_text), idx + 50 + len(keywords))
-                            snippet = page_text[start:end].replace("\n", " ")
-                            row_data[col_name] = f"...{snippet}..."
-                        else:
-                            row_data[col_name] = "N/A"
-                    
+                        found_val = "N/A"
+                        for kw in keywords:
+                            kw = kw.strip()
+                            if kw and kw.lower() in page_text.lower():
+                                # Simple extraction: 50 chars context
+                                idx = page_text.lower().find(kw.lower())
+                                start = max(0, idx - 50)
+                                end = min(len(page_text), idx + 50)
+                                found_val = page_text[start:end].replace("\n", " ")
+                                break # Stop after first keyword match
+                        
+                        row[col_name] = found_val
+
                     log_callback(f"Success: {url}")
-                    page.close()
-                    
+
                 except Exception as e:
                     log_callback(f"Failed: {url} - {str(e)}")
-                    # Fill missing cols with Error
-                    for col_def in columns_config:
-                         row_data[col_def["col_name"]] = "Error"
+                    row["Error"] = str(e)
                 
-                results.append(row_data)
+                results.append(row)
 
             browser.close()
 
         # Save to CSV
         if results:
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"harvest_{timestamp}.csv"
-            filepath = os.path.join(self.output_dir, filename)
-            
-            try:
-                df = pd.DataFrame(results)
-                df.to_csv(filepath, index=False)
-                log_callback(f"Harvest Complete! Saved to: {filepath}")
-            except Exception as e:
-                log_callback(f"Error saving CSV: {e}")
+            df = pd.DataFrame(results)
+            df.to_csv(output_file, index=False)
+            log_callback(f"Harvest Complete! Saved to: {output_file}")
         else:
-            log_callback("Harvest finished with no data collected.")
+            log_callback("Harvest finished with no data.")

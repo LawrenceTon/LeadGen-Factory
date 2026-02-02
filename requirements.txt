@@ -3,3 +3,6 @@ packaging
 pillow
 playwright
 pandas
+requests
+google-generativeai
+openai
