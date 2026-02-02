@@ -60,21 +60,31 @@ class InspectorLogic:
         print(f"[Saved] Results persisted for {url}", flush=True)
 
     def reset_database(self):
-        """Wipe the database for a fresh start (Safe SQL Mode)"""
-        # Instead of deleting the file (which causes 'File in Use' errors),
-        # we just DROP the table. This works even if the file is locked!
+        """Wipe the database (Nuclear Option)"""
+        # Plan A: Try to delete the physical file (Cleanest)
+        try:
+            if os.path.exists(self.db_path):
+                os.remove(self.db_path)
+                self.init_db()
+                print("🗑️ Database File Deleted. Ready for fresh scan.", flush=True)
+                return
+        except PermissionError:
+            # If Windows locks the file, we switch to Plan B
+            print("⚠️ File is locked by Windows. Switching to SQL Wipe...", flush=True)
+        except Exception as e:
+            print(f"⚠️ Warning: Could not delete file ({e}). Trying SQL Wipe...", flush=True)
+
+        # Plan B: If file is locked, just delete the DATA inside it
         try:
             conn = sqlite3.connect(self.db_path, timeout=10) # Wait up to 10s for lock to clear
             c = conn.cursor()
-            c.execute("DROP TABLE IF EXISTS audit_history") # Nuke the data
+            c.execute("DELETE FROM audit_history") # Delete all rows
             conn.commit()
+            c.execute("VACUUM") # Compress the file size
             conn.close()
-            
-            # Re-build the empty table
-            self.init_db()
-            print("🗑️ Database Wiped. Ready for fresh scan.", flush=True)
+            print("🗑️ Database Wiped (SQL Mode). Ready for fresh scan.", flush=True)
         except Exception as e:
-            print(f"Error resetting DB: {e}", flush=True)
+            print(f"❌ CRITICAL ERROR: Could not wipe DB. Please Restart the App. Details: {e}", flush=True)
 
     # --- TIER 1: THE SCRIPT SCOUT (Fast Regex) ---
     def extract_price_via_script(self, page):
