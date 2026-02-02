@@ -170,10 +170,17 @@ class HarvesterView(ctk.CTkFrame):
             self.option_recipe.set(recipes[0])
 
     def log_message(self, msg):
-        self.txt_console.configure(state="normal")
-        self.txt_console.insert("end", f"{msg}\n")
-        self.txt_console.see("end")
-        self.txt_console.configure(state="disabled")
+        if msg.strip():
+            self.txt_console.after(0, lambda: self._safe_insert(msg))
+
+    def _safe_insert(self, msg):
+        try:
+            self.txt_console.configure(state="normal")
+            self.txt_console.insert("end", f"{msg}\n")
+            self.txt_console.see("end")
+            self.txt_console.configure(state="disabled")
+        except:
+            pass
 
     def start_harvest_thread(self):
         recipe_name = self.option_recipe.get()
@@ -456,10 +463,17 @@ class InspectorView(ctk.CTkFrame):
             self.log_msg(f"Wizard Error: {e}")
 
     def log_msg(self, msg):
-        self.txt_log.configure(state="normal")
-        self.txt_log.insert("end", f"{msg}\n")
-        self.txt_log.see("end")
-        self.txt_log.configure(state="disabled")
+        if msg.strip():
+            self.txt_log.after(0, lambda: self._safe_insert_log(msg))
+
+    def _safe_insert_log(self, msg):
+        try:
+            self.txt_log.configure(state="normal")
+            self.txt_log.insert("end", f"{msg}\n")
+            self.txt_log.see("end")
+            self.txt_log.configure(state="disabled")
+        except:
+            pass
 
     def update_ui_hook(self, progress, status, msg):
         self.progress_bar.set(progress)
