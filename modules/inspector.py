@@ -67,7 +67,7 @@ class InspectorLogic:
                 os.remove(self.db_path)
                 self.init_db()
                 print("🗑️ Database File Deleted. Ready for fresh scan.", flush=True)
-                return
+                return True
         except PermissionError:
             # If Windows locks the file, we switch to Plan B
             print("⚠️ File is locked by Windows. Switching to SQL Wipe...", flush=True)
@@ -83,8 +83,10 @@ class InspectorLogic:
             c.execute("VACUUM") # Compress the file size
             conn.close()
             print("🗑️ Database Wiped (SQL Mode). Ready for fresh scan.", flush=True)
+            return True
         except Exception as e:
             print(f"❌ CRITICAL ERROR: Could not wipe DB. Please Restart the App. Details: {e}", flush=True)
+            return False
 
     # --- TIER 1: THE SCRIPT SCOUT (Fast Regex) ---
     def extract_price_via_script(self, page):
