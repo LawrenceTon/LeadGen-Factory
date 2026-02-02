@@ -276,7 +276,7 @@ class InspectorView(ctk.CTkFrame):
         self.control_frame.grid(row=8, column=0, sticky="ew", pady=(0, 10))
         self.control_frame.grid_columnconfigure(1, weight=1)
         
-        self.btn_start = ctk.CTkButton(self.control_frame, text="▶ Start", command=self.toggle_start_pause, fg_color="green", width=100)
+        self.btn_start = ctk.CTkButton(self.control_frame, text="▶ Start Audit", command=self.toggle_start_pause, fg_color="#FF9800", text_color="black", hover_color="#F57C00", width=100)
         self.btn_start.grid(row=0, column=0, padx=10, pady=10)
         
         self.progress_bar = ctk.CTkProgressBar(self.control_frame)
@@ -409,7 +409,7 @@ class InspectorView(ctk.CTkFrame):
         self.log_msg(f"[{status}] {msg}")
         
         if status in ["Stopped", "Complete"]:
-            self.btn_start.configure(text="▶ Start", fg_color="green")
+            self.btn_start.configure(text="▶ Start Audit", fg_color="#FF9800", state="normal")
             self.btn_stop.configure(state="disabled")
             self.is_running_ui = False
         elif status == "Paused":
