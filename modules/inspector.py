@@ -159,14 +159,27 @@ class InspectorLogic:
         elif url_col:
             self.url_col = str(url_col)
 
-        # Auto-Detect Column
+        # Auto-Detect Column (Smarter Sort)
         if not self.url_col or (self.df is not None and self.url_col not in self.df.columns):
             print("⚠️ No Domain column selected. Attempting Auto-Detect...", flush=True)
-            possible = [c for c in self.df.columns if "domain" in c.lower() or "url" in c.lower() or "website" in c.lower()]
-            if possible: self.url_col = possible[0]
-            else: return
+            # Find columns containing keywords
+            possible = [c for c in self.df.columns if any(x in c.lower() for x in ["domain", "url", "website", "link"])]
+            # Sort by length (shortest first) -> Prefers "Domain" over "Does this Domain Resolve?"
+            possible.sort(key=len)
+            
+            if possible: 
+                self.url_col = possible[0]
+                print(f"✅ Auto-selected URL column: '{self.url_col}'", flush=True)
+            else: 
+                print(f"❌ Error: Could not find a URL column. Available: {list(self.df.columns)}", flush=True)
+                return
 
         if rules: self.rules = rules
+        print(f"ℹ️ Loaded {len(self.rules) if self.rules else 0} rules for processing.", flush=True)
+        # Debug Rules
+        if self.rules:
+            for i, r in enumerate(self.rules):
+                print(f"   [Rule {i+1}] Type: {r.get('type')} -> Col: {r.get('target_column')}", flush=True)
         try: 
             self.limit_rows = int(limit_rows)
             print(f"✅ Limit set to: {self.limit_rows} new items.", flush=True)
