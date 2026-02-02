@@ -131,14 +131,19 @@ class InspectorLogic:
 
     # --- THE MASTER AUDIT FUNCTION ---
     def perform_audit(self, df=None, url_col=None, rules=None, limit_rows=0, limit_mins=0, *args):
-        """
-        The Main Engine:
-        1. Accepts data from Main.py (*args adapter)
-        2. Launches Stealth Browser
-        3. Runs Waterfall Logic (Script -> AI)
-        """
-        # 1. DATA LOADING ADAPTER
-        if df is not None: self.df = df
+        import pandas as pd # Ensure pandas is available here
+
+        # 1. LOAD DATA ADAPTER (Smart Fix)
+        # CASE A: Input is a Filename (String) -> Load it!
+        if isinstance(df, str):
+            try:
+                self.df = pd.read_csv(df)
+            except Exception as e:
+                print(f"❌ Error loading CSV: {e}")
+                return
+        # CASE B: Input is already a DataFrame -> Use it!
+        elif df is not None: 
+            self.df = df
         if url_col: self.url_col = url_col
         if rules: self.rules = rules
         
