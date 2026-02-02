@@ -148,8 +148,12 @@ class InspectorLogic:
             else: return
 
         if rules: self.rules = rules
-        try: self.limit_rows = int(limit_rows)
-        except: self.limit_rows = 0 
+        try: 
+            self.limit_rows = int(limit_rows)
+            print(f"✅ Limit set to: {self.limit_rows} new items.", flush=True)
+        except: 
+            self.limit_rows = 0 
+            print("⚠️ Limit invalid or 0. Running without limits.", flush=True)
         
         if not hasattr(self, 'df') or self.df is None:
             print("❌ Error: No CSV loaded.", flush=True)
@@ -159,43 +163,47 @@ class InspectorLogic:
         print(f"[Starting] Found {len(self.df)} rows. Connecting to Neural Database...", flush=True)
         
         # --- NEW: PERSISTENT BROWSER LAUNCHER ---
-        # Create a folder to save cookies (The "Memory")
         user_data_dir = os.path.join(os.getcwd(), "browser_memory")
         os.makedirs(user_data_dir, exist_ok=True)
         
         with sync_playwright() as p:
-            # Launch with Persistence (Saves cookies/history)
             browser = p.chromium.launch_persistent_context(
                 user_data_dir=user_data_dir,
-                channel="chrome", # Use REAL Google Chrome
+                channel="chrome", 
                 headless=False,
                 args=["--disable-blink-features=AutomationControlled"],
                 viewport={"width": 1280, "height": 720}
             )
             
             page = browser.pages[0] if browser.pages else browser.new_page()
-            
-            # Inject Stealth Scripts
             page.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             
+            # --- ACTION COUNTER LOGIC (Fixes the Limit bug) ---
+            scanned_count = 0 
+
             try:
                 for index, row in self.df.iterrows():
+                    # 1. STOP CHECKS
                     if self.stop_requested:
                         print("🛑 Audit Stopped by User.", flush=True)
                         break
 
-                    if self.limit_rows > 0 and (index + 1) > self.limit_rows:
-                        print(f"🛑 Limit Reached: Stopped after {self.limit_rows} rows.", flush=True)
+                    # Check Limit based on WORK DONE, not file index
+                    if self.limit_rows > 0 and scanned_count >= self.limit_rows:
+                        print(f"🛑 Limit Reached: Processed {scanned_count} new items.", flush=True)
                         break
                     
                     target_url = str(row.get(self.url_col)).strip()
                     if not target_url or target_url.lower() == "nan": continue
                     if not target_url.startswith("http"): target_url = "https://" + target_url
 
+                    # Check DB (Skip without incrementing scanned_count)
                     if self.check_log(target_url):
                          print(f"[Skipping] Already scanned: {target_url}", flush=True)
                          continue
 
+                    # Increment Counter only for NEW scans
+                    scanned_count += 1
                     print(f"[Scanning] Auditing ({index+1}/{len(self.df)}): {target_url}", flush=True)
 
                     # HUMAN SHAKE
@@ -207,9 +215,9 @@ class InspectorLogic:
                         response = page.goto(target_url, timeout=self.timeout * 1000, wait_until="domcontentloaded")
                         status_code = response.status if response else 0
                         
-                        # *** CLOUDFLARE CHECK ***
+                        # CLOUDFLARE CHECK
                         if "Just a moment" in page.title() or "Security" in page.title():
-                            print("🛡️ Cloudflare detected. Waiting 15s for manual bypass...", flush=True)
+                            print("🛡️ Cloudflare detected. Waiting 15s...", flush=True)
                             time.sleep(15) 
                             
                         page.screenshot(path=screenshot_path)
