@@ -192,18 +192,14 @@ class InspectorLogic:
                 print(f"❌ Error: Could not find a URL column. Available: {list(self.df.columns)}", flush=True)
                 return
 
-        if rules: self.rules = rules
+        # [CLEANUP] Rules already handled in Block B via rules_list.
+        # [CLEANUP] Limits already handled in Block D via limits_dict.
+        
         print(f"ℹ️ Loaded {len(self.rules) if self.rules else 0} rules for processing.", flush=True)
         # Debug Rules
         if self.rules:
             for i, r in enumerate(self.rules):
                 print(f"   [Rule {i+1}] Type: {r.get('type')} -> Col: {r.get('target_column')}", flush=True)
-        try: 
-            self.limit_rows = int(limit_rows)
-            print(f"✅ Limit set to: {self.limit_rows} new items.", flush=True)
-        except: 
-            self.limit_rows = 0 
-            print("⚠️ Limit invalid or 0. Running without limits.", flush=True)
         
         if not hasattr(self, 'df') or self.df is None:
             print("❌ Error: No CSV loaded.", flush=True)
