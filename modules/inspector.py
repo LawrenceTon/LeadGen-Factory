@@ -60,10 +60,17 @@ class InspectorLogic:
         print(f"[Saved] Results persisted for {url}", flush=True)
 
     def reset_database(self):
-        """Wipe the database for a fresh start"""
+        """Wipe the database for a fresh start (Safe SQL Mode)"""
+        # Instead of deleting the file (which causes 'File in Use' errors),
+        # we just DROP the table. This works even if the file is locked!
         try:
-            if os.path.exists(self.db_path):
-                os.remove(self.db_path)
+            conn = sqlite3.connect(self.db_path, timeout=10) # Wait up to 10s for lock to clear
+            c = conn.cursor()
+            c.execute("DROP TABLE IF EXISTS audit_history") # Nuke the data
+            conn.commit()
+            conn.close()
+            
+            # Re-build the empty table
             self.init_db()
             print("🗑️ Database Wiped. Ready for fresh scan.", flush=True)
         except Exception as e:
