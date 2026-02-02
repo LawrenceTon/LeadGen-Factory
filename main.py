@@ -240,6 +240,10 @@ class InspectorView(ctk.CTkFrame):
 
         self.btn_wizard = ctk.CTkButton(self.rule_frame, text="✨ Smart Wizard", command=self.run_smart_wizard, fg_color="#7B32A8")
         self.btn_wizard.pack(side="left", padx=20)
+
+        self.btn_toggle = ctk.CTkButton(self.rule_frame, text="▼ Hide Stack", command=self.toggle_rules_stack, 
+                                        fg_color="#95a5a6", width=80)
+        self.btn_toggle.pack(side="left", padx=5)
         
         # 3. Stack & Limits
         self.mid_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -268,7 +272,7 @@ class InspectorView(ctk.CTkFrame):
         self.btn_redo = ctk.CTkButton(self.edit_frame, text="Redo", width=60, command=self.redo_action, state="disabled")
         self.btn_redo.pack(side="left", padx=2)
         
-        self.rules_scroll = ctk.CTkScrollableFrame(self.rules_frame, label_text="Active Rules Stack")
+        self.rules_scroll = ctk.CTkScrollableFrame(self.rules_frame, label_text="Active Rules Stack", height=150)
         self.rules_scroll.pack(fill="both", expand=True)
 
         # 4. Control Center
@@ -327,6 +331,14 @@ class InspectorView(ctk.CTkFrame):
         if f:
             self.csv_path = f
             self.lbl_file.configure(text=os.path.basename(f))
+
+    def toggle_rules_stack(self):
+        if self.rules_scroll.winfo_viewable():
+            self.rules_scroll.pack_forget()
+            self.btn_toggle.configure(text="▲ Show Stack")
+        else:
+            self.rules_scroll.pack(fill="both", expand=True)
+            self.btn_toggle.configure(text="▼ Hide Stack")
 
     def toggle_input(self, choice):
         self.rule_input.pack_forget()

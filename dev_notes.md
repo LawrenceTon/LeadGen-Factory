@@ -19,4 +19,5 @@ This ensures that we don't have conflicting headers in the same session, but it 
 - We added a `try-except` block in `utils_browser.py` to blindly accept failure and fall back to manual JS injection (`navigator.webdriver` deletion) so the app never crashes on import.
 
 ## Bug Fixes
+- Solved layout overflow issue on smaller screens. The Rules Stack was pushing controls off-view. Implemented a toggle mechanism to show/hide the stack on demand.
 - Fixed UI regression. The Smart Wizard frame was taking up too much space, hiding the start buttons. Added a dedicated 'Control Panel' frame anchored above the log console.
