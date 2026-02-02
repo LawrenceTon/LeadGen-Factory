@@ -146,13 +146,25 @@ class InspectorLogic:
         elif df is not None: 
             self.df = df
             
-        # 2. SANITIZE URL COLUMN (The Fix)
-        # If url_col is a dictionary (from a dropdown), extract the string
+        # 2. SANITIZE URL COLUMN
         if isinstance(url_col, dict):
-            # Try to get 'value' or just take the first value
             self.url_col = url_col.get("value", list(url_col.values())[0])
         elif url_col:
             self.url_col = str(url_col)
+
+        # --- FIX: AUTO-DETECT DOMAIN COLUMN ---
+        # If no column is selected, or the selected one isn't in the CSV, try to find it.
+        if not self.url_col or (self.df is not None and self.url_col not in self.df.columns):
+            print("⚠️ No Domain column selected. Attempting Auto-Detect...")
+            possible_cols = [c for c in self.df.columns if "domain" in c.lower() or "url" in c.lower() or "website" in c.lower()]
+            if possible_cols:
+                self.url_col = possible_cols[0]
+                print(f"✅ Auto-selected column: '{self.url_col}'")
+            else:
+                print("❌ CRITICAL ERROR: Could not find a 'Domain' or 'URL' column in your CSV.")
+                print(f"   Available columns: {list(self.df.columns)}")
+                return
+        # --------------------------------------
 
         if rules: self.rules = rules
         
