@@ -285,9 +285,16 @@ class InspectorLogic:
                         if not isinstance(rule, dict) or 'type' not in rule: continue
 
                         result = ""
+                        target_col = rule['target_column']
+                        
+                        # LOGIC A: STRICT YES/NO
                         if rule['type'] == 'status_check':
+                            # Strict 200-399 range check
                             result = "Yes" if 200 <= status_code < 400 else "No"
+                        
+                        # LOGIC B: AI ANALYSIS + FORMATTING
                         elif rule['type'] == 'ai_analysis':
+                            # 1. Script Scout (Price)
                             if "price" in rule['prompt'].lower():
                                 print("   ⚡ Running Script Scout...", flush=True)
                                 script_price = self.extract_price_via_script(page)
@@ -295,14 +302,27 @@ class InspectorLogic:
                                     print(f"   ✅ Script found: {script_price}", flush=True)
                                     result = script_price
                             
+                            # 2. AI Expert (Backup)
                             if not result and os.path.exists(screenshot_path):
                                 print("   🤖 Calling AI Expert...", flush=True)
-                                prompt = rule['prompt'] + " Answer in 1-2 words. If Price, just number."
-                                result = self.perform_ai_analysis(prompt, screenshot_path)
+                                # STRICT FORMATTING RULES
+                                base_prompt = rule['prompt']
+                                strict_instruction = " Answer in 1-2 words only."
+                                
+                                if "price" in base_prompt.lower():
+                                    strict_instruction += " Output just the number/currency symbol."
+                                elif "lander" in base_prompt.lower() or "company" in base_prompt.lower():
+                                    strict_instruction += " Output just the Company Name."
+                                
+                                final_prompt = base_prompt + strict_instruction
+                                result = self.perform_ai_analysis(final_prompt, screenshot_path)
 
-                        print(f"   👉 {rule['target_column']}: {result}", flush=True)
-                        self.df.at[index, rule['target_column']] = result
-                    
+                        print(f"   👉 {target_col}: {result}", flush=True)
+                        
+                        # CRITICAL: COMMIT DATA IMMEDIATELY
+                        self.df.at[index, target_col] = result
+
+                    # Cleanup
                     if os.path.exists(screenshot_path):
                         try: os.remove(screenshot_path)
                         except: pass
