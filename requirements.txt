@@ -1,3 +1,5 @@
 customtkinter
 packaging
 pillow
+playwright
+pandas

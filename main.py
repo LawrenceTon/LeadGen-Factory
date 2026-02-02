@@ -1,5 +1,7 @@
 import customtkinter as ctk
+import threading
 from modules.architect import ArchitectLogic
+from modules.harvester import HarvesterLogic
 
 class ArchitectView(ctk.CTkFrame):
     def __init__(self, master, logic):
@@ -88,9 +90,95 @@ class ArchitectView(ctk.CTkFrame):
         success = self.logic.save_recipe(name, self.column_items)
         if success:
             self.status_label.configure(text="Recipe Saved Successfully!", text_color="green")
-            # Optional: Clear UI?
+            # Clear UI if needed, but keeping for now
         else:
             self.status_label.configure(text="Error saving recipe.", text_color="red")
+
+class HarvesterView(ctk.CTkFrame):
+    def __init__(self, master, logic):
+        super().__init__(master, corner_radius=0, fg_color="transparent")
+        self.logic = logic
+        
+        # Grid Layout
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1) # URL Area
+        self.grid_rowconfigure(3, weight=1) # Console Area
+
+        # 1. Top Bar: Recipe Selection
+        self.top_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.top_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+
+        self.lbl_recipe = ctk.CTkLabel(self.top_frame, text="Select Recipe:", font=ctk.CTkFont(weight="bold"))
+        self.lbl_recipe.pack(side="left", padx=(0, 10))
+
+        self.recipe_options = self.logic.get_recipe_names()
+        if not self.recipe_options:
+            self.recipe_options = ["No Recipes Found"]
+
+        self.option_recipe = ctk.CTkOptionMenu(self.top_frame, values=self.recipe_options)
+        self.option_recipe.pack(side="left")
+
+        # 2. URL Input Area
+        self.lbl_urls = ctk.CTkLabel(self, text="Target URLs (One per line):", anchor="w")
+        self.lbl_urls.grid(row=0, column=0, sticky="sw", pady=(40, 0)) # Hacky spacing
+
+        self.txt_urls = ctk.CTkTextbox(self, height=150)
+        self.txt_urls.grid(row=1, column=0, sticky="nsew", pady=(5, 10))
+        self.txt_urls.insert("0.0", "https://example.com\n")
+
+        # 3. Action Bar
+        self.action_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.action_frame.grid(row=2, column=0, sticky="ew", pady=10)
+
+        self.btn_start = ctk.CTkButton(self.action_frame, text="Start Harvest 🚜", command=self.start_harvest_thread, height=40, font=ctk.CTkFont(size=16, weight="bold"))
+        self.btn_start.pack(fill="x")
+
+        # 4. Console Log
+        self.lbl_console = ctk.CTkLabel(self, text="Harvest Log:", anchor="w")
+        self.lbl_console.grid(row=3, column=0, sticky="nw", pady=(10, 0))
+
+        self.txt_console = ctk.CTkTextbox(self, state="disabled") # Read-only
+        self.txt_console.grid(row=4, column=0, sticky="nsew", pady=(5, 0))
+
+    def refresh_recipes(self):
+        """Update dropdown in case new recipes were added."""
+        recipes = self.logic.get_recipe_names()
+        if recipes:
+            self.option_recipe.configure(values=recipes)
+            self.option_recipe.set(recipes[0])
+        else:
+            self.option_recipe.configure(values=["No Recipes Found"])
+
+    def log_message(self, msg):
+        """Thread-safe logging to GUI."""
+        self.txt_console.configure(state="normal")
+        self.txt_console.insert("end", f"{msg}\n")
+        self.txt_console.see("end")
+        self.txt_console.configure(state="disabled")
+
+    def start_harvest_thread(self):
+        recipe_name = self.option_recipe.get()
+        raw_urls = self.txt_urls.get("0.0", "end")
+        urls = [u for u in raw_urls.split("\n") if u.strip()]
+
+        if not urls:
+            self.log_message("Error: No URLs provided.")
+            return
+
+        if recipe_name == "No Recipes Found":
+             self.log_message("Error: Please create a recipe in Architect first.")
+             return
+        
+        self.btn_start.configure(state="disabled", text="Harvesting...")
+        
+        # Start Thread
+        t = threading.Thread(target=self.run_harvest_process, args=(urls, recipe_name))
+        t.start()
+
+    def run_harvest_process(self, urls, recipe_name):
+        self.logic.perform_harvest(urls, recipe_name, self.log_message)
+        # Re-enable button (needs main thread call technically, but CTk handles simple config usually gracefully, checking safety)
+        self.btn_start.configure(state="normal", text="Start Harvest 🚜")
 
 
 class NavigationController:
@@ -110,6 +198,10 @@ class NavigationController:
 
         self.current_frame = view_class(self.main_content_frame, **kwargs)
         self.current_frame.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        # Hook for refresh if exists
+        if hasattr(self.current_frame, 'refresh_recipes'):
+            self.current_frame.refresh_recipes()
 
     def show_placeholder(self, view_name, title_text):
         """
@@ -142,6 +234,7 @@ class LeadGenApp(ctk.CTk):
 
         # Logic Modules
         self.architect_logic = ArchitectLogic()
+        self.harvester_logic = HarvesterLogic()
 
         # System Settings
         ctk.set_appearance_mode("Dark")
@@ -202,7 +295,7 @@ class LeadGenApp(ctk.CTk):
         self.nav_controller.switch_to_view(ArchitectView, logic=self.architect_logic)
 
     def show_harvester(self):
-        self.nav_controller.show_placeholder("Harvester Module", "Welcome to the Harvester Module")
+        self.nav_controller.switch_to_view(HarvesterView, logic=self.harvester_logic)
 
     def show_janitor(self):
         self.nav_controller.show_placeholder("Janitor Module", "Welcome to the Janitor Module")
