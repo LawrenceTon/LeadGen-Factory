@@ -1,0 +1,9 @@
+{
+    "name": "CEO Search",
+    "columns": [
+        {
+            "col_name": "Job Title",
+            "keywords": "CEO, Founder"
+        }
+    ]
+}
