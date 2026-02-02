@@ -141,8 +141,18 @@ class InspectorLogic:
         if df is not None: self.df = df
         if url_col: self.url_col = url_col
         if rules: self.rules = rules
-        if limit_rows: self.limit_rows = int(limit_rows)
-        if limit_mins: self.limit_mins = int(limit_mins)
+        
+        # 2. SANITIZE LIMITS (The Fix)
+        # We use try/except to safely handle cases where main.py passes a Dict/List by mistake
+        try:
+            self.limit_rows = int(limit_rows)
+        except (ValueError, TypeError):
+            self.limit_rows = 0 # Default to 0 if bad data received
+            
+        try:
+            self.limit_mins = int(limit_mins)
+        except (ValueError, TypeError):
+            self.limit_mins = 0 # Default to 0 if bad data received
 
         if not hasattr(self, 'df') or self.df is None:
             print("❌ Error: No CSV loaded.")
