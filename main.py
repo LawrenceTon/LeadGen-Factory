@@ -20,6 +20,33 @@ from modules.inspector import InspectorLogic
 # from modules.janitor import JanitorLogic 
 from modules.tooltip import ToolTip
 
+class TextRedirector(object):
+    def __init__(self, widget, tag="stdout"):
+        self.widget = widget
+        self.tag = tag
+
+    def write(self, str_val):
+        # Only print if there is text
+        if str_val.strip():
+            # 🛡️ THE FIX: Force the update to happen in the Main GUI Thread
+            # This prevents "RuntimeError: main thread is not in main loop"
+            try:
+                self.widget.after(0, lambda: self._safe_insert(str_val))
+            except:
+                pass # App might be closed
+
+    def _safe_insert(self, str_val):
+        try:
+            self.widget.configure(state="normal")
+            self.widget.insert("end", str_val + "\n") 
+            self.widget.configure(state="disabled")
+            self.widget.see("end")
+        except:
+            pass 
+
+    def flush(self):
+        pass
+
 class JanitorView(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master, corner_radius=0, fg_color="transparent")
@@ -305,6 +332,9 @@ class InspectorView(ctk.CTkFrame):
         # Log
         self.txt_log = ctk.CTkTextbox(self, height=100, fg_color="black", text_color="#00ff00")
         self.txt_log.grid(row=9, column=0, sticky="nsew")
+        
+        # Redirect Print Statements to the Log
+        sys.stdout = TextRedirector(self.txt_log)
 
     def create_control_panel(self):
         self.control_panel_frame = ctk.CTkFrame(self, border_color="gray", border_width=2)
