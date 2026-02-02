@@ -153,34 +153,65 @@ class InspectorLogic:
             pass
         return None
 
-    def perform_audit(self, *args):
+    def perform_audit(self, csv_arg=None, rules_arg=None, api_arg=None, limits_arg=None, cb_arg=None, *args):
+        # 1. DATA LOADER & ARGUMENT UNPACKING
+        # Fixes compatibility with main.py which sends: (csv_path, rules, api_config, limits, callback)
+        if csv_arg and isinstance(csv_arg, str):
+            try:
+                if os.path.exists(csv_arg):
+                    self.df = pd.read_csv(csv_arg)
+                    self.df = self.df.astype(object)
+            except Exception as e:
+                print(f"Error loading CSV: {e}")
+
+        if rules_arg: self.rules = rules_arg
+        
+        if api_arg:
+             self.api_key = api_arg.get('primary_key')
+             
+        if limits_arg:
+             self.limit_rows = int(limits_arg.get('batch_rows', 0))
+             # Handle mins if needed, usually just used for breaks
+             
+        if limits_arg:
+            self.timeout = int(limits_arg.get('timeout_ms', 30000)) / 1000
+
+        # 2. SAFETY CHECK & URL DISCOVERY
+        if not hasattr(self, 'df') or self.df is None:
+            print("❌ Error: No CSV loaded. Please select a file first.")
+            return
+
+        # Discover URL Column
+        self.url_col = None
+        candidates = ["URL", "url", "Website", "website", "Domain", "domain", "Link", "link"]
+        for cand in candidates:
+            if cand in self.df.columns:
+                self.url_col = cand
+                break
+        
+        if not self.url_col and len(self.df.columns) > 0:
+            self.url_col = self.df.columns[0] # Default to first
+
         print(f"[Starting] Found {len(self.df)} rows. Connecting to Neural Database...")
         from modules import utils_browser
         import time
         import random
         import re
+        import google.generativeai as genai
 
-        # 1. LAUNCH BROWSER (STEALTH MODE)
-        # headless=False is REQUIRED for God Mode to bypass Cloudflare
+        # 3. LAUNCH BROWSER (STEALTH MODE)
         playwright, browser, context, page = utils_browser.launch_browser(
             headless=False, 
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
         )
-        
-        # 2. ACTIVATE INVISIBILITY CLOAK
         utils_browser.bypass_detection(page) 
 
         try:
             for index, row in self.df.iterrows():
                 # [Limit Checks]
-                try:
-                    if self.limit_rows > 0 and (index + 1) > self.limit_rows:
-                        print(f"🛑 Limit Reached: Stopped after {self.limit_rows} rows.")
-                        break
-                except: pass
-
-                # [Phoenix Protocol: Skip if done]
-                # ... (Your existing check_log code usually goes here, but it's fine if omitted for the fix) ...
+                if self.limit_rows > 0 and (index + 1) > self.limit_rows:
+                    print(f"🛑 Limit Reached: Stopped after {self.limit_rows} rows.")
+                    break
 
                 # URL Setup
                 target_url = row.get(self.url_col)
@@ -188,71 +219,64 @@ class InspectorLogic:
 
                 print(f"[Scanning] Auditing ({index+1}/{len(self.df)}): {target_url}")
 
-                # 3. HUMAN BEHAVIOR (The "Shake" - Vital for Stealth)
-                try:
-                    page.mouse.move(random.randint(100, 500), random.randint(100, 500))
+                # Human Shake
+                try: page.mouse.move(random.randint(100, 500), random.randint(100, 500))
                 except: pass
 
-                # 4. NAVIGATION & CLOUDFLARE BYPASS
+                # Navigation
                 try:
-                    # Navigate
-                    response = page.goto(target_url, timeout=self.timeout * 1000, wait_until="domcontentloaded")
+                    current_timeout = getattr(self, 'timeout', 30) * 1000
+                    response = page.goto(target_url, timeout=current_timeout, wait_until="domcontentloaded")
                     status_code = response.status if response else 0
                     final_url = page.url
-                    
-                    # *** THE MISSING PIECE: CLOUDFLARE WAIT ***
-                    # If we see a security challenge, we MUST pause to let the browser solve it.
+                    # Cloudflare Bypass
                     if "Just a moment" in page.title() or "Security" in page.title() or "Verify" in page.title():
-                        print("🛡️ Cloudflare detected. Waiting 10s for auto-bypass...")
-                        time.sleep(10) 
-                        # Update URL/Status after waiting
-                        final_url = page.url 
-                        
-                except Exception:
+                        print("🛡️ Cloudflare detected. Waiting 10s...")
+                        time.sleep(10)
+                        final_url = page.url
+                except:
                     status_code = 404
                     final_url = target_url
 
-                # 5. EXECUTE RULES (Waterfall Hybrid)
+                # Rules (Waterfall)
                 for rule in self.rules:
                     result = ""
-                    
-                    # --- LOGIC A: YES/NO STATUS ---
+                    # Yes/No Logic
                     if rule['type'] == 'status_check':
-                        if 200 <= status_code < 400:
-                            result = "Yes"
-                        else:
-                            result = "No"
-
-                    # --- LOGIC B: AI + SCRIPT WATERFALL ---
+                        result = "Yes" if 200 <= status_code < 400 else "No"
+                    
+                    # AI/Script Logic
                     elif rule['type'] == 'ai_analysis':
                         
-                        # STEP 1: SCRIPT SCOUT (Fast & Free)
-                        # Only runs if we are looking for a Price
-                        if "price" in rule['prompt'].lower():
-                            print(f"   ⚡ Running Script Scout...")
+                        # Use self.extract_price_via_script if it exists, else skip
+                        if hasattr(self, 'extract_price_via_script') and "price" in rule['prompt'].lower():
+                            print("   ⚡ Running Script Scout...")
                             script_price = self.extract_price_via_script(page)
-                            if script_price:
+                            if script_price: 
                                 print(f"   ✅ Script found: {script_price}")
                                 result = script_price
                         
-                        # STEP 2: AI EXPERT (Backup)
-                        # Only runs if Script failed OR if it's not a price question (like "Company Name")
+                        # AI Backup
                         if not result:
-                            # Strict Prompt to prevent "I'm sorry"
-                            prompt = rule['prompt'] + " Answer in 1-2 words. If Marketplace, name it. If Generic, say 'Developed'. If Price, just the number."
-                            print(f"   🤖 Calling AI Expert...")
-                            result = self.perform_ai_analysis(prompt, screenshot_path)
+                            # Unique filename for screenshots
+                            temp_shot = f"temp_{index}_{uuid.uuid4().hex[:8]}.jpg"
+                            try:
+                                page.screenshot(path=temp_shot, quality=70)
+                                print("   🤖 Calling AI Expert...")
+                                prompt = rule['prompt'] + " Answer in 1-2 words. If Price, just number. If Marketplace, name it."
+                                result = self.perform_ai_analysis(prompt, temp_shot) # Pass path, not bytes if method expects it
+                            except Exception as e:
+                                result = f"AI Error: {e}"
+                            finally:
+                                if os.path.exists(temp_shot):
+                                    try: os.remove(temp_shot)
+                                    except: pass
 
-                    # SAVE & LOG
                     print(f"   👉 {rule['target_column']}: {result}")
                     self.df.at[index, rule['target_column']] = result
-                    # [Database Save Logic would go here]
                     
         finally:
             utils_browser.close_browser(context, browser, playwright)
-            utils_browser.close_browser(context, browser, playwright)
-            self.is_running = False
-            callback(1.0, "Complete", "Stealth Audit Finished.")
 
     def export_history(self):
         if not hasattr(self, 'df') or self.df is None:
