@@ -1,3 +1,39 @@
-2026/02/02-10:14:15.649 7428 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\browser_memory\Default\Local Storage\leveldb/MANIFEST-000001
-2026/02/02-10:14:15.655 7428 Recovering log #3
-2026/02/02-10:14:15.660 7428 Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\browser_memory\Default\Local Storage\leveldb/000003.log 
+2026/02/02-19:46:15.591 405c Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\browser_memory\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/02-19:46:15.604 405c Recovering log #23
+2026/02/02-19:46:15.613 405c Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\browser_memory\Default\Local Storage\leveldb/000023.log 
+2026/02/02-19:46:45.297 480c Level-0 table #27: started
+2026/02/02-19:46:45.307 480c Level-0 table #27: 18446 bytes OK
+2026/02/02-19:46:45.310 480c Delete type=0 #23
+2026/02/02-19:46:45.311 480c Compacting 4@0 + 1@1 files
+2026/02/02-19:46:45.323 480c Generated table #28@0: 75 keys, 50518 bytes
+2026/02/02-19:46:45.323 480c Compacted 4@0 + 1@1 files => 50518 bytes
+2026/02/02-19:46:45.325 480c compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/02-19:46:45.327 480c Delete type=2 #18
+2026/02/02-19:46:45.327 480c Delete type=2 #20
+2026/02/02-19:46:45.327 480c Delete type=2 #22
+2026/02/02-19:46:45.327 480c Delete type=2 #24
+2026/02/02-19:46:45.328 480c Delete type=2 #27
+2026/02/02-19:51:39.327 405c Level-0 table #30: started
+2026/02/02-19:51:39.343 405c Level-0 table #30: 19396 bytes OK
+2026/02/02-19:51:39.350 405c Delete type=0 #26
+2026/02/02-19:55:16.170 480c Level-0 table #32: started
+2026/02/02-19:55:16.179 480c Level-0 table #32: 21587 bytes OK
+2026/02/02-19:55:16.182 480c Delete type=0 #29
+2026/02/02-19:55:40.968 480c Level-0 table #34: started
+2026/02/02-19:55:40.983 480c Level-0 table #34: 81884 bytes OK
+2026/02/02-19:55:40.986 480c Delete type=0 #31
+2026/02/02-19:57:49.186 480c Level-0 table #36: started
+2026/02/02-19:57:49.195 480c Level-0 table #36: 20974 bytes OK
+2026/02/02-19:57:49.198 480c Delete type=0 #33
+2026/02/02-19:57:49.199 480c Compacting 4@0 + 1@1 files
+2026/02/02-19:57:49.213 480c Generated table #37@0: 76 keys, 91124 bytes
+2026/02/02-19:57:49.213 480c Compacted 4@0 + 1@1 files => 91124 bytes
+2026/02/02-19:57:49.215 480c compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/02-19:57:49.216 480c Delete type=2 #28
+2026/02/02-19:57:49.216 480c Delete type=2 #30
+2026/02/02-19:57:49.216 480c Delete type=2 #32
+2026/02/02-19:57:49.216 480c Delete type=2 #34
+2026/02/02-19:57:49.217 480c Delete type=2 #36
+2026/02/02-19:59:26.391 480c Level-0 table #39: started
+2026/02/02-19:59:26.402 480c Level-0 table #39: 18685 bytes OK
+2026/02/02-19:59:26.405 480c Delete type=0 #35

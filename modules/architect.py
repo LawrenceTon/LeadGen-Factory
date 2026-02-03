@@ -13,11 +13,12 @@ class ArchitectLogic:
 
     def save_recipe(self, name: str, columns: List[Dict[str, str]]) -> bool:
         """
-        Saves a recipe to a JSON file.
+        Saves a recipe to a JSON file with Smart Blueprint execution tags.
         
         Args:
             name: The name of the recipe.
-            columns: A list of dictionaries, e.g., [{"col_name": "Job Title", "keywords": "CEO"}]
+            columns: A list of dictionaries, e.g., 
+                     [{"col_name": "Job Title", "keywords": "CEO", "logic_type": "Champion_Selector"}]
             
         Returns:
             True if successful, False otherwise.
@@ -28,9 +29,29 @@ class ArchitectLogic:
         filename = f"{name}.json"
         filepath = os.path.join(self.recipes_dir, filename)
         
+        # Smart Logic Mapping
+        LOGIC_MAP = {
+            "Champion_Selector": ["extract_employee_count", "identify_role"],
+            "Viability_Score": ["scoring_commercial", "keyword_match"],
+            "Domain_Intelligence": ["dns_check", "domain_age"],
+            "Social_Validator": ["social_check", "followers_extraction"],
+            "Standard": ["keyword_extraction"]
+        }
+
+        # Enrich columns with execution tags
+        enriched_columns = []
+        for col in columns:
+            logic = col.get("logic_type", "Standard")
+            tags = LOGIC_MAP.get(logic, ["keyword_extraction"])
+            
+            new_col = col.copy()
+            new_col["execution_tags"] = tags
+            enriched_columns.append(new_col)
+        
         data = {
             "name": name,
-            "columns": columns
+            "columns": enriched_columns,
+            "version": "2.0" # Smart Blueprint Version
         }
         
         try:

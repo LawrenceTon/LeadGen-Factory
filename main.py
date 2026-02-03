@@ -3,6 +3,7 @@ import threading
 import os
 import sys
 import pandas as pd
+import json
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -100,9 +101,24 @@ class ArchitectView(ctk.CTkFrame):
         
         self.col_name_entry = ctk.CTkEntry(self.controls_frame, placeholder_text="Column Name")
         self.col_name_entry.pack(side="left", padx=5, pady=10)
+
+        # Strategy Dropdown (New)
+        self.lbl_strategy = ctk.CTkLabel(self.controls_frame, text="Strategy:")
+        self.lbl_strategy.pack(side="left", padx=(10, 5))
         
-        self.col_key_entry = ctk.CTkEntry(self.controls_frame, placeholder_text="Keywords", width=200)
+        self.strategies = ["Custom", "Brand_Discovery", "Champion_Search", "Competitor_Scan", "News_Monitor"]
+        self.strategy_option = ctk.CTkOptionMenu(self.controls_frame, values=self.strategies, command=self.on_strategy_change, width=140)
+        self.strategy_option.pack(side="left", padx=5)
+        self.strategy_option.set("Custom")
+        
+        self.col_key_entry = ctk.CTkEntry(self.controls_frame, placeholder_text="Keywords ({keyword} supported)", width=250)
         self.col_key_entry.pack(side="left", padx=5, pady=10)
+
+        # Logic Type Dropdown
+        self.logic_types = ['Standard', 'Discovery_Engine', 'Resolution_Gatekeeper', 'Viability_Filter', 'Champion_Selector']
+        self.col_logic_entry = ctk.CTkOptionMenu(self.controls_frame, values=self.logic_types)
+        self.col_logic_entry.pack(side="left", padx=5, pady=10)
+        self.col_logic_entry.set("Standard")
         
         self.btn_add_col = ctk.CTkButton(self.controls_frame, text="Add Column", command=self.add_column)
         self.btn_add_col.pack(side="left", padx=10, pady=10)
@@ -122,20 +138,72 @@ class ArchitectView(ctk.CTkFrame):
         self.btn_save = ctk.CTkButton(self.footer_frame, text="Save Recipe", command=self.save_recipe, fg_color="green")
         self.btn_save.pack(side="right")
 
+    def on_strategy_change(self, choice):
+        """Auto-configure fields based on Strategy Protocol"""
+        if choice == "Custom":
+            return
+            
+        self.col_name_entry.delete(0, "end")
+        self.col_key_entry.delete(0, "end")
+        
+        if choice == "Brand_Discovery":
+            self.col_name_entry.insert(0, "Brand Identity")
+            self.col_key_entry.insert(0, "{keyword}")
+            self.col_logic_entry.set("Discovery_Engine")
+        
+        elif choice == "Champion_Search":
+            self.col_name_entry.insert(0, "Decision Maker")
+            self.col_key_entry.insert(0, "{keyword} CEO, {keyword} Founder, {keyword} President")
+            self.col_logic_entry.set("Champion_Selector")
+            
+        elif choice == "Competitor_Scan":
+            self.col_name_entry.insert(0, "Competitors")
+            self.col_key_entry.insert(0, "competitor of {keyword}, alternative to {keyword}")
+            self.col_logic_entry.set("Standard")
+
+        elif choice == "News_Monitor":
+            self.col_name_entry.insert(0, "Recent News")
+            self.col_key_entry.insert(0, "{keyword} press release, {keyword} launched, {keyword} announced")
+            self.col_logic_entry.set("Standard")
+
     def add_column(self):
         col_name = self.col_name_entry.get()
         keywords = self.col_key_entry.get()
+        logic_type = self.col_logic_entry.get()
+        
         if not col_name: return
 
+        # Unique ID for deletion
+        import uuid
+        col_id = str(uuid.uuid4())
+
         row_frame = ctk.CTkFrame(self.columns_scroll)
-        row_frame.pack(fill="x", pady=2)
+        row_frame.pack(fill="x", padx=5, pady=2)
         
-        lbl = ctk.CTkLabel(row_frame, text=f"{col_name} : {keywords}", anchor="w")
-        lbl.pack(side="left", padx=10, pady=5)
+        # Store reference for deletion
+        row_frame.col_id = col_id
+
+        display_text = f"{col_name}"
+        if keywords: display_text += f" ({keywords})"
+        if logic_type != "Standard":
+            display_text += f" [{logic_type}]"
+
+        lbl = ctk.CTkLabel(row_frame, text=display_text, anchor="w")
+        lbl.pack(side="left", padx=10, pady=5, fill="x", expand=True)
         
-        self.column_items.append({"col_name": col_name, "keywords": keywords})
+        btn_del = ctk.CTkButton(row_frame, text="🗑️", width=30, fg_color="red", command=lambda: self.delete_column(col_id, row_frame))
+        btn_del.pack(side="right", padx=5)
+        
+        self.column_items.append({"id": col_id, "col_name": col_name, "keywords": keywords, "logic_type": logic_type})
         self.col_name_entry.delete(0, "end")
         self.col_key_entry.delete(0, "end")
+        self.col_logic_entry.set("Standard")
+
+    def delete_column(self, col_id, frame):
+        # Remove from data
+        self.column_items = [c for c in self.column_items if c.get("id") != col_id]
+        # Remove from UI
+        frame.destroy()
 
     def save_recipe(self):
         name = self.name_entry.get()
@@ -151,42 +219,54 @@ class HarvesterView(ctk.CTkFrame):
         self.logic = logic
         
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(2, weight=1) # Textbox
+        self.grid_rowconfigure(4, weight=1) # Console log
 
-        # Top Bar
+        # Top Bar (Row 0)
         self.top_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.top_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
 
-        self.lbl_recipe = ctk.CTkLabel(self.top_frame, text="Select Recipe:", font=ctk.CTkFont(weight="bold"))
-        self.lbl_recipe.pack(side="left", padx=(0, 10))
+        self.lbl_recipe = ctk.CTkLabel(self.top_frame, text="Recipe:", font=ctk.CTkFont(weight="bold"))
+        self.lbl_recipe.pack(side="left", padx=(0, 5))
 
         self.recipe_options = self.logic.get_recipe_names() or ["No Recipes Found"]
-        self.option_recipe = ctk.CTkOptionMenu(self.top_frame, values=self.recipe_options)
+        self.option_recipe = ctk.CTkOptionMenu(self.top_frame, values=self.recipe_options, width=150)
         self.option_recipe.pack(side="left")
         
-        self.chk_human = ctk.CTkCheckBox(self.top_frame, text="Human Mode (Show Browser)")
-        self.chk_human.pack(side="left", padx=20)
+        self.var_mode = ctk.StringVar(value="Corporate Brand Mode")
+        self.seg_mode = ctk.CTkSegmentedButton(self.top_frame, values=["Corporate", "Public Figure"],
+                                               variable=self.var_mode)
+        self.seg_mode.pack(side="left", padx=10)
 
-        # URL Input
-        self.lbl_urls = ctk.CTkLabel(self, text="Target URLs (One per line):", anchor="w")
-        self.lbl_urls.grid(row=0, column=0, sticky="sw", pady=(40, 0))
+        self.chk_human = ctk.CTkCheckBox(self.top_frame, text="Human")
+        self.chk_human.pack(side="left", padx=10)
 
-        self.txt_urls = ctk.CTkTextbox(self, height=150)
-        self.txt_urls.grid(row=1, column=0, sticky="nsew", pady=(5, 10))
-        self.txt_urls.insert("0.0", "https://example.com\n")
+        # Smart Input (Row 1)
+        self.input_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.input_frame.grid(row=1, column=0, sticky="ew", pady=5)
+        
 
-        # Action
+        self.lbl_kw = ctk.CTkLabel(self.input_frame, text="Smart Keyword (Auto-Generate Domains):", font=ctk.CTkFont(weight="bold"))
+        self.lbl_kw.pack(side="left", padx=(0, 10))
+        self.entry_keyword = ctk.CTkEntry(self.input_frame, placeholder_text="e.g. Jackfruit", width=250)
+        self.entry_keyword.pack(side="left")
+
+        # URL Input (Row 2) - Combined Box
+        self.txt_urls = ctk.CTkTextbox(self, height=100)
+        self.txt_urls.grid(row=2, column=0, sticky="nsew", pady=(5, 10))
+        self.txt_urls.insert("0.0", "Paste specific URLs here (optional)...\n")
+
+        # Action (Row 3)
         self.action_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self.action_frame.grid(row=2, column=0, sticky="ew", pady=10)
+        self.action_frame.grid(row=3, column=0, sticky="ew", pady=5)
 
         self.btn_start = ctk.CTkButton(self.action_frame, text="Start Harvest 🚜", command=self.start_harvest_thread, height=40, font=ctk.CTkFont(size=16, weight="bold"))
-        self.btn_start.pack(fill="x")
+        self.btn_start.pack(side="left", fill="x", expand=True, padx=(0, 5))
 
-        # Console
-        self.lbl_console = ctk.CTkLabel(self, text="Harvest Log:", anchor="w")
-        self.lbl_console.grid(row=3, column=0, sticky="nw", pady=(10, 0))
+        self.btn_export = ctk.CTkButton(self.action_frame, text="Export Results 💾", command=self.export_csv, height=40, fg_color="green", font=ctk.CTkFont(size=16, weight="bold"))
+        self.btn_export.pack(side="left", fill="x", padx=(5, 0))
 
+        # Console (Row 4)
         self.txt_console = ctk.CTkTextbox(self, state="disabled")
         self.txt_console.grid(row=4, column=0, sticky="nsew", pady=(5, 0))
 
@@ -211,17 +291,52 @@ class HarvesterView(ctk.CTkFrame):
 
     def start_harvest_thread(self):
         recipe_name = self.option_recipe.get()
-        urls = [u for u in self.txt_urls.get("0.0", "end").split("\n") if u.strip()]
-        if not urls or recipe_name == "No Recipes Found": return
+        raw_urls = self.txt_urls.get("0.0", "end")
+        # Filter out placeholder
+        if "Paste specific URLs" in raw_urls: raw_urls = ""
         
-        self.btn_start.configure(state="disabled", text="Harvesting...")
-        t = threading.Thread(target=self.logic.perform_harvest, args=(urls, recipe_name, self.log_message, bool(self.chk_human.get())))
+        urls = [u for u in raw_urls.split("\n") if u.strip() and "http" in u]
+        keyword = self.entry_keyword.get().strip()
+        
+        if (not urls and not keyword) or recipe_name == "No Recipes Found": 
+            self.log_message("Error: Please provide a Keyword OR a URL.")
+            return
+        
+        mode = self.var_mode.get()
+        if mode == "Corporate": mode = "Corporate Brand Mode"
+        if mode == "Public Figure": mode = "Public Figure Mode"
+        
+        self.btn_start.configure(state="disabled", text=f"Harvesting ({mode})...")
+        t = threading.Thread(target=self.logic.perform_harvest, args=(urls, recipe_name, self.log_message), kwargs={'human_mode': bool(self.chk_human.get()), 'search_mode': mode, 'keyword_input': keyword})
         t.start()
-        # Note: logic.perform_harvest will re-enable button manually or via callback wrapper? 
-        # Actually logic doesn't re-enable. Let's fix button state in a callback wrapper if needed.
-        # For now, simplistic. In production, callback should handle state.
-        # But HarvesterLogic is synchronous in the thread. 
         self.monitor_harvest_thread(t)
+
+    def export_csv(self):
+        filename = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
+        if not filename: return
+        
+        recipe_name = self.option_recipe.get()
+        
+        # We need to know which columns were in the recipe to enforce order. 
+        # User requirement: "validate that the final CSV headers perfectly match the column order defined in the active Architect blueprint"
+        # So we SHOULD get the headers.
+        
+        recipe_cols = []
+        if recipe_name and recipe_name != "No Recipes Found":
+            try:
+                recipe_path = resource_path(os.path.join("recipes", f"{recipe_name}.json"))
+                with open(recipe_path, 'r') as f:
+                    data = json.load(f)
+                    recipe_cols = [c['col_name'] for c in data.get('columns', [])]
+            except Exception as e: 
+                self.log_message(f"Error loading recipe for headers: {e}")
+                recipe_cols = [] # Fallback to no specific order if recipe fails to load
+            
+        success, msg = self.logic.export_data(filename, recipe_headers=recipe_cols)
+        if success:
+             self.log_message(f"✅ {msg}")
+        else:
+             self.log_message(f"❌ {msg}")
 
     def monitor_harvest_thread(self, thread):
         if thread.is_alive():
