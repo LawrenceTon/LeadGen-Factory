@@ -1,9 +1,6 @@
-2026/02/09-00:31:35.179 4b20 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/MANIFEST-000001
-2026/02/09-00:31:35.191 4b20 Recovering log #296
-2026/02/09-00:31:35.197 4b20 Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/000296.log 
-2026/02/09-00:32:10.418 16e0 Level-0 table #299: started
-2026/02/09-00:32:10.431 16e0 Level-0 table #299: 56606 bytes OK
-2026/02/09-00:32:10.437 16e0 Delete type=0 #296
-2026/02/09-00:33:09.661 16e0 Level-0 table #301: started
-2026/02/09-00:33:09.670 16e0 Level-0 table #301: 56430 bytes OK
-2026/02/09-00:33:09.673 16e0 Delete type=0 #298
+2026/02/09-03:46:47.977 a84 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/09-03:46:47.988 a84 Recovering log #314
+2026/02/09-03:46:47.993 a84 Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/000314.log 
+2026/02/09-03:47:48.013 a84 Level-0 table #319: started
+2026/02/09-03:47:48.030 a84 Level-0 table #319: 55535 bytes OK
+2026/02/09-03:47:48.033 a84 Delete type=0 #314

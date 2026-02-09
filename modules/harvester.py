@@ -29,6 +29,11 @@ class HarvesterLogic:
     def __init__(self):
         self.last_dataframe = None
         self.stop_requested = False
+        self._load_config()
+
+    def _load_config(self):
+        # We no longer need the Whoxy API Key, but we'll keep the method for future settings
+        pass
 
     def request_stop(self):
         self.stop_requested = True
@@ -106,6 +111,62 @@ class HarvesterLogic:
             return scraped_content
         except Exception as e: return scraped_content
 
+    async def _scrape_whoxy_browser(self, keyword, page, log_callback):
+        """
+        Directly navigates to Whoxy.com/keyword/{keyword} and vacuums domain matches.
+        No API key required.
+        """
+        log_callback(f"   🦄 Whoxy Engine Active (Scraping): https://www.whoxy.com/keyword/{keyword}")
+        candidates = []
+        
+        try:
+            # 1. Navigate
+            url = f"https://www.whoxy.com/keyword/{keyword}"
+            await page.goto(url, timeout=60000)
+            
+            # Wait for content or CAPTCHA check
+            await asyncio.sleep(2)
+            if "captcha" in page.url.lower():
+                await perform_manual_intervention(page, "Whoxy CAPTCHA detected. Please solve.", style=0x30)
+            
+            # 2. Vacuum Protocol (Grab all links)
+            links = await page.locator("a[href]").all()
+            log_callback(f"      🔎 Vacuuming {len(links)} elements on Whoxy...")
+            
+            seen_domains = set()
+            for link in links:
+                try:
+                    text_content = await link.inner_text()
+                    href = await link.get_attribute("href")
+                    
+                    # We are looking for domains in the search result table
+                    # Usually Whoxy links results to their own whois pages e.g. /domain-name.com
+                    # or displays them as text.
+                    domain = None
+                    if href and href.startswith("/") and len(href) > 5 and "." in href:
+                        domain = href.strip("/")
+                    elif text_content and "." in text_content and len(text_content.split(".")) >= 2:
+                        # Fallback to text match if it looks like a domain
+                        domain = text_content.strip()
+                    
+                    if domain and "whoxy.com" not in domain.lower() and "." in domain:
+                         if domain not in seen_domains:
+                             seen_domains.add(domain)
+                             candidates.append({
+                                 "Domain": f"https://{domain}",
+                                 "Page Title": f"Whoxy Result: {domain}",
+                                 "Source": "Whoxy (Scraped)"
+                             })
+                             # log_callback(f"         ✅ Whoxy Match: {domain}")
+                except: continue
+
+            log_callback(f"      🦄 Whoxy found {len(candidates)} potential domains via Vacuum.")
+
+        except Exception as e:
+            log_callback(f"   ⚠️ Whoxy Scraping Error: {e}")
+            
+        return candidates
+
     async def _scrape_google_serp_active(self, keyword, page, log_callback):
         self.stop_requested = False
         base_query = f"\"{keyword}\" \"contact us\" -site:linkedin.com -site:facebook.com -site:instagram.com"
@@ -114,7 +175,7 @@ class HarvesterLogic:
         from urllib.parse import quote_plus
         encoded_query = quote_plus(base_query)
         
-        log_callback(f"   🛑 SOP Scraper Active: '{base_query}'")
+        log_callback(f"   🛑 Google Engine Active: '{base_query}'")
         
         candidates = []
         seen_urls = set()
@@ -221,7 +282,7 @@ class HarvesterLogic:
                         # Add Valid Candidate
                         if root and root not in seen_urls:
                             seen_urls.add(root)
-                            candidates.append({"Domain": root, "Page Title": title})
+                            candidates.append({"Domain": root, "Page Title": title, "Source": "Google"})
                             found_on_page += 1
                             log_callback(f"         ✅ Accepted: {root} (MATCH: {full_domain_str})")
 
@@ -606,9 +667,43 @@ class HarvesterLogic:
             await setup_stealth(page)
 
             if strategy_name == "Find_Companies":
-                 discovered = await self._scrape_google_serp_active(keyword, page, log_callback)
-                 if discovered:
-                     for item in discovered:
+                 # DUAL-ENGINE (Browser Based): Run Google and Whoxy in parallel on separate pages
+                 log_callback("🚀 Launching Dual-Page Parallel Engines...")
+                 
+                 # Create a second page for Whoxy
+                 whoxy_page = await context.new_page()
+                 await setup_stealth(whoxy_page)
+                 
+                 # Define tasks
+                 google_task = self._scrape_google_serp_active(keyword, page, log_callback)
+                 whoxy_task = self._scrape_whoxy_browser(keyword, whoxy_page, log_callback)
+                 
+                 # Run concurrently
+                 results_tuple = await asyncio.gather(google_task, whoxy_task)
+                 google_results = results_tuple[0]
+                 whoxy_results = results_tuple[1]
+                 
+                 # Clean up second page
+                 await whoxy_page.close()
+                 
+                 # MERGE & DEDUPE
+                 all_results = google_results + whoxy_results
+                 seen_domains = set()
+                 unique_results = []
+                 
+                 for item in all_results:
+                     dom = item.get("Domain")
+                     if dom:
+                         # Normalize to root domain for deduping
+                         root = self._clean_to_root_domain(dom)
+                         if root and root not in seen_domains:
+                             seen_domains.add(root)
+                             unique_results.append(item)
+                 
+                 log_callback(f"📊 Dual-Engine Complete. Merged {len(google_results)} (Google) + {len(whoxy_results)} (Whoxy) -> {len(unique_results)} Unique Domains.")
+
+                 if unique_results:
+                     for item in unique_results:
                          current_leads.append(item)
             
             elif strategy_name == "Sniper_Mode":

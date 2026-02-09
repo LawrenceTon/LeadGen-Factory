@@ -22,13 +22,21 @@ Every target is hunted on two tracks simultaneously:
 
 ---
 
+## 🚀 Key Features (v2.0 Dual-Engine & Hygiene)
+
+### 1. Dual-Engine Discovery
+We don't rely on a single source. The Harvester now runs **Google Search** and **Whoxy API** in parallel, uncovering hidden domains that search engines often derank.
+
+### 2. The Hygiene Protocol
+Data decays. The Janitor is now a standalone validation engine that eliminates dead weight by verifying DNS records and filtering out parked "For Sale" pages automatically.
+
 ## 📂 The Modules
 
 | Module | Role | Function |
 | :--- | :--- | :--- |
 | **The Architect** | 🧠 Strategy | Visual recipe builder. Define "CEO" or "Marketing Director" and let the bot figure out the queries. |
-| **The Harvester** | 🚜 Execution | The core engine. Runs the "Antigravity" protocols to find emails, socials, and phone numbers. |
-| **The Janitor** | 🧹 Hygiene | Cleans lists, splits names, and removes toxic keywords (e.g., "LLC", "Inc"). |
+| **The Harvester** | 🚜 Execution | **Dual-Engine** (Google + Whoxy Scraper). Runs parallel dual-page searches to find companies using the "Antigravity" protocols. **(No API Key Required)** |
+| **The Janitor** | 🧹 Hygiene | **Validation Interface**. Deduplicates data, checks DNS (removes dead sites), and filters out "Parked/For Sale" domains. |
 | **The Inspector** | 🕵️ Audit | Validates emails and checks if websites are alive (200 OK) before you export. |
 
 ---

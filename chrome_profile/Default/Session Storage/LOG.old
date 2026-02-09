@@ -1,3 +1,14 @@
-2026/02/09-00:25:54.556 6520 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Session Storage/MANIFEST-000001
-2026/02/09-00:25:54.559 6520 Recovering log #118
-2026/02/09-00:25:54.571 6520 Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Session Storage/000118.log 
+2026/02/09-03:25:01.548 2660 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Session Storage/MANIFEST-000001
+2026/02/09-03:25:01.551 2660 Recovering log #118
+2026/02/09-03:25:01.552 2660 Level-0 table #120: started
+2026/02/09-03:25:01.573 2660 Level-0 table #120: 13427 bytes OK
+2026/02/09-03:25:01.594 2660 Delete type=0 #118
+2026/02/09-03:25:01.615 5db8 Compacting 4@0 + 1@1 files
+2026/02/09-03:25:01.642 5db8 Generated table #122@0: 26 keys, 1769 bytes
+2026/02/09-03:25:01.642 5db8 Compacted 4@0 + 1@1 files => 1769 bytes
+2026/02/09-03:25:01.644 5db8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/02/09-03:25:01.646 5db8 Delete type=2 #109
+2026/02/09-03:25:01.646 5db8 Delete type=2 #112
+2026/02/09-03:25:01.647 5db8 Delete type=2 #115
+2026/02/09-03:25:01.647 5db8 Delete type=2 #117
+2026/02/09-03:25:01.647 5db8 Delete type=2 #120

@@ -1,5 +1,18 @@
-2026/02/09-00:25:54.338 6520 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/MANIFEST-000001
-2026/02/09-00:25:54.349 6520 Recovering log #291
-2026/02/09-00:25:54.351 6520 Level-0 table #295: started
-2026/02/09-00:25:54.365 6520 Level-0 table #295: 56621 bytes OK
-2026/02/09-00:25:54.374 6520 Delete type=0 #291
+2026/02/09-03:25:01.340 2660 Reusing MANIFEST C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/09-03:25:01.353 2660 Recovering log #309
+2026/02/09-03:25:01.360 2660 Reusing old log C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\chrome_profile\Default\Local Storage\leveldb/000309.log 
+2026/02/09-03:41:02.410 2660 Level-0 table #313: started
+2026/02/09-03:41:02.422 2660 Level-0 table #313: 55751 bytes OK
+2026/02/09-03:41:02.434 2660 Delete type=0 #309
+2026/02/09-03:42:03.009 5db8 Level-0 table #315: started
+2026/02/09-03:42:03.017 5db8 Level-0 table #315: 55452 bytes OK
+2026/02/09-03:42:03.019 5db8 Delete type=0 #312
+2026/02/09-03:42:03.020 5db8 Compacting 4@0 + 1@1 files
+2026/02/09-03:42:03.076 5db8 Generated table #316@0: 2597 keys, 2103116 bytes
+2026/02/09-03:42:03.076 5db8 Compacted 4@0 + 1@1 files => 2103116 bytes
+2026/02/09-03:42:03.077 5db8 compacted to: files[ 0 3 1 0 0 0 0 ]
+2026/02/09-03:42:03.079 5db8 Delete type=2 #305
+2026/02/09-03:42:03.080 5db8 Delete type=2 #307
+2026/02/09-03:42:03.080 5db8 Delete type=2 #310
+2026/02/09-03:42:03.080 5db8 Delete type=2 #313
+2026/02/09-03:42:03.080 5db8 Delete type=2 #315

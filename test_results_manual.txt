@@ -1,0 +1,18 @@
+test_config_loading (__main__.TestHygieneAndEngine.test_config_loading) ... ok
+test_deduplication (__main__.TestHygieneAndEngine.test_deduplication) ... ok
+test_dns_check (__main__.TestHygieneAndEngine.test_dns_check) ... FAIL
+test_whoxy_fetch_mock (__main__.TestHygieneAndEngine.test_whoxy_fetch_mock) ... ok
+
+======================================================================
+FAIL: test_dns_check (__main__.TestHygieneAndEngine.test_dns_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Lawrence\Desktop\LeadGen_Factory_Project\tests\test_dual_engine_hygiene.py", line 42, in test_dns_check
+    self.assertTrue(valid)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.059s
+
+FAILED (failures=1)

@@ -1,6 +1,6 @@
 # 📜 THE ANTIGRAVITY CONSTITUTION (Immutable Laws)
 
-This document establishes the verified protocols for the LeadGen Factory. Failure to adhere to these 5 rules is a critical system failure.
+This document establishes the verified protocols for the LeadGen Factory. Failure to adhere to these 7 rules is a critical system failure.
 
 ## 1. THE VACUUM PROTOCOL (Selector Agnosticism)
 **"Grab everything, filter later."**
@@ -24,3 +24,11 @@ This document establishes the verified protocols for the LeadGen Factory. Failur
 **"The truth is often in the preview."**
 *   Data is often visible in the search preview but hidden behind login walls on the site.
 *   **Action:** Always regex-scan the raw HTML of the search results page (`res.inner_text()`) **before** navigating away.
+
+## 6. DUAL-ENGINE DISCOVERY (Cross-Platform Execution)
+**"One search is a guess. Two searches is a find."**
+*   **Action:** Never rely solely on Google. Always run **Whoxy** (Domain Keyword) or other secondary engines in parallel to maximize discovery and bypass SERP deranking.
+
+## 7. CONTINUOUS HYGIENE (List Purity)
+**"Data decays. Hygiene is eternal."**
+*   **Action:** All result sets must pass through **DNS resolution checks** and **Parked Page filters** before final export. A lead is only a lead if the business is live.

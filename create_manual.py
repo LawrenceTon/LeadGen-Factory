@@ -52,11 +52,12 @@ This is the special feature. When selected, the bot takes a high-res screenshot 
 other_modules = """
 # 🚜 MODULE 2: THE HARVESTER (The Lead Finder)
 *The engine that discovers new leads.*
-1.  **Select Recipe:** Choose a strategy created in the Architect.
-2.  **Human Mode (Stealth):**
+1.  **Dual-Engine Logic**: Now simultaneously searches **Google** and **Whoxy.com** to maximize discovery.
+2.  **Configuration**: Ensure your `config.json` contains a valid Whoxy API key.
+3.  **Human Mode (Stealth):**
     * **✅ Checked:** Opens a visible browser. You can manually solve Captchas. Safe.
     * **❌ Unchecked:** Runs invisible (Headless). Fast.
-3.  **Start:** Extracts data to CSV based on your recipe.
+4.  **Start:** Extracts data to CSV based on your recipe and keywords.
 
 ---
 
@@ -68,10 +69,12 @@ other_modules = """
 ---
 
 # 🧹 MODULE 3: THE JANITOR (The Cleaner)
-*Polishes your raw data.*
-* **Remove Duplicates:** deletes repeated rows.
-* **Split Names:** "Lawrence Anthony" -> "Lawrence", "Anthony".
-* **Format:** Prepares files for CRM/Email tools.
+*Advanced Validation & Hygiene Dashboard.*
+* **Load List**: Import any CSV for sanitization.
+* **Remove Duplicates**: Deletes repeated Domains and Emails from your set.
+* **DNS Check**: Detects and deletes "dead" domains that no longer resolve.
+* **Parked Page Filter**: Automatically rejects "For Sale" pages or domains parked on GoDaddy/Sedo.
+* **Export Clean**: Saves your high-purity lead list to a new CSV.
 
 ---
 

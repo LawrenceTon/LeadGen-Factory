@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [v2.0 - The Dual-Engine & Hygiene Update] - 2026-02-09
+**"Parallel Engines. Pure Outputs."**
+
+### 🚀 Core Engineering
+*   **Dual-Engine Discovery**: Implemented `asyncio.gather` to run Google Search and Whoxy API concurrently.
+*   **Hygiene Engine**: Developed `JanitorLogic` for standalone list validation (DNS + Parked Page detection).
+*   **Config Serialization**: Added `config.json` support for secure API key storage.
+
+### ✨ Features
+*   **Whoxy Integration (Scraper)**: Direct domain-keyword harvesting via Browser Scraping (no API key required).
+*   **DNS Resolution Check**: Integrated `dnspython` to verify domain Liveness (A/MX records).
+*   **Parked Page Filter**: Signature-based detection for GoDaddy, Namecheap, and Sedo parking pages.
+*   **Standalone Janitor UI**: Dedicated dashboard with Upload, Stop, and Export controls.
+
+---
+
 ## [v1.0 - The Antigravity Edition] - 2026-02-05
 **"The shift from scraping to hunting."**
 
