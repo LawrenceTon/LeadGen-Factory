@@ -143,13 +143,20 @@ class HarvesterLogic:
                     # Usually Whoxy links results to their own whois pages e.g. /domain-name.com
                     # or displays them as text.
                     domain = None
-                    if href and href.startswith("/") and len(href) > 5 and "." in href:
-                        domain = href.strip("/")
-                    elif text_content and "." in text_content and len(text_content.split(".")) >= 2:
-                        # Fallback to text match if it looks like a domain
-                        domain = text_content.strip()
+                    if href:
+                        # Whoxy often uses /domain.com or /whois/domain.com
+                        potential = href.strip("/")
+                        if potential.startswith("whois/"):
+                             potential = potential.replace("whois/", "")
+                        
+                        if "." in potential and len(potential) > 4 and "whoxy.com" not in potential.lower():
+                            domain = potential
                     
-                    if domain and "whoxy.com" not in domain.lower() and "." in domain:
+                    if not domain and text_content and "." in text_content and len(text_content.strip()) > 4:
+                        if " " not in text_content.strip() and "whoxy.com" not in text_content.lower():
+                             domain = text_content.strip()
+                    
+                    if domain:
                          if domain not in seen_domains:
                              seen_domains.add(domain)
                              candidates.append({
