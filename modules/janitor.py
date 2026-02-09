@@ -9,6 +9,8 @@ import re
 from tkinter import filedialog, messagebox
 from datetime import datetime
 from urllib.parse import urlparse
+from playwright.async_api import async_playwright
+from modules.utils_browser import launch_browser, setup_stealth
 
 class JanitorLogic:
     def __init__(self):
@@ -35,55 +37,54 @@ class JanitorLogic:
         removed = initial_count - len(df)
         return df, removed
 
-    def check_dns(self, domain):
-        """Verifies if domain resolves (A record or MX record)."""
-        if not domain: return False
+    async def verify_domain_browser(self, page, url, log_callback):
+        """
+        Physically opens the domain in the browser, waits for render, 
+        and checks for 'Seller' fingerprints.
+        """
+        if not url: return False, "MISSING_URL"
+        if not url.startswith("http"): url = "https://" + url
+        
         try:
-            # Clean domain
-            clean_dom = domain.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0]
+            log_callback(f"   👁️ Rendering: {url}")
+            # 1. Physical Navigation
+            # We use a generous timeout because redirects/render can be slow
+            response = await page.goto(url, timeout=45000, wait_until="domcontentloaded")
             
-            # Configure resolver with timeout (compatible way)
-            resolver = dns.resolver.Resolver()
-            resolver.timeout = 3
-            resolver.lifetime = 3
+            # 2. Patience Protocol: Mandatory 5s wait for redirects/rendering
+            await asyncio.sleep(5)
             
-            try:
-                resolver.resolve(clean_dom, 'A')
-                return True
-            except:
-                # Fallback to MX
-                resolver.resolve(clean_dom, 'MX')
-                return True
-        except Exception as e:
-            # print(f"DNS Error for {domain}: {e}") # Debug only
-            return False
-
-    def is_parked(self, url):
-        """Checks for Parked/For Sale signatures."""
-        if not url: return False
-        try:
-            if not url.startswith("http"): url = "https://" + url
-            response = requests.get(url, timeout=5, headers={"User-Agent": "Mozilla/5.0"})
-            content = response.text.lower()
+            # Re-check URL after possible redirects
+            final_url = page.url.lower()
+            title = (await page.title()).lower()
+            body_text = (await page.locator("body").inner_text()).lower()
             
-            signatures = [
+            # 3. Expanded Blacklist (Seller Fingerprints)
+            seller_fingerprints = [
                 "domain is for sale", "buy this domain", "parked free", 
                 "godaddy", "namecheap", "dan.com", "sedo", "afternic",
-                "this domain is currently parked", "domain parking"
+                "this domain is currently parked", "domain parking",
+                "huge domains", "hugedomains", "domaineasy", "atom.com",
+                "premium domain", "inquire about this domain",
+                "domain names for sale", "make an offer"
             ]
             
-            if any(s in content for s in signatures):
-                # Double check title
-                title = re.search(r'<title>(.*?)</title>', content)
-                if title and any(s in title.group(1).lower() for s in ["parked", "for sale", "available"]):
-                    return True
-                # Often parked pages have very little content
-                if len(content) < 5000 and "buy" in content:
-                    return True
-                    
-            return False
-        except:
-            return False # Treat unreachable as separate issue (DNS check handles this)
+            # Check for matches in Title or Body
+            for fingerprint in seller_fingerprints:
+                if fingerprint in title or fingerprint in body_text:
+                    log_callback(f"   ⚠️ [REJECTED] Seller Fingerprint: '{fingerprint}'")
+                    return False, "SELLER_PARKED"
+            
+            # 4. Check for 'Empty' or 'Broken' pages
+            if len(body_text) < 300 and ("403" in title or "404" in title or "error" in title):
+                log_callback(f"   ❌ [REJECTED] Dead/Error Page Detected.")
+                return False, "DEAD_OR_ERROR"
+
+            return True, "CLEAN"
+
+        except Exception as e:
+            log_callback(f"   ❌ [REJECTED] Unreachable: {e}")
+            return False, "UNREACHABLE"
 
 class JanitorModule(ctk.CTkFrame):
     def __init__(self, parent):
@@ -117,11 +118,11 @@ class JanitorModule(ctk.CTkFrame):
         self.chk_dedupe.pack(side="left", padx=10, pady=5)
 
         self.var_dns = ctk.BooleanVar(value=True)
-        self.chk_dns = ctk.CTkCheckBox(opts, text="DNS Resolution Check (Delete Dead)", variable=self.var_dns)
+        self.chk_dns = ctk.CTkCheckBox(opts, text="Browser-First Verification (Render & Scan)", variable=self.var_dns)
         self.chk_dns.pack(side="left", padx=10)
 
         self.var_parked = ctk.BooleanVar(value=True)
-        self.chk_parked = ctk.CTkCheckBox(opts, text="Filter Parked Pages (GoDaddy/Sedo)", variable=self.var_parked)
+        self.chk_parked = ctk.CTkCheckBox(opts, text="Filter Seller Blacklist (Atom/Dan/Sedo)", variable=self.var_parked)
         self.chk_parked.pack(side="left", padx=10)
 
         # Action Buttons
@@ -171,6 +172,9 @@ class JanitorModule(ctk.CTkFrame):
         self.log("🛑 Stop requested...")
 
     def run_process(self):
+        asyncio.run(self.run_process_async())
+
+    async def run_process_async(self):
         total = len(self.df)
         self.log(f"🚀 Starting Hygiene on {total} rows...")
         self.btn_run.configure(state="disabled")
@@ -184,7 +188,7 @@ class JanitorModule(ctk.CTkFrame):
         
         if self.logic.stop_requested: return
 
-        # 2. Iterative Checks (DNS & Parked)
+        # 2. Iterative Checks (Browser-First Rendering)
         if self.var_dns.get() or self.var_parked.get():
             valid_indices = []
             
@@ -197,50 +201,42 @@ class JanitorModule(ctk.CTkFrame):
                     break
             
             if not target_col:
-                self.log("⚠️ No 'Website' column found for DNS checks.")
+                self.log("⚠️ No 'Website' column found for checks.")
             else:
                 total_now = len(self.df)
                 processed = 0
-                dead = 0
-                parked = 0
+                rejected = 0
                 
-                for idx, row in self.df.iterrows():
-                    if self.logic.stop_requested: break
-                    url = str(row[target_col])
-                    if not url or url.lower() == "nan": continue
+                async with async_playwright() as p:
+                    # Launch browser once for the whole run
+                    playwright, browser, context, page = await launch_browser(headless=False, playwright_instance=p)
+                    await setup_stealth(page)
                     
-                    is_valid = True
-                    reason = ""
-                    
-                    # A. DNS Check
-                    if self.var_dns.get():
-                        if not self.logic.check_dns(url):
-                            is_valid = False
-                            dead += 1
-                            reason = "DNS_DEAD"
-                            self.log(f"   ❌ [DNS] {url} -> Unreachable")
-                    
-                    # B. Parked Check (Only if still valid)
-                    if is_valid and self.var_parked.get():
-                        if self.logic.is_parked(url):
-                            is_valid = False
-                            parked += 1
-                            reason = "PARKED_PAGE"
-                            self.log(f"   ⚠️ [PARKED] {url} -> For Sale/Parked")
-                    
-                    if is_valid:
-                        valid_indices.append(idx)
-                        self.df.at[idx, "Hygiene_Status"] = "Clean"
-                    else:
-                        self.df.at[idx, "Hygiene_Status"] = reason
+                    for idx, row in self.df.iterrows():
+                        if self.logic.stop_requested: break
+                        url = str(row[target_col])
+                        if not url or url.lower() == "nan": continue
+                        
+                        # Physical Verification
+                        is_valid, reason = await self.logic.verify_domain_browser(page, url, self.log)
+                        
+                        if is_valid:
+                            valid_indices.append(idx)
+                            self.df.at[idx, "Hygiene_Status"] = "Clean"
+                        else:
+                            rejected += 1
+                            self.df.at[idx, "Hygiene_Status"] = reason
+                        
+                        processed += 1
+                        if processed % 5 == 0:
+                            self.log(f"   ⏳ Processed {processed}/{total_now}...")
 
-                    processed += 1
-                    if processed % 5 == 0:
-                        self.log(f"   ⏳ Processed {processed}/{total_now}...")
+                    try: await browser.close()
+                    except: pass
 
                 # Filter DataFrame
                 self.df = self.df.loc[valid_indices].reset_index(drop=True)
-                self.log(f"✅ Removed {dead} dead domains and {parked} parked pages.")
+                self.log(f"✅ Processed {processed} domains. Rejected {rejected} total (Dead/Seller/Broken).")
 
         self.btn_run.configure(state="normal")
         self.btn_export.configure(state="normal")
