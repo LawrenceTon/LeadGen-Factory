@@ -1,0 +1,58 @@
+{
+    "name": "Namebroker ",
+    "columns": [
+        {
+            "id": "52223c26-783f-42c2-add6-905806e63797",
+            "col_name": "Brand Identity",
+            "keywords": "Jackfruit",
+            "logic_type": "Discovery_Engine",
+            "strategy": "Brand_Discovery",
+            "execution_tags": [
+                "keyword_extraction"
+            ]
+        },
+        {
+            "id": "e84ef0d2-2ff3-4791-b2db-5e5b6f258c7b",
+            "col_name": "Official Website",
+            "keywords": "",
+            "logic_type": "Domain_Recon",
+            "strategy": "Domain_Recon",
+            "execution_tags": [
+                "keyword_extraction"
+            ]
+        },
+        {
+            "id": "070aaffd-c728-4390-8be6-0d4c3fedd74a",
+            "col_name": "Decision Maker",
+            "keywords": "{keyword} CEO, {keyword} Founder",
+            "logic_type": "Champion_Selector",
+            "strategy": "Champion_Hunter",
+            "execution_tags": [
+                "extract_employee_count",
+                "identify_role"
+            ]
+        },
+        {
+            "id": "df3d389e-8cbe-4bf5-ae1f-641190b66e60",
+            "col_name": "Contact Validated",
+            "keywords": "",
+            "logic_type": "Email_Verifier",
+            "strategy": "Email_Verifier",
+            "execution_tags": [
+                "keyword_extraction"
+            ]
+        },
+        {
+            "id": "14ab92b5-9223-42a0-b844-8d525dbb347e",
+            "col_name": "Linkedin",
+            "keywords": "{keyword} CEO, {keyword} Founder",
+            "logic_type": "Champion_Selector",
+            "strategy": "Champion_Hunter",
+            "execution_tags": [
+                "extract_employee_count",
+                "identify_role"
+            ]
+        }
+    ],
+    "version": "2.0"
+}

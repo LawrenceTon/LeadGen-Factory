@@ -1,3 +1,4 @@
+import customtkinter as ctk
 import pandas as pd
 import json
 import os
@@ -5,437 +6,835 @@ import re
 import requests
 import dns.resolver
 import whois
+import random
+import io
+import unicodedata
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
-from pydantic import BaseModel, Field, ConfigDict, ValidationError
 from datetime import datetime
-from playwright.sync_api import sync_playwright
 import threading
 import time
+import asyncio
+from playwright.async_api import async_playwright
+from modules.utils_browser import launch_browser, setup_stealth, perform_manual_intervention, check_active_session, human_click
 
-# --- Pydantic Model for Data Integrity ---
-class LeadData(BaseModel):
-    URL: str
-    Timestamp: str
-    Match_Type: str = Field(alias="Match Type")
-    Current_Domain: str = Field(alias="Current Domain", default="")
-    Viability_Score: int = Field(alias="Viability Score", ge=0, le=100)
-    Target_Role_Strategy: str = Field(alias="Target Role Strategy", default="N/A")
-    Notes: str = ""
-    # Allow extra columns dynamic from recipe
-    model_config = ConfigDict(extra='allow') 
+# Try to import image libraries (Safe Fallback)
+try:
+    from PIL import Image
+    import imagehash
+    IMAGE_LIB_AVAILABLE = True
+except ImportError:
+    IMAGE_LIB_AVAILABLE = False
 
 class HarvesterLogic:
-    NEGATIVE_KEYWORDS = ['school', 'clinic', 'church', 'university', 'non-profit', 'charity', 'foundation', 'academy']
-
     def __init__(self):
         self.last_dataframe = None
+        self.stop_requested = False
 
-    def get_recipe_names(self):
-        """Returns a list of JSON files in the recipes folder."""
-        if not os.path.exists("recipes"):
-            return []
-        files = [f for f in os.listdir("recipes") if f.endswith(".json")]
-        return files
+    def request_stop(self):
+        self.stop_requested = True
 
-    def _extract_employee_count(self, text):
-        """Attempts to find employee count text like '50-100 employees'."""
-        match = re.search(r'(\d+(?:,\d+)?[\-\+]\d+(?:,\d+)?|\d+(?:,\d+)?\+?)\s+employees?', text, re.IGNORECASE)
-        if match:
-            val_str = match.group(1).replace(',', '').replace('+', '')
-            if '-' in val_str:
-                try: return int(val_str.split('-')[0])
-                except: return 0
-            else:
-                try: return int(val_str)
-                except: return 0
-        return 0
-
-    def _calculate_viability(self, mode, target_roles_found, public_verification, employee_count):
-        """Calculates 0-100 score based on framework rules."""
-        score = 10
-        if mode == 'Corporate Brand Mode':
-            if target_roles_found:
-                score = 100
-            elif employee_count > 0:
-                score = 50 
-        elif mode == 'Public Figure Mode':
-            if public_verification['verified']:
-                score = 100
-            elif public_verification['followers'] > 100000:
-                score = 80
-            elif public_verification['followers'] > 10000:
-                score = 50
-        return score
-
-    @retry(stop=stop_after_attempt(3), wait=wait_fixed(1), retry=retry_if_exception_type(Exception))
-    def _resolve_domain_dns(self, url):
-        """
-        Resolution Gatekeeper: Uses dnspython to check for A or MX records.
-        Much faster than loading a full HTTP request.
-        """
+    def _clean_to_root_domain(self, url):
+        if not url: return None
         try:
-            domain = url.replace("https://", "").replace("http://", "").split('/')[0]
-            try:
-                dns.resolver.resolve(domain, 'A')
-                return True
-            except:
-                # Try MX if A fails (some email-only domains)
-                try:
-                    dns.resolver.resolve(domain, 'MX')
-                    return True
-                except:
-                    return False
-        except Exception:
-            return False
+            if not url.startswith("http"): url = "https://" + url
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            return f"{parsed.scheme}://{parsed.netloc}"
+        except: return url
 
-    def _get_domain_age_years(self, url):
-        """Returns domain age in years or None if lookup fails."""
+    def _normalize_text(self, text):
+        if not text: return ""
+        replacements = {
+            "ø": "o", "Ø": "o",
+            "æ": "ae", "Æ": "ae",
+            "å": "a", "Å": "a",
+            "ü": "u", "Ü": "u",
+            "ö": "o", "Ö": "o",
+            "ä": "a", "Ä": "a",
+            "ß": "ss",
+            "é": "e", "è": "e"
+        }
+        cleaned = text
+        for char, rep in replacements.items():
+            cleaned = cleaned.replace(char, rep)
         try:
-            domain = url.replace("https://", "").replace("http://", "").split('/')[0]
-            w = whois.whois(domain)
-            creation_date = w.creation_date
-            if isinstance(creation_date, list):
-                creation_date = creation_date[0]
-            
-            if creation_date:
-                age_delta = datetime.now() - creation_date
-                return age_delta.days / 365.25
-            return None
+            normalized = unicodedata.normalize('NFKD', cleaned).encode('ascii', 'ignore').decode('utf-8')
+            return normalized.lower()
         except:
+            return cleaned.lower()
+
+    def _distill_google_url(self, raw_url):
+        if not raw_url: return None
+        # 1. Check for Google Redirect
+        if "/url?q=" in raw_url:
+            try:
+                clean = raw_url.split("/url?q=")[1].split("&")[0]
+                from urllib.parse import unquote
+                return unquote(clean)
+            except: pass
+            
+        # 2. Filter out internal Google junk
+        if "google.com" in raw_url or "googleusercontent" in raw_url:
             return None
 
-    def _discover_companies_via_linkedin(self, keyword, page, log_callback):
-        """
-        LinkedIn-First Discovery Engine:
-        1. Searches Google for LinkedIn Company pages matching the keyword.
-        2. Visits each LinkedIn page ('About' section).
-        3. Extracts the official 'Website' link.
-        """
-        discovered_urls = []
+        # 3. Return as is if it looks valid
+        if raw_url.startswith("http"):
+            return raw_url
+            
+        return None
+
+    async def _deep_dive_scan(self, page, url, log_callback, context_tag):
+        scraped_content = ""
         try:
-            # 1. Google Search Proxy
-            search_query = f"site:linkedin.com/company/ {keyword}"
-            search_url = f"https://www.google.com/search?q={search_query}"
-            log_callback(f"🔎 Discovery: Searching '{keyword}' on LinkedIn via Google...")
-            
-            page.goto(search_url, timeout=30000)
-            page.wait_for_selector("div.g", timeout=5000)
-            
-            # Extract LinkedIn URLs from Google Results
-            linkedin_links = []
-            results = page.locator("div.g a").all()
-            for res in results:
-                url = res.get_attribute("href")
-                if url and "linkedin.com/company/" in url and "translate.google" not in url:
-                    linkedin_links.append(url)
-            
-            linkedin_links = list(set(linkedin_links))[:3] # Limit to top 3 matches for relevance
-            log_callback(f"   Found {len(linkedin_links)} potential company profiles.")
-
-            # 2. Visit LinkedIn & Extract Website
-            for li_url in linkedin_links:
-                try:
-                    # Visit About section directly if possible, or just the main page
-                    target_li = li_url if "/about" in li_url else f"{li_url.rstrip('/')}/about/"
-                    log_callback(f"   Analysing: {target_li}...")
-                    
-                    page.goto(target_li, timeout=30000)
-                    
-                    # Heuristic to find Website: Look for "Website" text or external links
-                    # LinkedIn often hides it in a <dl> or section.
-                    # We try to get the page content and find links.
-                    
-                    # Strategy A: Specific Selector (Brittle)
-                    # Strategy B: Find 'Website' text and look near it (Robust)
-                    
-                    content = page.content()
-                    # Simple regex to find the official website in the definition list or similar
-                    # Often like: <dt>Website</dt><dd><a href="http://example.com"...>
-                    
-                    website_url = None
-                    
-                    # Try Playwright locator approach
-                    # Look for an 'a' tag that is visually near "Website" text?
-                    # Or simple extracted text links:
-                    
-                    # Let's try to extract all external links and pick the most likely "Home" page
-                    links = page.locator("a").all()
-                    for link in links:
-                        href = link.get_attribute("href")
-                        text = link.inner_text().lower()
-                        
-                        if not href or "linkedin.com" in href or "google.com" in href: continue
-                        if not href.startswith("http"): continue
-                        
-                        # Strong signals
-                        if "website" in text or "visit" in text:
-                            website_url = href
-                            break
-                            
-                        # If we have a generic link that matches the keyword somewhat, candidate it
-                        # (Skipping deep logic for now to keep it fast)
-                        
-                    if website_url:
-                        log_callback(f"   ✅ Extracted Official Site: {website_url}")
-                        discovered_urls.append(website_url)
-                    else:
-                        # Fallback: Try a quick text scan for "Website http..."
-                        pass
-
-                except Exception as e:
-                    log_callback(f"   ⚠️ Failed to extract from {li_url}: {e}")
-
-        except Exception as e:
-            log_callback(f"Discovery Error: {e}")
-            
-        return list(set(discovered_urls))
-
-    def perform_harvest(self, urls, recipe_name, log_callback, human_mode=False, search_mode='Corporate Brand Mode', keyword_input=None):
-        """
-        Executes the scraping logic with Developer Toolkit enhancements.
-        """
-        self.last_dataframe = None # Reset previous session
-        recipe_path = os.path.join("recipes", recipe_name)
-        recipe = {}
-        try:
-            with open(recipe_path, "r") as f:
-                recipe = json.load(f)
-        except Exception as e:
-            if recipe_name != "No Recipes Found":
-                log_callback(f"Error loading recipe: {e}")
-                return
-
-        all_urls = []
-        if urls: all_urls.extend([u.strip() for u in urls if u.strip()])
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_file = os.path.join("output", f"harvest_{timestamp}.csv")
-        results = []
-        mode = search_mode
-
-        with sync_playwright() as p:
-            log_callback(f"Initializing Browser (Human Mode: {human_mode})...")
-            if human_mode:
-                browser = p.chromium.launch(headless=False, slow_mo=1000)
-            else:
-                browser = p.chromium.launch(headless=True)
-            
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            )
-            page = context.new_page()
-
-            # --- PIPELINE ENGINE ---
-            # Strict Visual-Order Execution: Index 0 -> Index N
-            
-            # Initial Seed: If we have URLs entered manually, they are our starting "Leads"
-            # If we have a keyword but NO URLs, we expect the first column to be "Discovery_Engine"
-            
-            current_leads = []
-            if all_urls:
-                 # Seed leads from manual input
-                 for u in all_urls:
-                     current_leads.append({
-                         "URL": u, 
-                         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                         "Match Type": "Potential",
-                         "Viability Score": 0,
-                         "Notes": "Manual Entry. "
-                     })
-            elif keyword_input and not all_urls:
-                # Seed with a placeholder to allow Discovery Engine to run
-                current_leads.append({
-                    "URL": None, # No URL yet
-                    "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "Match Type": "Seed",
-                    "Viability Score": 0,
-                    "Notes": f"Seed Keyword: {keyword_input} "
-                })
-
-            log_callback(f"Starting Pipeline Execution for {len(current_leads)} seed items...")
-
-            # 1. Pipeline Loop
-            columns = recipe.get("columns", [])
-            if not columns and not all_urls:
-                 log_callback("Error: No recipe columns and no manual URLs. Pipeline empty.")
-                 return
-
-            for col_idx, col in enumerate(columns):
-                col_name = col.get("col_name", "Unknown")
-                logic_type = col.get("logic_type", "Standard")
-                raw_keywords = col.get("keywords", "")
-                
-                # Dynamic Injection
-                processed_keywords = raw_keywords
-                if keyword_input:
-                     processed_keywords = raw_keywords.replace("{keyword}", keyword_input)
-                else:
-                     processed_keywords = raw_keywords.replace("{keyword}", "")
-                
-                log_callback(f"Executing Step {col_idx+1}: {col_name} [{logic_type}]...")
-                
-                new_leads_list = [] # For Discovery phase which might expand 1 seed -> N leads
-                
-                for lead in current_leads:
-                    # Skip dead/blocked leads unless this is a Revival step (advanced, not impl yet)
-                    if lead.get("Match Type") in ["Dead Asset", "Blocked"]:
-                        new_leads_list.append(lead)
-                        continue
-
-                    url = lead.get("URL")
-                    
+            log_callback(f"         👉 Deep Dive ({context_tag}): Opening {url[:40]}...")
+            await page.goto(url, timeout=35000, wait_until="domcontentloaded")
+            for i in range(3): 
+                await page.evaluate(f"window.scrollBy(0, {random.randint(400, 800)})")
+                await asyncio.sleep(0.5)
+            content = await page.locator("body").inner_text()
+            scraped_content += content
+            if "@" not in content:
+                contact_links = page.locator("a[href*='contact'], a[href*='about'], a[href*='team']")
+                if await contact_links.count() > 0:
                     try:
-                        # --- LOGIC HANDLERS ---
-                        
-                        # A. DISCOVERY ENGINE
-                        if logic_type == "Discovery_Engine":
-                            if url: 
-                                # If we already have a URL, maybe we skip discovery or re-verify?
-                                # For strictness, if this is a Discovery step, maybe we look for *related* entities?
-                                # Current logic: Discovery generates URLs from Keyword.
-                                new_leads_list.append(lead) # Keep original
-                            elif keyword_input:
-                                # Run Discovery
-                                discovered = self._discover_companies_via_linkedin(keyword_input, page, log_callback)
-                                for d_url in discovered:
-                                    new_lead = lead.copy()
-                                    new_lead["URL"] = d_url
-                                    new_lead["Match Type"] = "Discovered"
-                                    new_lead["Notes"] += "LinkedIn Discovery. "
-                                    new_leads_list.append(new_lead)
-                                if not discovered:
-                                     lead["Notes"] += "Discovery Failed. "
-                                     new_leads_list.append(lead)
-                            else:
-                                new_leads_list.append(lead)
+                        await contact_links.first.click(timeout=3000)
+                        await page.wait_for_load_state("domcontentloaded", timeout=5000)
+                        scraped_content += " " + await page.locator("body").inner_text()
+                    except: pass
+            mailtos = await page.evaluate("""() => { return Array.from(document.querySelectorAll('a[href^="mailto:"]')).map(a => a.href); }""")
+            scraped_content += " " + " ".join(mailtos)
+            return scraped_content
+        except Exception as e: return scraped_content
 
-                        # B. RESOLUTION GATEKEEPER
-                        elif logic_type == "Resolution_Gatekeeper":
-                            if not url: 
-                                lead["Notes"] += "Skip Gatekeeper (No URL). "
-                                new_leads_list.append(lead)
-                                continue
-                                
-                            if self._resolve_domain_dns(url):
-                                # Valid
-                                pass 
-                            else:
-                                lead["Match Type"] = "Dead Asset"
-                                lead["Notes"] += "DNS Failed. "
-                            new_leads_list.append(lead)
+    async def _scrape_google_serp_active(self, keyword, page, log_callback):
+        self.stop_requested = False
+        base_query = f"\"{keyword}\" \"contact us\" -site:linkedin.com -site:facebook.com -site:instagram.com"
+        
+        # Safe Query Encoding
+        from urllib.parse import quote_plus
+        encoded_query = quote_plus(base_query)
+        
+        log_callback(f"   🛑 SOP Scraper Active: '{base_query}'")
+        
+        candidates = []
+        seen_urls = set()
+        
+        # Explicit Iteration (Max 10 Pages)
+        # We construct URLs directly to avoid "Next" button failures
+        max_pages = 10
+        
+        for page_num in range(1, max_pages + 1):
+            if self.stop_requested: break
+            
+            # Google Logic: start=0 (Page 1), start=10 (Page 2), etc.
+            start_index = (page_num - 1) * 10
+            url = f"https://www.google.com/search?q={encoded_query}&start={start_index}"
+            
+            log_callback(f"   🕷️ Scraping Page {page_num}...")
+            
+            try:
+                # 1. Navigate
+                await page.goto(url, timeout=60000)
+                if page_num == 1:
+                    await perform_manual_intervention(page, "Solve CAPTCHA if needed.", style=0x30)
+                
+                # 2. Human Scroll (Trigger lazy loads)
+                for _ in range(3):
+                    await page.evaluate(f"window.scrollBy(0, {random.randint(500, 900)})")
+                    await asyncio.sleep(random.uniform(0.8, 1.2))
+                await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                await asyncio.sleep(1.5)
 
-                        # C. VIABILITY FILTER & SCORE
-                        elif logic_type == "Viability_Filter" or logic_type == "Viability_Score":
-                             if not url or lead.get("Match Type") == "Dead Asset":
-                                new_leads_list.append(lead)
-                                continue
-                             
-                             # Load Page
-                             try:
-                                 page.goto(url, timeout=30000)
-                                 lead["Current Domain"] = page.url
-                                 page_text = page.inner_text("body")
-                                 
-                                 # Block
-                                 shield_hit = False
-                                 for neg in self.NEGATIVE_KEYWORDS:
-                                     if neg in page_text.lower():
-                                         lead["Match Type"] = "Blocked"
-                                         lead["Notes"] += f"Blocked by '{neg}'. "
-                                         shield_hit = True
-                                         break
-                                 
-                                 if not shield_hit and logic_type == "Viability_Score":
-                                     # Simple scoring logic re-used
-                                     emp_count = self._extract_employee_count(page_text)
-                                     lead["Viability Score"] = 50 + (emp_count if emp_count else 0)
-                                     
-                             except Exception as e:
-                                 lead["Notes"] += f"Page Load Error: {e} "
-                             
-                             new_leads_list.append(lead)
+                # 3. Check End of Results
+                body_text = await page.locator("body").inner_text()
+                if "did not match any documents" in body_text:
+                    log_callback("   🛑 End of results (Google limit).")
+                    break
 
-                        # D. CHAMPION SELECTOR
-                        elif logic_type == "Champion_Selector":
-                             if not url or lead.get("Match Type") in ["Dead Asset", "Blocked"]:
-                                new_leads_list.append(lead)
-                                continue
+                # 4. Extract & Filter (Container-based for Context)
+                # We target multiple common Google result containers to be robust
+                result_containers = await page.locator("div.g, div.MjjYud, div.tF2Cxc").all()
+                if not result_containers:
+                     # Fallback 1
+                     result_containers = await page.locator("div[data-header-feature]").all()
+                
+                log_callback(f"      🔎 Analyzing {len(result_containers)} structured results...")
 
-                             try:
-                                 page.goto(url, timeout=30000)
-                                 page_text = page.inner_text("body")
-                                 
-                                 # Look for keywords which are Roles
-                                 roles = processed_keywords.split(",")
-                                 found_role = None
-                                 for role in roles:
-                                     role = role.strip()
-                                     if role and role.lower() in page_text.lower():
-                                         found_role = role
-                                         break
-                                 
-                                 if found_role:
-                                     lead[col_name] = found_role
-                                     lead["Target Role Strategy"] = found_role
-                                     lead["Viability Score"] = 100
-                                     lead["Notes"] += f"Champion Found: {found_role}. "
-                                 else:
-                                     lead["Notes"] += "No Champion Found. "
-                                     
-                             except Exception as e:
-                                 lead["Notes"] += f"Error: {e} "
-                             
-                             new_leads_list.append(lead)
+                # FALLBACK MODE: If structured containers fail, use raw links
+                use_fallback = len(result_containers) == 0
+                if use_fallback:
+                     log_callback("      ⚠️ Structured scraping failed. Switching to RAW LINK MODE.")
+                     # Grab all links in the main search area
+                     result_containers = await page.locator("#search a[href]").all()
 
-                        # E. STANDARD (Extraction)
+                found_on_page = 0
+                for container in result_containers:
+                    try:
+                        # Extract Data based on Mode
+                        if use_fallback:
+                            link_el = container
+                            text_content = await container.inner_text() 
+                            title = text_content.strip() if text_content else "Raw Link Result"
                         else:
-                             if not url or lead.get("Match Type") in ["Dead Asset", "Blocked"]:
-                                new_leads_list.append(lead)
-                                continue
-                                
-                             try:
-                                 page.goto(url, timeout=30000)
-                                 page_text = page.inner_text("body")
-                                 
-                                 kws = processed_keywords.split(",")
-                                 for kw in kws:
-                                     kw = kw.strip()
-                                     if kw and kw.lower() in page_text.lower():
-                                         idx = page_text.lower().find(kw.lower())
-                                         start = max(0, idx - 50)
-                                         end = min(len(page_text), idx + 50)
-                                         lead[col_name] = page_text[start:end].replace("\n", " ").strip()
-                                         break
-                             except: pass
-                             new_leads_list.append(lead)
+                            text_content = await container.inner_text()
+                            link_el = container.locator("a[href]").first
+                            if await link_el.count() == 0: continue
+                            title_el = container.locator("h3").first
+                            title = await title_el.inner_text() if await title_el.count() > 0 else "Scraped Result"
+
+                        raw_href = await link_el.get_attribute("href")
+                        clean_href = self._distill_google_url(raw_href)
+                        if not clean_href: continue
+                        
+                        # Define ROOT here before using it
+                        root = self._clean_to_root_domain(clean_href)
+                        if not root: continue
+
+                        # RELEVANCE CHECK (Strict Domain/Name Match)
+                        
+                        # 1. Cleaner Keyword Parsing
+                        try:
+                            clean_keyword = keyword.strip().strip("'").strip('"').lower()
+                            fuzzy_keyword = clean_keyword.replace(" ", "").replace("-", "")
+                        except:
+                            clean_keyword = str(keyword).lower()
+                            fuzzy_keyword = clean_keyword
+
+                        root_lower = root.lower()
+                        
+                        full_domain_str = root_lower.split("//")[-1].split("/")[0]
+                        clean_domain_str = full_domain_str.replace("-", "").replace(".", "")
+
+                        is_match = False
+                        if clean_keyword in full_domain_str:
+                            is_match = True
+                        elif fuzzy_keyword in clean_domain_str:
+                            is_match = True
+                        
+                        # DEBUG: Explicitly log the first few comparisons to see WHY it failed
+                        # if found_on_page < 3 and not is_match:
+                        #      log_callback(f"DEBUG: '{clean_keyword}' vs '{full_domain_str}' -> {is_match}")
+                        
+                        if not is_match:
+                            continue
+
+                        # Add Valid Candidate
+                        if root and root not in seen_urls:
+                            seen_urls.add(root)
+                            candidates.append({"Domain": root, "Page Title": title})
+                            found_on_page += 1
+                            log_callback(f"         ✅ Accepted: {root} (MATCH: {full_domain_str})")
 
                     except Exception as e:
-                        log_callback(f"Pipeline Error on {col_name}: {e}")
-                        new_leads_list.append(lead)
-                
-                # Update main list for next column
-                current_leads = new_leads_list
+                        log_callback(f"Error parsing container: {e}")
+                        continue
 
-            browser.close()
+                if found_on_page > 0:
+                    log_callback(f"      ✅ Found {found_on_page} matches.")
+                else:
+                    log_callback(f"      ⚠️ No matches on Page {page_num} (Strict Domain Filter).")
 
-        # Save Results
-        if current_leads:
-            # Filter out seeds that never got a URL
-            final_leads = [l for l in current_leads if l.get("URL")]
+            except Exception as e:
+                log_callback(f"   ⚠️ Page Error: {e}")
             
-            if final_leads:
-                df = pd.DataFrame(final_leads)
-                self.last_dataframe = df 
+            # Pause before next page
+            await asyncio.sleep(random.uniform(2, 4))
+        
+        log_callback("   🛑 Scraper Finished. Closing browser...")
+        await asyncio.sleep(3) 
+        return candidates
+
+    async def find_ceo(self, current_leads, page, log_callback):
+        self.stop_requested = False
+        log_callback(f"   🕵️ Starting CEO Hunt (Fundamentals Applied)...")
+        
+        # 📚 BATCH CACHE (Redundancy Killer)
+        # Stores results for (Company, Domain) pairs to prevent re-scanning the same target 50 times.
+        search_cache = {}
+
+        for idx, lead in enumerate(current_leads):
+            if self.stop_requested: break
+            company = lead.get("Company Name")
+            domain = lead.get("Website")
+            
+            # Normalize keys for cache lookups
+            cache_key = (company.lower() if company else None, domain.lower() if domain else None)
+
+            # Skip if we already have a person
+            if lead.get("Decision Maker") and lead.get("Decision Maker") != "Unknown":
+                continue
+
+            # 🛑 SAFETY CHECK (Garbage In, Garbage Out)
+            # We strictly cannot hunt a CEO if we don't know the Company OR the Domain.
+            # Searching generic "CEO" results in hallucinations (e.g. "Scott").
+            if not company and not domain:
+                log_callback(f"      ⚠️ [{idx+1}] Skipping: Missing Company Name & Domain. Cannot hunt.")
+                lead["Decision Maker"] = "Missing Target Info"
+                continue
+
+            # 🚀 CACHE CHECK
+            if cache_key in search_cache:
+                cached = search_cache[cache_key]
+                lead["Decision Maker"] = cached["Decision Maker"]
+                lead["LinkedIn Profile"] = cached["LinkedIn Profile"]
+                log_callback(f"      ⚡ [{idx+1}] Instant Fill (Cached): {cached['Decision Maker']}")
+                continue
+
+            # Query 1: LinkedIn Role Dorking
+            query = f'site:linkedin.com/in/ ("CEO" OR "Founder" OR "Owner" OR "Principal") '
+            if company: query += f'"{company}"'
+            elif domain: query += f'"{domain}"'
+            
+            # Query 2: Broad "Team" Search (Fallback)
+            query_broad = f'"{company}" ("CEO" OR "Founder" OR "Owner")'
+
+            found = False
+            
+            # Try Queries
+            for q_active in [query, query_broad]:
+                if found: break
                 
-                # Reorder
-                cols = ["URL", "Match Type", "Viability Score", "Current Domain", "Target Role Strategy", "Notes"]
-                existing_cols = [c for c in cols if c in df.columns]
-                other_cols = [c for c in df.columns if c not in existing_cols]
-                df = df[existing_cols + other_cols]
+                try:
+                    log_callback(f"      🕸️ Scanning for Boss ({idx+1}): {q_active[:50]}...")
+                    await page.goto(f"https://www.google.com/search?q={q_active}", timeout=40000)
+                    
+                    try:
+                        await page.wait_for_selector("div#search", timeout=5000)
+                    except:
+                        pass
+                    
+                    # VACUUM + DISTILL (Strict Filtering)
+                    links = await page.locator("a[href]").all()
+                    
+                    for link in links:
+                        raw_href = await link.get_attribute("href")
+                        
+                        # CRITICAL FIX: Distill BEFORE checking
+                        clean_href = self._distill_google_url(raw_href)
+                        if not clean_href: continue
+                        
+                        # Match Logic: Only accept valid LinkedIn Profiles
+                        if "linkedin.com/in/" in clean_href:
+                            try:
+                                # 🧹 CLEANING PROTOCOL: Remove fragments/queries
+                                base_url = clean_href.split("?")[0].split("#")[0]
+                                
+                                # Extract Name from URL Slug
+                                slug = base_url.split("/in/")[1].split("/")[0]
+                                slug_parts = slug.split("-")
+                                
+                                # Filter out garbage (hex codes, numbers)
+                                name_parts = [
+                                    p.capitalize() for p in slug_parts 
+                                    if not re.match(r'^[\d\w]{10,}$', p) and not p.isdigit() 
+                                    and p.lower() not in ["ceo", "founder", "owner", "profile"]
+                                ]
+                                
+                                if len(name_parts) >= 1:
+                                    guessed_name = " ".join(name_parts)
+                                    # NORDIC TRANSFORMATION (Normalization)
+                                    # Ensure we return clean, standard text
+                                    guessed_name = self._normalize_text(guessed_name).title()
+                                    
+                                    lead["Decision Maker"] = guessed_name
+                                    lead["LinkedIn Profile"] = base_url
+                                    
+                                    # SAVE TO CACHE
+                                    search_cache[cache_key] = {"Decision Maker": guessed_name, "LinkedIn Profile": base_url}
+
+                                    log_callback(f"      ✅ CEO Identified: {guessed_name}")
+                                    log_callback(f"         🔗 Profile: {base_url}")
+                                    found = True
+                                    break
+                            except: pass
+                except Exception as e:
+                    log_callback(f"Error: {e}")
                 
-                df.to_csv(output_file, index=False)
-                log_callback(f"Pipeline Complete! {len(final_leads)} Results Saved to: {output_file}")
+                await asyncio.sleep(1.5)
+            
+            if not found:
+                log_callback("      ❌ No clear CEO profile found.")
+                lead["Decision Maker"] = "Unknown"
+                # Cache the failure too, so we don't retry impossible searches
+                search_cache[cache_key] = {"Decision Maker": "Unknown", "LinkedIn Profile": None}
+
+    async def find_company_name(self, current_leads, page, log_callback):
+        self.stop_requested = False
+        for idx, lead in enumerate(current_leads):
+            if self.stop_requested: break
+            # Skip if we already have info
+            if lead.get("Company Name") and lead.get("Website"): continue
+
+            raw_url = lead.get("Website")
+            if not raw_url: continue
+            if not str(raw_url).startswith("http"): raw_url = "https://" + str(raw_url)
+            
+            log_callback(f"   [{idx+1}] 🕵️ Visiting: {raw_url}")
+            try:
+                await page.goto(raw_url, timeout=45000)
+                title = await page.title()
+                lead["Company Name"] = title.split("|")[0].strip()
+                log_callback(f"      ✅ Identified: {lead['Company Name']}")
+            except: lead["Company Name"] = "Unknown"
+
+    async def find_email_address(self, current_leads, page, log_callback):
+        self.stop_requested = False
+        EMAIL_REGEX = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+        log_callback(f"   📧 Starting Pattern-Smart Email Hunt...")
+
+        for idx, lead in enumerate(current_leads):
+            if self.stop_requested: break
+            # Skip if verified email exists
+            if lead.get("Email") and "Unverified" not in str(lead.get("Email")) and "Not Found" not in str(lead.get("Email")):
+                continue
+
+            ceo_name = lead.get("Decision Maker") or lead.get("Person Name")
+            company = lead.get("Company Name")
+            domain = lead.get("Website")
+
+            # 🛑 SAFETY CHECK: strict skip for missing names or placeholders
+            if not ceo_name or ceo_name in ["Unknown", "Missing Target Info"]:
+                log_callback(f"   [{idx+1}] ⚠️ Skipping: No valid Person Name ({ceo_name}).")
+                continue
+
+            clean_name = re.sub(r'[\(\[].*?[\)\]]', '', ceo_name) 
+            clean_name = clean_name.replace("CEO", "").replace("Founder", "").strip()
+            norm_name = self._normalize_text(clean_name)
+            log_callback(f"   [{idx+1}] 🧅 Target: {clean_name} @ {company or 'Unknown'}")
+
+            if (not domain or str(domain).lower() == "nan") and company:
+                try:
+                    await page.goto(f"https://www.google.com/search?q={company} official site", timeout=30000)
+                    
+                    try: 
+                        await page.wait_for_selector("div#search", timeout=5000)
+                    except: 
+                        pass
+                    
+                    links = await page.locator("a[href]").all()
+                    for link in links:
+                        href = await link.get_attribute("href")
+                        clean_href = self._distill_google_url(href)
+                        if clean_href and "http" in clean_href and "google" not in clean_href and "linkedin" not in clean_href:
+                            domain = self._clean_to_root_domain(clean_href)
+                            lead["Website"] = domain
+                            break
+                except: pass
+
+            clean_dom = ""
+            if domain:
+                clean_dom = domain.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0]
+
+            guesses = []
+            found_emails = [] 
+            if clean_dom:
+                parts = norm_name.split(" ")
+                parts = [p for p in parts if len(p) > 1]
+                if len(parts) >= 1:
+                    f = parts[0]
+                    l = parts[-1] if len(parts) > 1 else ""
+                    guesses = [
+                        f"{f}@{clean_dom}", f"{f}.{l}@{clean_dom}", f"{f}{l}@{clean_dom}",
+                        f"{f[0]}{l}@{clean_dom}", f"{l}@{clean_dom}"
+                    ]
+            
+            strategies = []
+            if guesses: strategies.append((f'"{guesses[0]}" OR "{guesses[1]}"', "Corporate (Predictive)"))
+            strategies.append((f'"{clean_name}" ("@gmail.com" OR "@outlook.com")', "Personal (Predictive)"))
+            if company: strategies.append((f'"{clean_name}" "{company}" email', "Broad (Context)"))
+
+            for q, label in strategies:
+                if self.stop_requested: break
+                try:
+                    log_callback(f"      🕸️ Scanning ({label}): {q[:40]}...")
+                    await page.goto(f"https://www.google.com/search?q={q}", timeout=40000)
+                    
+                    try:
+                        await page.wait_for_selector("div#search", timeout=5000)
+                    except:
+                        pass
+                    
+                    body_text = await page.locator("body").inner_text()
+                    snippet_emails = re.findall(EMAIL_REGEX, body_text)
+                    for e in snippet_emails:
+                        if self._validate_email_match(e, norm_name, clean_dom, company):
+                            if e not in found_emails:
+                                found_emails.append(f"{e} (Snippet)")
+                                log_callback(f"      ✅ FOUND (Snippet): {e}")
+
+                    links_to_visit = []
+                    raw_links = await page.locator("a[href]").all()
+                    for link in raw_links:
+                        try:
+                            href = await link.get_attribute("href")
+                            clean_href = self._distill_google_url(href)
+                            if clean_href and "http" in clean_href and "google" not in clean_href:
+                                if any(x in clean_href.lower() for x in [norm_name.replace(" ", ""), "email", "contact", "profile", "rocketreach", "proff"]):
+                                    links_to_visit.append(clean_href)
+                        except: pass
+                        if len(links_to_visit) >= 5: break
+
+                    for link in links_to_visit:
+                        content = await self._deep_dive_scan(page, link, log_callback, "Deep Scan")
+                        found = re.findall(EMAIL_REGEX, content)
+                        for e in found:
+                            if self._validate_email_match(e, norm_name, clean_dom, company):
+                                if e not in found_emails:
+                                    found_emails.append(f"{e} (Deep Dive)")
+                                    log_callback(f"      ✅ FOUND (Page): {e}")
+                except: pass
+                await asyncio.sleep(1)
+
+            if found_emails:
+                unique_emails = list(set(found_emails))
+                lead["Email"] = ", ".join(unique_emails)
+                lead["Email Source"] = "Smart Hunt"
             else:
-                 log_callback("Pipeline finished. No valid URL-based leads generated.")
+                if guesses:
+                    best = ", ".join(guesses[:3])
+                    lead["Email"] = f"Unverified Guesses: {best}"
+                else:
+                    lead["Email"] = "Not Found"
+            await asyncio.sleep(2)
+
+    def _validate_email_match(self, email, norm_name, domain, company):
+        e_lower = email.lower()
+        if domain and domain in e_lower: return True
+        is_personal = any(x in e_lower for x in ["gmail", "outlook", "yahoo", "hotmail", "icloud", "proton"])
+        if is_personal:
+            parts = norm_name.split()
+            first = parts[0]
+            last = parts[-1] if len(parts) > 1 else ""
+            if first in e_lower: return True
+            if len(first) > 0 and (first[0] + last) in e_lower: return True 
+            if last in e_lower and first[0] in e_lower: return True 
+        return False
+
+    async def find_social_media(self, current_leads, page, log_callback, platforms=None):
+        self.stop_requested = False
+        if platforms is None: platforms = ["LinkedIn", "Facebook", "Instagram"]
+        if "LinkedIn" in platforms:
+            platforms.remove("LinkedIn")
+            platforms.insert(0, "LinkedIn")
+        
+        platform_dorks = { "LinkedIn": "site:linkedin.com/in/", "Facebook": "site:facebook.com", "Instagram": "site:instagram.com" }
+        patterns = {
+            "LinkedIn": r"https?://(?:[a-z]{2,3}\.)?linkedin\.com/in/([\w\-%]+)",
+            "Facebook": r"https?://(?:www\.)?facebook\.com/(?:[a-zA-Z0-9\.]+|profile\.php\?id=[0-9]+)",
+            "Instagram": r"https?://(?:www\.)?instagram\.com/([a-zA-Z0-9_\.]+)"
+        }
+
+        for idx, lead in enumerate(current_leads):
+            if self.stop_requested: break
+            name = lead.get("Decision Maker") or lead.get("Person Name")
+            company = lead.get("Company Name")
+
+            # 🛑 SAFETY CHECK: strict skip for missing names or placeholders
+            if not name or name in ["Unknown", "Missing Target Info"]:
+                continue
+
+            # Skip if all requested platforms found
+            all_found = True
+            for p in platforms:
+                if not lead.get(f"{p} Profile"): all_found = False
+            if all_found: continue
+
+            log_callback(f"   [{idx+1}] 🕸️ Hunting Socials for: {name}...")
+            extracted_handle = None
+
+            for platform in platforms:
+                # Skip if already found
+                if lead.get(f"{platform} Profile"): continue
+
+                dork = platform_dorks.get(platform)
+                strategies = []
+                if extracted_handle and platform != "LinkedIn":
+                    strategies.append((f"{dork} \"{extracted_handle}\"", "Pivot (Handle)"))
+                if company:
+                    strategies.append((f"{dork} \"{name}\" \"{company}\"", "Strict (Name+Company)"))
+                strategies.append((f"{dork} \"{name}\"", "Broad (Name Only)"))
+
+                found_for_platform = False
+                for query, label in strategies:
+                    if found_for_platform: break
+                    if self.stop_requested: break
+                    try:
+                        await page.goto(f"https://www.google.com/search?q={query}", timeout=45000)
+                        
+                        # FIXED: Multi-line try/except
+                        try:
+                            await page.wait_for_selector("div#search", timeout=5000)
+                        except:
+                            pass
+                        
+                        links = await page.locator("a[href]").all()
+                        for link in links:
+                            raw_href = await link.get_attribute("href")
+                            clean_href = self._distill_google_url(raw_href)
+                            if not clean_href: continue
+                            match = re.search(patterns.get(platform), clean_href)
+                            if match:
+                                final_url = match.group(0)
+                                if platform == "LinkedIn":
+                                    if "/in/" not in final_url or len(final_url) < 30: continue
+                                    extracted_handle = match.group(1) 
+                                    log_callback(f"      💡 Handle Detected: {extracted_handle} (Pivoting...)")
+                                if platform == "Facebook" and ("public" in final_url or "pages" in final_url): continue
+                                lead[f"{platform} Profile"] = final_url
+                                log_callback(f"      ✅ {platform}: {final_url}")
+                                found_for_platform = True
+                                break
+                    except: pass
+                    await asyncio.sleep(1)
+
+    async def execute_strategy_async(self, input_data, strategy_name, log_callback, keyword=None, target_platform=None):
+        self.last_dataframe = None
+        self.stop_requested = False
+        current_leads = []
+        
+        if strategy_name == "Find_Companies":
+            log_callback(f"🚀 Executing Genesis: {keyword}...")
         else:
-            log_callback("Pipeline finished. No results.")
+            if input_data is None or input_data.empty: 
+                log_callback("⚠️ No data loaded.")
+                return
+            current_leads = input_data.to_dict('records')
+            log_callback(f"🚀 Executing Enrichment ({strategy_name}) on {len(current_leads)} rows...")
+
+        async with async_playwright() as p:
+            playwright, browser, context, page = await launch_browser(headless=False, playwright_instance=p)
+            await setup_stealth(page)
+
+            if strategy_name == "Find_Companies":
+                 discovered = await self._scrape_google_serp_active(keyword, page, log_callback)
+                 if discovered:
+                     for item in discovered:
+                         current_leads.append(item)
+            
+            elif strategy_name == "Sniper_Mode":
+                log_callback(f"🎯 TRIGGERED: Sniper Scan -> Target: {target_platform}")
+                if target_platform == "Find CEO":
+                    await self.find_ceo(current_leads, page, log_callback)
+                else:
+                    if not current_leads[0].get("Decision Maker") and not current_leads[0].get("Person Name"):
+                         log_callback("⚠️ Missing Person Name. Cannot hunt Email/Socials.")
+                    else:
+                        if target_platform == "Email":
+                             await self.find_email_address(current_leads, page, log_callback)
+                        elif target_platform == "Full Profile (All)":
+                            await self.find_email_address(current_leads, page, log_callback)
+                            await self.find_social_media(current_leads, page, log_callback, ["LinkedIn", "Facebook", "Instagram"])
+                        elif target_platform == "LinkedIn Profile":
+                             await self.find_social_media(current_leads, page, log_callback, ["LinkedIn"])
+
+            elif strategy_name == "Find_Email": 
+                await self.find_email_address(current_leads, page, log_callback)
+            
+            # --- NEW AUTO-FILL GAP ANALYSIS ---
+            elif strategy_name == "Auto_Fill_Missing":
+                log_callback("🧩 Strategy: Auto-Fill Missing Data (Intelligent Gap Analysis)...")
+                
+                # 1. Company/Website Gaps
+                missing_company = [l for l in current_leads if not l.get("Company Name") or not l.get("Website")]
+                if missing_company:
+                    log_callback(f"   📉 Found {len(missing_company)} rows missing Company Info. Hunting...")
+                    await self.find_company_name(missing_company, page, log_callback)
+
+                # 2. CEO Gaps
+                missing_ceo = [l for l in current_leads if not l.get("Decision Maker") or l.get("Decision Maker") == "Unknown"]
+                if missing_ceo:
+                    log_callback(f"   📉 Found {len(missing_ceo)} rows missing CEO. Hunting...")
+                    await self.find_ceo(missing_ceo, page, log_callback)
+
+                # 3. Email Gaps (Requires Decision Maker to work best)
+                missing_email = [l for l in current_leads if (l.get("Decision Maker") and l.get("Decision Maker") != "Unknown") and (not l.get("Email") or "Unverified" in str(l.get("Email")))]
+                if missing_email:
+                    log_callback(f"   📉 Found {len(missing_email)} rows missing Email. Hunting...")
+                    await self.find_email_address(missing_email, page, log_callback)
+
+                # 4. Social Gaps (Requires Decision Maker)
+                missing_social = [l for l in current_leads if (l.get("Decision Maker") and l.get("Decision Maker") != "Unknown") and not l.get("LinkedIn Profile")]
+                if missing_social:
+                    log_callback(f"   📉 Found {len(missing_social)} rows missing Socials. Hunting...")
+                    await self.find_social_media(missing_social, page, log_callback)
+
+            try: await browser.close()
+            except: pass
+            
+            if current_leads:
+                self.last_dataframe = pd.DataFrame(current_leads)
+                if strategy_name == "Sniper_Mode":
+                    log_callback("\n" + "="*30)
+                    log_callback("   🎯 SNIPER REPORT SUMMARY")
+                    log_callback("="*30)
+                    res = current_leads[0]
+                    if res.get("Decision Maker"): log_callback(f"👤 Name: {res.get('Decision Maker')}")
+                    if res.get("Website"): log_callback(f"🌐 Website: {res.get('Website')}")
+                    if res.get("Email"): log_callback(f"📧 Email: {res.get('Email')}")
+                    if res.get("LinkedIn Profile"): log_callback(f"🔗 LinkedIn: {res.get('LinkedIn Profile')}")
+                    log_callback("="*30 + "\n")
+                else:
+                    log_callback(f"✅ Process Complete. Results ready in memory.")
+
+    def execute_strategy(self, input_data, strategy_name, log_callback, keyword=None, target_platform=None):
+        asyncio.run(self.execute_strategy_async(input_data, strategy_name, log_callback, keyword, target_platform))
+
+    def export_data(self, filename):
+        if self.last_dataframe is not None:
+            self.last_dataframe.to_csv(filename, index=False)
+            return True, "Saved."
+        return False, "No data."
+
+# --- UI MODULE ---
+class HarvesterModule(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.logic = HarvesterLogic()
+        self.setup_ui()
+
+    def setup_ui(self):
+        head = ctk.CTkFrame(self)
+        head.pack(fill="x", padx=10, pady=10)
+        ctk.CTkLabel(head, text="🚜 The Harvester: Lead Factory (SOP Enhanced)", font=("Arial", 18, "bold")).pack(side="left", padx=10)
+
+        # GENESIS ROW
+        row_gen = ctk.CTkFrame(self)
+        row_gen.pack(fill="x", padx=10, pady=5)
+        self.entry_keyword = ctk.CTkEntry(row_gen, placeholder_text="Enter Brand Keyword", width=300)
+        self.entry_keyword.pack(side="left", padx=10, pady=10)
+        self.btn_find = ctk.CTkButton(row_gen, text="🔍 Find Companies", command=self.run_genesis, fg_color="#FF9800")
+        self.btn_find.pack(side="left", padx=5)
+
+        # INDIVIDUAL SNIPER ROW
+        self.row_sniper = ctk.CTkFrame(self)
+        self.row_sniper.pack(fill="x", padx=10, pady=5)
+        ctk.CTkLabel(self.row_sniper, text="Individual Sniper:", font=("Arial", 12, "bold")).pack(side="left", padx=10)
+        
+        self.entry_company = ctk.CTkEntry(self.row_sniper, placeholder_text="Company Name", width=200)
+        self.entry_company.pack(side="left", padx=5)
+        
+        self.entry_domain = ctk.CTkEntry(self.row_sniper, placeholder_text="Domain (Optional)", width=150)
+        self.entry_domain.pack(side="left", padx=5)
+
+        self.entry_person = ctk.CTkEntry(self.row_sniper, placeholder_text="Person Name (Required)", width=200)
+        self.entry_person.pack(side="left", padx=5)
+        
+        # Updated Values: Added "Find CEO"
+        self.sniper_target = ctk.CTkComboBox(self.row_sniper, values=["Full Profile (All)", "Email", "LinkedIn Profile", "Find CEO"], width=160, command=self.update_sniper_ui)
+        self.sniper_target.set("Full Profile (All)")
+        self.sniper_target.pack(side="left", padx=5)
+        
+        self.btn_sniper = ctk.CTkButton(self.row_sniper, text="🎯 Search", command=self.run_sniper_scan, fg_color="#8E44AD", width=80)
+        self.btn_sniper.pack(side="left", padx=5)
+
+        # BULK ENRICHMENT ROW
+        row_enrich = ctk.CTkFrame(self)
+        row_enrich.pack(fill="x", padx=10, pady=5)
+        self.btn_load = ctk.CTkButton(row_enrich, text="📂 Load CSV", command=self.load_csv, fg_color="#1F6AA5", width=120)
+        self.btn_load.pack(side="left", padx=5)
+        
+        ctk.CTkLabel(row_enrich, text="Strategy:").pack(side="left", padx=(10, 5))
+        # UPDATED COMBOBOX: Added "Auto-Fill Missing Data"
+        self.strategy_var = ctk.StringVar(value="Auto-Fill Missing Data")
+        self.combo_strategy = ctk.CTkComboBox(row_enrich, values=["Auto-Fill Missing Data", "Find CEO", "Find Email", "Find Company Name"], variable=self.strategy_var, width=180)
+        self.combo_strategy.pack(side="left", padx=5)
+        
+        self.btn_run_enrich = ctk.CTkButton(row_enrich, text="▶️ Run Bulk", command=self.run_enrichment_strategy, fg_color="#2B7A0B", width=80)
+        self.btn_run_enrich.pack(side="left", padx=5)
+        
+        # CONTROLS ROW
+        row_ctrl = ctk.CTkFrame(self)
+        row_ctrl.pack(fill="x", padx=10, pady=5)
+        self.btn_stop = ctk.CTkButton(row_ctrl, text="🛑 STOP", command=self.stop_process, fg_color="red", width=100)
+        self.btn_stop.pack(side="left", padx=5)
+        self.btn_restart = ctk.CTkButton(row_ctrl, text="🔄 Restart / Clear", command=self.restart_app, fg_color="gray", width=120)
+        self.btn_restart.pack(side="left", padx=5)
+        self.btn_export = ctk.CTkButton(row_ctrl, text="💾 Export Data", command=self.export_csv, fg_color="green", width=120)
+        self.btn_export.pack(side="right", padx=10)
+        
+        self.log_box = ctk.CTkTextbox(self, height=400, font=("Consolas", 12))
+        self.log_box.pack(fill="both", expand=True, padx=10, pady=10)
+
+    def update_sniper_ui(self, choice):
+        # Repack UI based on selection
+        self.entry_person.pack_forget()
+        self.sniper_target.pack_forget()
+        self.btn_sniper.pack_forget()
+        
+        if choice != "Find CEO":
+            self.entry_person.pack(side="left", padx=5)
+        
+        self.sniper_target.pack(side="left", padx=5)
+        self.btn_sniper.pack(side="left", padx=5)
+
+    def log(self, msg):
+        timestamp = datetime.now().strftime('%H:%M:%S')
+        self.log_box.insert("end", f"[{timestamp}] {msg}\n")
+        self.log_box.see("end")
+
+    def run_genesis(self):
+        kw = self.entry_keyword.get()
+        if not kw: self.log("⚠️ Enter a keyword first."); return
+        threading.Thread(target=self.logic.execute_strategy, args=(None, "Find_Companies", self.log, kw), daemon=True).start()
+
+    def run_sniper_scan(self):
+        company = self.entry_company.get()
+        domain = self.entry_domain.get()
+        person = self.entry_person.get()
+        target = self.sniper_target.get()
+        
+        if target == "Find CEO":
+            if not company and not domain:
+                self.log("⚠️ For 'Find CEO', you must provide a Company Name or Domain.")
+                return
+        else:
+            if not person:
+                self.log("⚠️ Person Name is required for this Sniper Mode.")
+                return
+
+        data = [{'Company Name': company, 'Website': domain, 'Decision Maker': person}]
+        df = pd.DataFrame(data)
+        
+        self.log(f"🎯 Sniper Sequence: {person if person else 'Hunting CEO'} @ {company or 'Unknown'} -> {target}")
+        threading.Thread(target=self.logic.execute_strategy, args=(df, "Sniper_Mode", self.log, None, target), daemon=True).start()
+
+    def load_csv(self):
+        file_path = ctk.filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        if file_path:
+            try:
+                self.logic.last_dataframe = pd.read_csv(file_path)
+                self.log(f"✅ Loaded {len(self.logic.last_dataframe)} rows.")
+            except Exception as e: self.log(f"❌ Error loading CSV: {e}")
+
+    def run_enrichment_strategy(self):
+        if self.logic.last_dataframe is None: self.log("⚠️ No data loaded."); return
+        selection = self.strategy_var.get()
+        
+        # KEY MAPPING FOR THE NEW FEATURE
+        strategy_map = {
+            "Auto-Fill Missing Data": "Auto_Fill_Missing",
+            "Find CEO": "Find_Decision_Maker", 
+            "Find Email": "Find_Email", 
+            "Find Company Name": "Find_Company_Name"
+        }
+        
+        if selection == "Find CEO": internal_strat = "Sniper_Mode" 
+        elif selection == "Auto-Fill Missing Data": internal_strat = "Auto_Fill_Missing"
+        else: internal_strat = strategy_map.get(selection, "Find_Decision_Maker")
+        
+        threading.Thread(target=self.logic.execute_strategy, args=(self.logic.last_dataframe, internal_strat, self.log, None, "Find CEO" if selection == "Find CEO" else None), daemon=True).start()
+
+    def stop_process(self):
+        self.logic.request_stop()
+        self.log("🛑 Stop Signal Sent.")
+
+    def restart_app(self):
+        self.logic.last_dataframe = None
+        self.log_box.delete("1.0", "end")
+        self.log("🔄 System Reset. Ready.")
+
+    def export_csv(self):
+        path = ctk.filedialog.asksaveasfilename(defaultextension=".csv")
+        if path:
+            success, msg = self.logic.export_data(path)
+            self.log(msg)

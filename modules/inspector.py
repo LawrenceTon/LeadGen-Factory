@@ -1,460 +1,263 @@
+import customtkinter as ctk
 import pandas as pd
-import time
-import random
+import threading
+import asyncio
 import os
-import re
-import uuid
-import google.generativeai as genai
+import requests
+import hashlib
+import dns.resolver
 from datetime import datetime
-import sqlite3
-import ast
-from playwright.sync_api import sync_playwright
 
 class InspectorLogic:
-    def __init__(self, db_path="leads.db"):
-        self.db_path = db_path
-        self.df = None
-        self.rules = []
-        self.api_key = None
-        self.url_col = None
-        self.limit_rows = 0
-        self.limit_mins = 0
-        self.timeout = 30
+    def __init__(self):
+        self.last_dataframe = None
         self.stop_requested = False
-        self.init_db()
-
-    def init_db(self):
-        """Create the database table if it doesn't exist"""
-        conn = sqlite3.connect(self.db_path)
-        c = conn.cursor()
-        c.execute('''CREATE TABLE IF NOT EXISTS audit_history 
-                     (url TEXT PRIMARY KEY, status TEXT, timestamp TEXT)''')
-        conn.commit()
-        conn.close()
-
-    def set_api_key(self, key):
-        self.api_key = key
 
     def request_stop(self):
-        """Called when user clicks STOP button"""
-        print("🛑 Stop requested by user...", flush=True)
         self.stop_requested = True
 
-    def check_log(self, url):
-        """Check if URL was already scanned"""
-        conn = sqlite3.connect(self.db_path)
-        c = conn.cursor()
-        c.execute("SELECT status FROM audit_history WHERE url=?", (url,))
-        data = c.fetchone()
-        conn.close()
-        return data
+    # --- 1. SAFE DNS CHECK (The "Map" Check) ---
+    def verify_email_dns(self, email):
+        """
+        Checks if the domain exists and is configured to receive email.
+        Uses Google DNS (8.8.8.8) to bypass local ISP issues.
+        Risk Level: ZERO (Standard Internet Traffic)
+        """
+        if "@" not in email:
+            return "Invalid", "❌ Format Error"
 
-    def save_log(self, url, status):
-        """Save progress to DB"""
-        conn = sqlite3.connect(self.db_path)
-        c = conn.cursor()
-        c.execute("INSERT OR REPLACE INTO audit_history VALUES (?, ?, ?)", 
-                  (url, status, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        conn.commit()
-        conn.close()
-        print(f"[Saved] Results persisted for {url}", flush=True)
-
-    def reset_database(self):
-        """Wipe the database (Nuclear Option)"""
-        # Plan A: Try to delete the physical file (Cleanest)
         try:
-            if os.path.exists(self.db_path):
-                os.remove(self.db_path)
-                self.init_db()
-                print("🗑️ Database File Deleted. Ready for fresh scan.", flush=True)
+            domain = email.split('@')[1]
+            resolver = dns.resolver.Resolver()
+            resolver.nameservers = ['8.8.8.8', '8.8.4.4'] 
+            resolver.timeout = 3.0
+            resolver.lifetime = 3.0
+
+            try:
+                mx_records = resolver.resolve(domain, 'MX')
+                return "Valid Domain", f"✅ Domain Active (MX Found)"
+            except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
+                return "Invalid Domain", f"❌ Domain Invalid (No MX)"
+            except:
+                return "Error", "⚠️ DNS Timeout"
+        except:
+            return "Error", "⚠️ Parse Error"
+
+    # --- 2. SOCIAL CHECK (The "Human" Check) ---
+    def check_gravatar(self, email):
+        """
+        Checks if the email has a public Gravatar profile image.
+        Risk Level: ZERO (Standard Web Request)
+        """
+        try:
+            # 1. Clean and Hash the email (MD5)
+            clean_email = email.strip().lower()
+            email_hash = hashlib.md5(clean_email.encode('utf-8')).hexdigest()
+            
+            # 2. Check Gravatar API
+            # d=404 tells Gravatar to return a 404 error if no image exists
+            url = f"https://www.gravatar.com/avatar/{email_hash}?d=404"
+            response = requests.get(url, timeout=2)
+            
+            if response.status_code == 200:
                 return True
-        except PermissionError:
-            # If Windows locks the file, we switch to Plan B
-            print("⚠️ File is locked by Windows. Switching to SQL Wipe...", flush=True)
-        except Exception as e:
-            print(f"⚠️ Warning: Could not delete file ({e}). Trying SQL Wipe...", flush=True)
-
-        # Plan B: If file is locked, just delete the DATA inside it
-        try:
-            conn = sqlite3.connect(self.db_path, timeout=10) # Wait up to 10s for lock to clear
-            c = conn.cursor()
-            c.execute("DELETE FROM audit_history") # Delete all rows
-            conn.commit()
-            c.execute("VACUUM") # Compress the file size
-            conn.close()
-            print("🗑️ Database Wiped (SQL Mode). Ready for fresh scan.", flush=True)
-            return True
-        except Exception as e:
-            print(f"❌ CRITICAL ERROR: Could not wipe DB. Please Restart the App. Details: {e}", flush=True)
+            return False
+        except:
             return False
 
-    # --- TIER 1: THE SCRIPT SCOUT (Fast Regex & Logic) ---
-    def analyze_lander_script(self, page, target_url, status_code):
-        """
-        Analyzes the page for Lander/Company info using strict logic:
-        1. Connectivity Check
-        2. Marketplace Detection
-        3. Redirect Tracing
-        4. Developed Website Fallback
-        """
-        # 1. Connectivity Check
-        if status_code == 0 or status_code == 404:
-            return "Does Not Resolve"
-
-        try:
-            current_url = page.url.lower().rstrip('/')
-            target_clean = target_url.lower().rstrip('/')
-            if not target_clean.startswith("http"): target_clean = "https://" + target_clean
-            
-            # Remove www for better comparison
-            current_domain = current_url.replace("https://", "").replace("http://", "").replace("www.", "")
-            target_domain = target_clean.replace("https://", "").replace("http://", "").replace("www.", "")
-
-            # 2. Marketplace Detection (Hardcoded known players)
-            title = page.title().lower()
-            try: content = page.locator("body").inner_text().lower()[:5000]
-            except: content = ""
-            
-            marketplaces = {
-                "Atom": ["atom.com", "generated by atom"],
-                "DomainEasy": ["domaineasy"],
-                "BrandBucket": ["brandbucket"],
-                "HugeDomains": ["hugedomains"],
-                "Sedo": ["sedo"],
-                "Afternic": ["afternic"],
-                "Dan.com": ["dan.com"],
-                "Squadhelp": ["squadhelp"]
-            }
-            
-            for name, keywords in marketplaces.items():
-                if any(k in title for k in keywords) or any(k in content for k in keywords):
-                    return name # Return "Atom", "Sedo", etc.
-
-            # 3. Redirect Logic
-            # If domain changed significantly -> Return Destination URL
-            if target_domain != current_domain:
-                return page.url # Return the destination URL
-
-            # 4. Default Fallback
-            return "Developed Website"
-        except Exception as e:
-            print(f"   ⚠️ Script Error: {e}", flush=True)
-            return None
-
-    def extract_price_via_script(self, page):
-        """Extracts prices via Context-Aware Regex/Scoring"""
-        try:
-            text_content = page.locator("body").inner_text()
-            # Regex to capture: Symbol-Value OR Value-Symbol (Suffix)
-            # Supports: "$19,998", "USD 19,998", "9,698 USD"
-            regex_pattern = r'(?:(?:USD|EUR|GBP|£|\$|€)\s?\$?\s?[\d,]+(?:\.\d{2})?)|(?:[\d,]+(?:\.\d{2})?\s?(?:USD|EUR|GBP|£|\$|€))'
-            
-            best_price = None
-            highest_score = -1000 
-            
-            # Use finditer for Context Awareness
-            for match in re.finditer(regex_pattern, text_content, re.IGNORECASE):
-                full_str = match.group(0).strip()
-                
-                # Dynamic Context Window (100 chars before/after)
-                start_idx = max(0, match.start() - 100)
-                end_idx = min(len(text_content), match.end() + 100)
-                context = text_content[start_idx:end_idx].lower()
-                
-                score = 0
-                
-                # POSITIVE SIGNALS (Immediate Context)
-                if "buy now" in context: score += 1000
-                if "purchase" in context: score += 800
-                if "own this" in context: score += 500
-                if "add to cart" in context: score += 500
-                if "price" in context: score += 200
-                if "valuable" in context: score += 50
-                if "only" in context: score += 50 
-                
-                # NEGATIVE SIGNALS (Immediate Context)
-                if "lease" in context: score -= 500
-                if "rent" in context: score -= 500
-                if "/mo" in context or "per month" in context: score -= 500
-                if "installment" in context: score -= 300
-                if "down" in context and "payment" in context: score -= 300 
-                
-                if score > highest_score:
-                    highest_score = score
-                    best_price = full_str
-            
-            # Return best match if score is positive enough (Context validated)
-            if highest_score > 0 and best_price: 
-                return best_price
-
-            # 2. Text Signal Check (Fallback)
-            lower_body = text_content.lower()
-            if "make offer" in lower_body or "minimum offer" in lower_body: return "Make Offer"
-            if "contact broker" in lower_body: return "Contact Broker"
-            if "inquire" in lower_body: return "Inquire"
-            
-        except Exception as e:
-            print(f"   ⚠️ Price Script Error: {e}", flush=True)
-            pass
-        return None
-
-    def fundamental_retreat(self, page):
-        """
-        FAILSAFE: The 'Nuclear' Option. 
-        When AI Fails (429/Quota), we resort to basic text scanning 
-        to salvage ANY valid business data.
-        """
-        try:
-            print("   🛡️ Initiating Fundamental Retreat...", flush=True)
-            content = page.locator("body").inner_text().lower()[:10000] # Scan first 10k chars
-            
-            if "make offer" in content: return "Make Offer"
-            if "contact us" in content or "contact broker" in content: return "Contact Broker"
-            if "for sale" in content: return "For Sale"
-            if "domain" in content and "available" in content: return "Available"
-            
-        except Exception as e:
-            print(f"   ⚠️ Retreat Failed: {e}", flush=True)
-        
-        return "" # Return empty string to keep DF clean (No Error Codes)
-
-    # --- TIER 2: THE AI EXPERT ---
-    # --- TIER 2: THE AI EXPERT ---
-    def perform_ai_analysis(self, prompt, screenshot_path):
-        """Dynamic Model Discovery using google-genai SDK"""
-        if not self.api_key: return "AI Error: No Key"
-
-        try:
-            client = genai.Client(api_key=self.api_key)
-            
-            # Upload File
-            try:
-                # v1.0 SDK file upload
-                myfile = client.files.upload(path=screenshot_path)
-            except Exception as e:
-                return f"AI Upload Error: {str(e)[:50]}"
-
-            # Model Selection (Defaulting to Flash for speed)
-            valid_model = "gemini-1.5-flash" 
-
-            # Generate
-            response = client.models.generate_content(
-                model=valid_model,
-                contents=[myfile, prompt]
-            )
-            return response.text.strip()
-            
-        except Exception as e:
-            return f"AI Error: {str(e)[:50]}..."
-
-    # --- THE MASTER AUDIT FUNCTION ---
-    # Fix: Matching signature to main.py call: (csv_path, active_rules, api_config, limits, callback)
-    def perform_audit(self, csv_path=None, rules_list=None, api_config=None, limits_dict=None, callback=None, *args):
-        # 1. LOAD DATA & SANITIZE INPUTS
+    # --- MAIN EXECUTION SWITCH ---
+    def execute_task(self, input_data, task_type, manual_input, log_callback):
         self.stop_requested = False
         
-        # A. Handle Data
-        if isinstance(csv_path, str):
-            try: self.df = pd.read_csv(csv_path)
-            except: pass
-        elif csv_path is not None: 
-            self.df = csv_path
-
-        # B. Handle Rules
-        if rules_list: self.rules = rules_list
-        
-        # C. Handle API (Optional)
-        if api_config: 
-            self.api_key = api_config.get('primary_key')
-
-        # D. Handle Limits (The Fix)
-        if isinstance(limits_dict, dict):
-            try:
-                self.limit_rows = int(limits_dict.get('batch_rows', 0))
-                self.limit_mins = int(limits_dict.get('batch_minutes', 0))
-                print(f"✅ Limit set to: {self.limit_rows} rows.", flush=True)
-            except:
-                self.limit_rows = 0
-        elif isinstance(limits_dict, int):
-             self.limit_rows = limits_dict # Fallback
-             
-        # E. URL Column is now ALWAYS Auto-Detected (We ignore legacy arg)
-        self.url_col = None
-
-        # Auto-Detect Column (Smarter Sort)
-        if not self.url_col or (self.df is not None and self.url_col not in self.df.columns):
-            print("⚠️ No Domain column selected. Attempting Auto-Detect...", flush=True)
-            # Find columns containing keywords
-            possible = [c for c in self.df.columns if any(x in c.lower() for x in ["domain", "url", "website", "link"])]
-            # Sort by length (shortest first) -> Prefers "Domain" over "Does this Domain Resolve?"
-            possible.sort(key=len)
+        # MODE 1: EMAIL VERIFICATION
+        if task_type == "Verify Email":
+            if not manual_input:
+                log_callback("⚠️ No emails entered.")
+                return
             
-            if possible: 
-                self.url_col = possible[0]
-                print(f"✅ Auto-selected URL column: '{self.url_col}'", flush=True)
-            else: 
-                print(f"❌ Error: Could not find a URL column. Available: {list(self.df.columns)}", flush=True)
+            email_list = [e.strip() for e in manual_input.split(',') if e.strip()]
+            log_callback(f"🚀 Verifying {len(email_list)} emails (Safe Mode)...")
+            
+            results = []
+            for email in email_list:
+                if self.stop_requested: break
+                
+                log_callback(f"   🔎 Checking: {email}...")
+                
+                # Step 1: Check Domain (DNS)
+                dns_status, dns_msg = self.verify_email_dns(email)
+                
+                # Step 2: Check Social (Gravatar)
+                # We check this even if DNS fails, just in case of weird server setups
+                has_profile = self.check_gravatar(email)
+                
+                # Final Status Logic
+                final_status = dns_status
+                final_msg = dns_msg
+                
+                if has_profile:
+                    final_status = "✅ Verified User"
+                    final_msg = "✅ VALID: Social Profile Found (Real Human)"
+                    log_callback(f"      📸 SOCIAL HIT: Found Profile Picture!")
+                elif "Valid" in dns_status:
+                    final_status = "⚠️ Valid Domain"
+                    final_msg = "✅ Domain OK (User Unverified)"
+                    log_callback(f"      {final_msg}")
+                else:
+                    log_callback(f"      {final_msg}")
+
+                results.append({
+                    "Input": email, 
+                    "Type": "Email", 
+                    "Status": final_status, 
+                    "Details": final_msg,
+                    "Has Profile": "Yes" if has_profile else "No"
+                })
+            
+            self.last_dataframe = pd.DataFrame(results)
+            log_callback(f"✅ Safe Verification Complete.")
+
+        # MODE 2: DOMAIN ANALYSIS
+        elif task_type == "Analyze Domain":
+            if not manual_input:
+                log_callback("⚠️ No domain entered.")
                 return
 
-        # [CLEANUP] Rules already handled in Block B via rules_list.
-        # [CLEANUP] Limits already handled in Block D via limits_dict.
-        
-        print(f"ℹ️ Loaded {len(self.rules) if self.rules else 0} rules for processing.", flush=True)
-        # Debug Rules
-        if self.rules:
-            for i, r in enumerate(self.rules):
-                print(f"   [Rule {i+1}] Type: {r.get('type')} -> Col: {r.get('target_column')}", flush=True)
-        
-        if not hasattr(self, 'df') or self.df is None:
-            print("❌ Error: No CSV loaded.", flush=True)
-            return
-
-        self.df = self.df.astype(object)
-        print(f"[Starting] Found {len(self.df)} rows. Connecting to Neural Database...", flush=True)
-        
-        # --- NEW: PERSISTENT BROWSER LAUNCHER ---
-        user_data_dir = os.path.join(os.getcwd(), "browser_memory")
-        os.makedirs(user_data_dir, exist_ok=True)
-        
-        with sync_playwright() as p:
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=user_data_dir,
-                channel="chrome", 
-                headless=False,
-                args=["--disable-blink-features=AutomationControlled"],
-                viewport={"width": 1280, "height": 720}
-            )
+            domain_list = [d.strip() for d in manual_input.split(',') if d.strip()]
+            log_callback(f"🚀 Analyzing {len(domain_list)} domains...")
             
-            page = browser.pages[0] if browser.pages else browser.new_page()
-            page.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-            
-            # --- ACTION COUNTER LOGIC (Fixes the Limit bug) ---
-            scanned_count = 0 
+            results = []
+            for dom in domain_list:
+                if self.stop_requested: break
+                # Treat domain as email check for MX logic
+                test_email = f"test@{dom.replace('https://','').replace('http://','').split('/')[0]}"
+                
+                log_callback(f"   🌐 Scanning: {dom}...")
+                status, msg = self.verify_email_dns(test_email)
+                
+                if "Valid" in status:
+                    final_status = "Healthy"
+                    final_msg = "✅ MX Records Active"
+                else:
+                    final_status = "Unhealthy"
+                    final_msg = msg
 
+                log_callback(f"      {final_status}: {final_msg}")
+                results.append({"Input": dom, "Type": "Domain", "Status": final_status, "Details": final_msg})
+            
+            self.last_dataframe = pd.DataFrame(results)
+            log_callback(f"✅ Domain Analysis Complete.")
+
+        # MODE 3: CSV AUDIT
+        elif task_type == "Audit CSV (Vision)":
+            log_callback("ℹ️ Vision Audit: Please load a CSV first.")
+
+    def export_data(self, filename):
+        if self.last_dataframe is not None:
+            self.last_dataframe.to_csv(filename, index=False)
+            return True, "Saved."
+        return False, "No data."
+
+# --- UI MODULE ---
+class InspectorModule(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.logic = InspectorLogic()
+        self.setup_ui()
+
+    def setup_ui(self):
+        head = ctk.CTkFrame(self)
+        head.pack(fill="x", padx=10, pady=10)
+        ctk.CTkLabel(head, text="🕵️ The Inspector: Safe Verification", font=("Arial", 18, "bold")).pack(side="left", padx=10)
+
+        # INPUT ROW
+        row_input = ctk.CTkFrame(self)
+        row_input.pack(fill="x", padx=10, pady=5)
+        
+        self.btn_load = ctk.CTkButton(row_input, text="📂 Load CSV", command=self.load_csv, fg_color="#1F6AA5", width=100)
+        self.btn_load.pack(side="left", padx=5)
+        
+        self.lbl_file = ctk.CTkLabel(row_input, text="No file selected", text_color="gray")
+        self.lbl_file.pack(side="left", padx=5)
+
+        # DYNAMIC MANUAL BOX
+        row_manual = ctk.CTkFrame(self)
+        row_manual.pack(fill="x", padx=10, pady=5)
+        
+        self.lbl_manual = ctk.CTkLabel(row_manual, text="Enter Emails (comma separated):")
+        self.lbl_manual.pack(side="left", padx=5)
+        
+        self.entry_manual = ctk.CTkEntry(row_manual, placeholder_text="ceo@test.com, info@domain.com...", width=400)
+        self.entry_manual.pack(side="left", padx=5, fill="x", expand=True)
+
+        # CONTROLS ROW
+        row_ctrl = ctk.CTkFrame(self)
+        row_ctrl.pack(fill="x", padx=10, pady=5)
+        
+        ctk.CTkLabel(row_ctrl, text="Task:").pack(side="left", padx=5)
+        
+        self.task_var = ctk.StringVar(value="Verify Email")
+        self.combo_task = ctk.CTkComboBox(
+            row_ctrl, 
+            values=["Verify Email", "Analyze Domain", "Audit CSV (Vision)"], 
+            variable=self.task_var, 
+            width=180,
+            command=self.update_ui_state
+        )
+        self.combo_task.pack(side="left", padx=5)
+
+        self.btn_start = ctk.CTkButton(row_ctrl, text="▶️ Run Inspector", command=self.run_process, fg_color="#FF9800")
+        self.btn_start.pack(side="left", padx=5)
+        
+        self.btn_stop = ctk.CTkButton(row_ctrl, text="🛑 Stop", command=self.stop_process, fg_color="red", width=80)
+        self.btn_stop.pack(side="left", padx=5)
+        
+        self.btn_export = ctk.CTkButton(row_ctrl, text="💾 Export", command=self.export_csv, fg_color="green", width=80)
+        self.btn_export.pack(side="right", padx=10)
+
+        # LOG BOX
+        self.log_box = ctk.CTkTextbox(self, height=350, font=("Consolas", 12))
+        self.log_box.pack(fill="both", expand=True, padx=10, pady=10)
+
+    def update_ui_state(self, choice):
+        if choice == "Verify Email":
+            self.lbl_manual.configure(text="Enter Emails (comma separated):")
+            self.entry_manual.configure(placeholder_text="ceo@test.com, info@domain.com...")
+            self.entry_manual.configure(state="normal")
+        elif choice == "Analyze Domain":
+            self.lbl_manual.configure(text="Enter Domains (comma separated):")
+            self.entry_manual.configure(placeholder_text="ideadex.me, google.com...")
+            self.entry_manual.configure(state="normal")
+        elif choice == "Audit CSV (Vision)":
+            self.lbl_manual.configure(text="Manual Input Disabled:")
+            self.entry_manual.configure(placeholder_text="(Load a CSV file to audit)")
+            self.entry_manual.configure(state="disabled")
+
+    def log(self, msg):
+        timestamp = datetime.now().strftime('%H:%M:%S')
+        self.log_box.insert("end", f"[{timestamp}] {msg}\n")
+        self.log_box.see("end")
+
+    def load_csv(self):
+        file_path = ctk.filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        if file_path:
             try:
-                for index, row in self.df.iterrows():
-                    # 1. STOP CHECKS
-                    if self.stop_requested:
-                        print("🛑 Audit Stopped by User.", flush=True)
-                        break
+                self.logic.last_dataframe = pd.read_csv(file_path)
+                self.lbl_file.configure(text=os.path.basename(file_path), text_color="white")
+                self.log(f"✅ Loaded {len(self.logic.last_dataframe)} rows.")
+            except Exception as e: self.log(f"❌ Error: {e}")
 
-                    # Check Limit based on WORK DONE, not file index
-                    if self.limit_rows > 0 and scanned_count >= self.limit_rows:
-                        print(f"🛑 Limit Reached: Processed {scanned_count} new items.", flush=True)
-                        break
-                    
-                    target_url = str(row.get(self.url_col)).strip()
-                    if not target_url or target_url.lower() == "nan": continue
-                    if not target_url.startswith("http"): target_url = "https://" + target_url
+    def run_process(self):
+        task = self.task_var.get()
+        manual_data = self.entry_manual.get()
+        threading.Thread(target=self.logic.execute_task, args=(self.logic.last_dataframe, task, manual_data, self.log), daemon=True).start()
 
-                    # Check DB (Skip without incrementing scanned_count)
-                    if self.check_log(target_url):
-                         print(f"[Skipping] Already scanned: {target_url}", flush=True)
-                         continue
+    def stop_process(self):
+        self.logic.request_stop()
+        self.log("🛑 Stop Signal Sent.")
 
-                    # Increment Counter only for NEW scans
-                    scanned_count += 1
-                    print(f"[Scanning] Auditing ({index+1}/{len(self.df)}): {target_url}", flush=True)
-
-                    # HUMAN SHAKE
-                    try: page.mouse.move(random.randint(100, 500), random.randint(100, 500))
-                    except: pass
-
-                    screenshot_path = f"temp_{index}_{uuid.uuid4().hex[:8]}.jpg"
-                    try:
-                        response = page.goto(target_url, timeout=self.timeout * 1000, wait_until="domcontentloaded")
-                        status_code = response.status if response else 0
-                        
-                        # CLOUDFLARE CHECK
-                        if "Just a moment" in page.title() or "Security" in page.title():
-                            print("🛡️ Cloudflare detected. Waiting 15s...", flush=True)
-                            time.sleep(15) 
-                            
-                        page.screenshot(path=screenshot_path)
-                    except:
-                        status_code = 404
-                        import shutil
-                        if os.path.exists("modules/assets/blank.jpg"): shutil.copy("modules/assets/blank.jpg", screenshot_path)
-
-                    # EXECUTE RULES
-                    for rule in self.rules:
-                        if isinstance(rule, str):
-                            try: rule = ast.literal_eval(rule)
-                            except: continue
-                        
-                        if not isinstance(rule, dict) or 'type' not in rule: continue
-
-                        result = ""
-                        target_col = rule['target_column']
-                        
-                        # LOGIC A: STRICT YES/NO
-                        if rule['type'] == 'status_check':
-                            result = "Yes" if 200 <= status_code < 400 else "No"
-                        
-                        # LOGIC B: AI ANALYSIS + SCRIPT FIRST PROTOCOL
-                        elif rule['type'] == 'ai_analysis':
-                            prompt_lower = rule['prompt'].lower()
-                            
-                            # 1. LANDER / COMPANY / REDIRECT Rule
-                            if "lander" in prompt_lower or "company" in prompt_lower:
-                                print("   ⚡ Running Script Scout (Lander)...", flush=True)
-                                script_lander = self.analyze_lander_script(page, target_url, status_code)
-                                if script_lander:
-                                    print(f"   ✅ Script found: {script_lander}", flush=True)
-                                    result = script_lander
-
-                            # 2. PRICE Rule
-                            elif "price" in prompt_lower:
-                                print("   ⚡ Running Script Scout (Price)...", flush=True)
-                                script_price = self.extract_price_via_script(page)
-                                if script_price: 
-                                    print(f"   ✅ Script found: {script_price}", flush=True)
-                                    result = script_price
-                            
-                            # 3. AI FALLBACK + SAFETY NET
-                            # Only call AI if Script failed AND we don't have a definitive "Does Not Resolve"
-                            if not result and os.path.exists(screenshot_path) and result != "Does Not Resolve":
-                                print("   🤖 Calling AI Expert...", flush=True)
-                                base_prompt = rule['prompt']
-                                strict_instruction = " Answer in 1-2 words only."
-                                
-                                if "price" in base_prompt.lower():
-                                    strict_instruction += " Output just the number/currency symbol."
-                                elif "lander" in base_prompt.lower() or "company" in base_prompt.lower():
-                                    strict_instruction += " Output just the Company Name."
-                                
-                                final_prompt = base_prompt + strict_instruction
-                                result = self.perform_ai_analysis(final_prompt, screenshot_path)
-
-                                # FUNDAMENTAL RETREAT (If AI Fails)
-                                if "error" in result.lower() or "429" in result or "quota" in result.lower():
-                                    print(f"   ⚠️ AI Failed ({result}). Engaging Safety Net...", flush=True)
-                                    result = self.fundamental_retreat(page)
-                                    if result:
-                                        print(f"   🛡️ Safety Net Salvaged: {result}", flush=True)
-
-                        print(f"   👉 {target_col}: {result}", flush=True)
-                        
-                        # CRITICAL: COMMIT DATA IMMEDIATELY
-                        self.df.at[index, target_col] = result
-
-                    # Cleanup
-                    if os.path.exists(screenshot_path):
-                        try: os.remove(screenshot_path)
-                        except: pass
-                    self.save_log(target_url, "Done")
-                        
-            finally:
-                browser.close()
-                print("[Complete] Audit Finished.", flush=True)
-
-    def export_history(self):
-        """Export the final results to CSV"""
-        if self.df is None:
-            return False, "No data to export", ""
-            
-        filename = f"output/audit_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-        os.makedirs("output", exist_ok=True)
-        self.df.to_csv(filename, index=False)
-        print(f"💾 Exported to: {filename}", flush=True)
-        return True, "Export Successful", filename
+    def export_csv(self):
+        path = ctk.filedialog.asksaveasfilename(defaultextension=".csv")
+        if path:
+            success, msg = self.logic.export_data(path)
+            self.log(msg)

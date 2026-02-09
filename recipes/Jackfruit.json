@@ -1,0 +1,16 @@
+{
+    "name": "Jackfruit",
+    "columns": [
+        {
+            "id": "9c9a3667-e6fc-44aa-8083-0f7e1a0ae2aa",
+            "col_name": "Company",
+            "keywords": "Jackfruit",
+            "logic_type": "Discovery_Engine",
+            "strategy": "Brand_Discovery",
+            "execution_tags": [
+                "keyword_extraction"
+            ]
+        }
+    ],
+    "version": "2.0"
+}

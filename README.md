@@ -1,44 +1,51 @@
-🏭 LeadGen Factory
-LeadGen Factory is a modular, desktop-based automation suite designed for high-performance lead generation, data harvesting, list cleaning, and quality assurance. Unlike linear scripts, this application functions as a "Digital Office" with specialized modules for each stage of the data lifecycle.
+🏭 LeadGen Factory: Antigravity Edition
 
-🚀 Architecture
-The application is built on a modular Python architecture using CustomTkinter for the GUI and Playwright for the automation engine.
+**"Human-Grade Intuition. Machine-Grade Speed."**
 
-📂 The Modules
-The application is divided into four isolated workspaces:
+LeadGen Factory is a modular, desktop-based automation suite designed for high-performance lead generation, data harvesting, list cleaning, and quality assurance. It does not just scrape; it *hunts* using the "Antigravity" protocols—Vacuuming data, normalizing inputs, and sniping snippets before they disappear.
 
-Module,Icon,Role,Function
-The Architect,🧠,Strategy Builder,"Visual editor to create scraping ""Recipes"" (JSON). Users define target columns (e.g., ""CEO Name"") and context rules without coding."
-The Harvester,🚜,List Builder,"Executes recipes. Features a ""Human Mode"" to bypass authentication walls (LinkedIn/Facebook) by allowing manual user login before automation."
-The Janitor,🧹,Data Cleaner,"Drag-and-drop cleaning suite. Handles deduplication, name splitting, and toxic keyword filtering on any CSV file."
-The Inspector,🕵️,Quality Control,Validates data integrity. Pings URLs for 200 OK status and verifies email syntax before finalizing the list.
+## 🚀 Key Features (v1.0 Antigravity)
 
-🛠️ Technical Stack
-Interface: customtkinter (Python GUI)
+### 1. The Vacuum Protocol
+We stopped playing "Whack-a-Mole" with Google's CSS selectors. The bot now grabs **ALL** links and **ALL** text from the DOM and filters them locally. It is immune to minor layout changes.
 
-Automation: playwright (Browser Engine)
+### 2. Nordic Normalization
+Built for the global market. `Øvregaard` becomes `ovregaard` automatically. We never miss a lead because of an accent mark.
 
-Data Processing: pandas (CSV/Excel Logic)
+### 3. Predictive Dorking
+We don't ask "Who is the CEO?". We calculate the email (`ceo@company.com`) and search for *that*. It bypasses privacy filters by finding the answer, not the question.
 
-Configuration: JSON (Recipe Storage)
+### 4. Parallel Hunting
+Every target is hunted on two tracks simultaneously:
+*   **Corporate:** `name@company.com`
+*   **Personal:** `name@gmail.com` / `name@outlook.com`
 
-LeadGen-Factory/
-├── modules/           # Independent logic for each worker (harvester.py, etc.)
-├── recipes/           # JSON files defining search strategies
-├── output/            # Raw and Cleaned CSV exports (GitIgnored)
-├── assets/            # Icons and UI resources
-├── main.py            # GUI Entry point and Navigation Controller
-└── requirements.txt   # Dependency list
+---
 
+## 📂 The Modules
 
-🔮 Roadmap
-[ ] Phase 1: Core GUI Shell & Navigation (Current)
+| Module | Role | Function |
+| :--- | :--- | :--- |
+| **The Architect** | 🧠 Strategy | Visual recipe builder. Define "CEO" or "Marketing Director" and let the bot figure out the queries. |
+| **The Harvester** | 🚜 Execution | The core engine. Runs the "Antigravity" protocols to find emails, socials, and phone numbers. |
+| **The Janitor** | 🧹 Hygiene | Cleans lists, splits names, and removes toxic keywords (e.g., "LLC", "Inc"). |
+| **The Inspector** | 🕵️ Audit | Validates emails and checks if websites are alive (200 OK) before you export. |
 
-[ ] Phase 2: Recipe Builder & JSON Logic
+---
 
-[ ] Phase 3: Harvester Engine & Human Mode
+## 🛠️ How to Use
 
-[ ] Phase 4: Cleaning & QC Utilities
+1.  **Launch** the application (`main.py`).
+2.  **Harvester Tab**:
+    *   **Genesis Mode**: Enter a keyword (e.g., "Solar Installers Texas") to find companies.
+    *   **Sniper Mode**: Enter a specific person and company to hunt their details.
+    *   **Bulk Mode**: Load a CSV and select a strategy ("Find CEO", "Find Email").
+3.  **Janitor Tab**: Load your results to clean up formatting.
+4.  **Export**: Save your "Gold Standard" list to CSV.
 
+---
 
-Property of Lawrence Anthony Juntilla
+## 📜 The 5 Laws (Antigravity Constitution)
+See `ANTIGRAVITY_LOGIC.md` for the core engineering principles governing this software.
+
+*Property of Lawrence Anthony Juntilla*

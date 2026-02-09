@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <link rel="pingback" href="https://www.casalinda.ec/xmlrpc.php">
+
+    				<script>document.documentElement.className = document.documentElement.className + ' yes-js js_active js'</script>
+			            <style type="text/css">
+                /**
+                background color
+                 */
+                .border-btn:before,
+                .border-btn-white:before,
+                .woocommerce ul.products li.product .yith-wcwl-add-button .button:hover,
+                .woocommerce ul.products li.product .quick-view-icon-wrapper .button:hover,
+                .woocommerce ul.products li.product .cart-icon-wrapper .button:hover i,
+                .woocommerce ul.products li.product a.added i,
+                .mebel-product ul.products li.product-item .button:hover,
+                .mebel-product ul.products li.product-item .cart-icon-wrapper .button:hover i,
+                .mebel-product ul.products li.product-item .cart-icon-wrapper a.added i,
+                .woocommerce .widget_price_filter .ui-slider .ui-slider-handle,
+                span.onsale, .products li .yith-wcwl-add-to-wishlist .yith-wcwl-add-button.hide a.add_to_wishlist,
+                .mebel-social:hover,
+                .mail-form-wrapper form.mailchimp-form .mail-send button,
+                .entry-footer .post-edit-link:hover, .entry-footer .vc_inline-link:hover,
+                .summary form.cart .single_add_to_cart_button,
+                .woocommerce .woocommerce-pagination .page-numbers li span.current,
+                .woocommerce .woocommerce-pagination .page-numbers li a:hover
+                {
+                    background-color:#f28f22 !important;
+                }
+                .mebel-product ul.products li.product-item .cart-icon-wrapper .button:hover{
+                    background:transparent !important;
+                }
+                /**
+                 border color
+                 */
+                .border-btn, .border-btn:hover, .border-btn:focus, .border-btn:active,
+                .border-btn-white:hover, .border-btn-white:focus, .border-btn-white:active,
+                .woocommerce ul.products li.product .yith-wcwl-add-button .button:hover,
+                .woocommerce ul.products li.product .quick-view-icon-wrapper .button:hover,
+                .woocommerce ul.products li.product .cart-icon-wrapper .button:hover i,
+                .mebel-product ul.products li.product-item .button:hover,
+                .mebel-product ul.products li.product-item .cart-icon-wrapper .button:hover i,
+                .mebel-product ul.products li.product-item .cart-icon-wrapper a.added i,
+                ul.products li.product:hover > a,
+                .woocommerce ul.products li.product a.added,
+                .mebel-social:hover,
+                .tab_featured_category_wrapper #featured-product .featured-product-right ul.products li.cat-product-body:hover > a,
+                .mail-form-wrapper form.mailchimp-form .mail-input input:focus,
+                .mebel-product ul.products li.product-item:hover > a,
+                .mebel-product .product-header h3,
+                .product-sale-countdown .shop-now-button .border-btn,
+                .widget_tag_cloud .tagcloud a,
+                .entry-footer .post-edit-link, .entry-footer .vc_inline-link,
+                .icon-text .icon-text-wrapper .col-md-12:hover,
+                #footerv5 .footer-top .logo_mail .footer5_mailchimp input[type="email"]
+                {
+                    border-color:#f28f22 !important;
+                }
+                /**
+                color
+                 */
+                .widget_layered_nav ul li:hover,
+                .widget_layered_nav ul li a:before,
+                .widget_layered_nav ul li:hover a,
+                .widget_product_categories > ul li:hover,
+                .widget_product_categories > ul li:hover > a,
+                .widget_product_categories > ul li > a:before,
+                .woocommerce ul.products li.product span.price :hover,
+                .widget_nav_menu ul li a:hover,
+                footer.site-footer .site-info .copyright-wrapper a,
+                .blog-recent-post-wrapper .recent-post-description .recent-post-title a:hover,
+                .tab_featured_category_wrapper .featured-product-right ul.products li.cat-product-body span.price :hover,
+                .tab_featured_category_wrapper .product-tab .tab-featured .tab-icon-wrapper:hover,
+                .mebel-product ul.products li.product-item span.price :hover,
+                .post-cat a,
+                .mebel-product-list .woocommerce .price,
+                .mebel-product .woocommerce .price,
+                .mebel-product-list a.product-title-ls:hover,
+                .icon-text .icon-text-wrapper .col-md-12 .icon,
+                .summary .woocommerce-product-rating
+                {
+                    color:#f28f22 !important;
+                }
+            </style>
+                        <style type="text/css">
+                
+                
+            </style>
+            <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+<!-- Google Tag Manager for WordPress by gtm4wp.com -->
+<script data-cfasync="false" data-pagespeed-no-defer>
+	var gtm4wp_datalayer_name = "dataLayer";
+	var dataLayer = dataLayer || [];
+</script>
+<!-- End Google Tag Manager for WordPress by gtm4wp.com -->
+	<!-- This site is optimized with the Yoast SEO plugin v26.9 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Casa Linda - La Moda en tu Hogar</title>
+	<meta name="description" content="En Casa Linda somos líderes a nivel nacional e internacional de la Industria Textil en moda para el hogar, ofreciendo productos de alta calidad." />
+	<link rel="canonical" href="https://www.casalinda.ec/" />
+	<meta property="og:locale" content="es_ES" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Casa Linda - La Moda en tu Hogar" />
+	<meta property="og:description" content="En Casa Linda somos líderes a nivel nacional e internacional de la Industria Textil en moda para el hogar, ofreciendo productos de alta calidad." />
+	<meta property="og:url" content="https://www.casalinda.ec/" />
+	<meta property="og:site_name" content="Casa Linda" />
+	<meta property="article:modified_time" content="2025-12-15T17:30:45+00:00" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.casalinda.ec/","url":"https://www.casalinda.ec/","name":"Casa Linda - La Moda en tu Hogar","isPartOf":{"@id":"https://www.casalinda.ec/#website"},"about":{"@id":"https://www.casalinda.ec/#organization"},"datePublished":"2016-03-17T05:57:35+00:00","dateModified":"2025-12-15T17:30:45+00:00","description":"En Casa Linda somos líderes a nivel nacional e internacional de la Industria Textil en moda para el hogar, ofreciendo productos de alta calidad.","breadcrumb":{"@id":"https://www.casalinda.ec/#breadcrumb"},"inLanguage":"es","potentialAction":[{"@type":"ReadAction","target":["https://www.casalinda.ec/"]}]},{"@type":"BreadcrumbList","@id":"https://www.casalinda.ec/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Portada"}]},{"@type":"WebSite","@id":"https://www.casalinda.ec/#website","url":"https://www.casalinda.ec/","name":"Casa Linda","description":"La moda en tu hogar","publisher":{"@id":"https://www.casalinda.ec/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.casalinda.ec/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"es"},{"@type":"Organization","@id":"https://www.casalinda.ec/#organization","name":"Casa Linda","url":"https://www.casalinda.ec/","logo":{"@type":"ImageObject","inLanguage":"es","@id":"https://www.casalinda.ec/#/schema/logo/image/","url":"https://www.casalinda.ec/wp-content/uploads/2021/12/logo-casa-linda-cuadrado.png","contentUrl":"https://www.casalinda.ec/wp-content/uploads/2021/12/logo-casa-linda-cuadrado.png","width":117,"height":73,"caption":"Casa Linda"},"image":{"@id":"https://www.casalinda.ec/#/schema/logo/image/"}}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="Casa Linda &raquo; Feed" href="https://www.casalinda.ec/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.casalinda.ec/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.casalinda.ec%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.casalinda.ec/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.casalinda.ec%2F&#038;format=xml" />
+<style id='wp-img-auto-sizes-contain-inline-css' type='text/css'>
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+<link rel='stylesheet' id='ht_ctc_main_css-css' href='https://www.casalinda.ec/wp-content/plugins/click-to-chat-for-whatsapp/new/inc/assets/css/main.css?ver=4.37' type='text/css' media='all' />
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://www.casalinda.ec/wp-includes/css/dist/block-library/style.min.css?ver=6.9.1' type='text/css' media='all' />
+
+<style id='wp-block-heading-inline-css' type='text/css'>
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://www.casalinda.ec/wp-includes/blocks/heading/style.min.css */
+</style>
+<style id='wp-block-social-links-inline-css' type='text/css'>
+.wp-block-social-links{background:none;box-sizing:border-box;margin-left:0;padding-left:0;padding-right:0;text-indent:0}.wp-block-social-links .wp-social-link a,.wp-block-social-links .wp-social-link a:hover{border-bottom:0;box-shadow:none;text-decoration:none}.wp-block-social-links .wp-social-link svg{height:1em;width:1em}.wp-block-social-links .wp-social-link span:not(.screen-reader-text){font-size:.65em;margin-left:.5em;margin-right:.5em}.wp-block-social-links.has-small-icon-size{font-size:16px}.wp-block-social-links,.wp-block-social-links.has-normal-icon-size{font-size:24px}.wp-block-social-links.has-large-icon-size{font-size:36px}.wp-block-social-links.has-huge-icon-size{font-size:48px}.wp-block-social-links.aligncenter{display:flex;justify-content:center}.wp-block-social-links.alignright{justify-content:flex-end}.wp-block-social-link{border-radius:9999px;display:block}@media not (prefers-reduced-motion){.wp-block-social-link{transition:transform .1s ease}}.wp-block-social-link{height:auto}.wp-block-social-link a{align-items:center;display:flex;line-height:0}.wp-block-social-link:hover{transform:scale(1.1)}.wp-block-social-links .wp-block-social-link.wp-social-link{display:inline-block;margin:0;padding:0}.wp-block-social-links .wp-block-social-link.wp-social-link .wp-block-social-link-anchor,.wp-block-social-links .wp-block-social-link.wp-social-link .wp-block-social-link-anchor svg,.wp-block-social-links .wp-block-social-link.wp-social-link .wp-block-social-link-anchor:active,.wp-block-social-links .wp-block-social-link.wp-social-link .wp-block-social-link-anchor:hover,.wp-block-social-links .wp-block-social-link.wp-social-link .wp-block-social-link-anchor:visited{color:currentColor;fill:currentColor}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link{background-color:#f0f0f0;color:#444}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-amazon{background-color:#f90;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-bandcamp{background-color:#1ea0c3;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-behance{background-color:#0757fe;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-bluesky{background-color:#0a7aff;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-codepen{background-color:#1e1f26;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-deviantart{background-color:#02e49b;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-discord{background-color:#5865f2;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-dribbble{background-color:#e94c89;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-dropbox{background-color:#4280ff;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-etsy{background-color:#f45800;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-facebook{background-color:#0866ff;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-fivehundredpx{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-flickr{background-color:#0461dd;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-foursquare{background-color:#e65678;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-github{background-color:#24292d;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-goodreads{background-color:#eceadd;color:#382110}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-google{background-color:#ea4434;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-gravatar{background-color:#1d4fc4;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-instagram{background-color:#f00075;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-lastfm{background-color:#e21b24;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-linkedin{background-color:#0d66c2;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-mastodon{background-color:#3288d4;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-medium{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-meetup{background-color:#f6405f;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-patreon{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-pinterest{background-color:#e60122;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-pocket{background-color:#ef4155;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-reddit{background-color:#ff4500;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-skype{background-color:#0478d7;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-snapchat{background-color:#fefc00;color:#fff;stroke:#000}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-soundcloud{background-color:#ff5600;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-spotify{background-color:#1bd760;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-telegram{background-color:#2aabee;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-threads{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-tiktok{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-tumblr{background-color:#011835;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-twitch{background-color:#6440a4;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-twitter{background-color:#1da1f2;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-vimeo{background-color:#1eb7ea;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-vk{background-color:#4680c2;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-wordpress{background-color:#3499cd;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-whatsapp{background-color:#25d366;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-x{background-color:#000;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-yelp{background-color:#d32422;color:#fff}:where(.wp-block-social-links:not(.is-style-logos-only)) .wp-social-link-youtube{background-color:red;color:#fff}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link{background:none}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link svg{height:1.25em;width:1.25em}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-amazon{color:#f90}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-bandcamp{color:#1ea0c3}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-behance{color:#0757fe}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-bluesky{color:#0a7aff}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-codepen{color:#1e1f26}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-deviantart{color:#02e49b}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-discord{color:#5865f2}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-dribbble{color:#e94c89}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-dropbox{color:#4280ff}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-etsy{color:#f45800}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-facebook{color:#0866ff}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-fivehundredpx{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-flickr{color:#0461dd}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-foursquare{color:#e65678}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-github{color:#24292d}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-goodreads{color:#382110}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-google{color:#ea4434}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-gravatar{color:#1d4fc4}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-instagram{color:#f00075}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-lastfm{color:#e21b24}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-linkedin{color:#0d66c2}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-mastodon{color:#3288d4}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-medium{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-meetup{color:#f6405f}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-patreon{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-pinterest{color:#e60122}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-pocket{color:#ef4155}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-reddit{color:#ff4500}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-skype{color:#0478d7}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-snapchat{color:#fff;stroke:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-soundcloud{color:#ff5600}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-spotify{color:#1bd760}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-telegram{color:#2aabee}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-threads{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-tiktok{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-tumblr{color:#011835}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-twitch{color:#6440a4}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-twitter{color:#1da1f2}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-vimeo{color:#1eb7ea}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-vk{color:#4680c2}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-whatsapp{color:#25d366}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-wordpress{color:#3499cd}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-x{color:#000}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-yelp{color:#d32422}:where(.wp-block-social-links.is-style-logos-only) .wp-social-link-youtube{color:red}.wp-block-social-links.is-style-pill-shape .wp-social-link{width:auto}:root :where(.wp-block-social-links .wp-social-link a){padding:.25em}:root :where(.wp-block-social-links.is-style-logos-only .wp-social-link a){padding:0}:root :where(.wp-block-social-links.is-style-pill-shape .wp-social-link a){padding-left:.6666666667em;padding-right:.6666666667em}.wp-block-social-links:not(.has-icon-color):not(.has-icon-background-color) .wp-social-link-snapchat .wp-block-social-link-label{color:#000}
+/*# sourceURL=https://www.casalinda.ec/wp-includes/blocks/social-links/style.min.css */
+</style>
+
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+<link rel='stylesheet' id='wc-blocks-style-css' href='https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks.css?ver=wc-10.4.3' type='text/css' media='all' />
+
+<link rel='stylesheet' id='wp-components-css' href='https://www.casalinda.ec/wp-includes/css/dist/components/style.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='common-css' href='https://www.casalinda.ec/wp-admin/css/common.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='forms-css' href='https://www.casalinda.ec/wp-admin/css/forms.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-reset-editor-styles-css' href='https://www.casalinda.ec/wp-includes/css/dist/block-library/reset.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-block-editor-content-css' href='https://www.casalinda.ec/wp-includes/css/dist/block-editor/content.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-editor-classic-layout-styles-css' href='https://www.casalinda.ec/wp-includes/css/dist/edit-post/classic.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-block-library-theme-css' href='https://www.casalinda.ec/wp-includes/css/dist/block-library/theme.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-edit-blocks-css' href='https://www.casalinda.ec/wp-includes/css/dist/block-library/editor.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='mebel-block-editor-css-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/editor-style.css?ver=6.9.1' type='text/css' media='all' />
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--fade-green: #b0d103;--wp--preset--color--navy-blue: #032c4b;--wp--preset--color--sunset-orange: #FF4A52;--wp--preset--color--body-bg: #ffffff;--wp--preset--color--primary-text: #333;--wp--preset--color--secondary-text: #636363;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='contact-form-7-css' href='https://www.casalinda.ec/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.4' type='text/css' media='all' />
+<link rel='stylesheet' id='woocommerce-layout-css' href='https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=10.4.3' type='text/css' media='all' />
+<link rel='stylesheet' id='woocommerce-smallscreen-css' href='https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/css/woocommerce-smallscreen.css?ver=10.4.3' type='text/css' media='only screen and (max-width: 768px)' />
+<link rel='stylesheet' id='woocommerce-general-css' href='https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/css/woocommerce.css?ver=10.4.3' type='text/css' media='all' />
+<style id='woocommerce-inline-inline-css' type='text/css'>
+.woocommerce form .form-row .required { visibility: visible; }
+/*# sourceURL=woocommerce-inline-inline-css */
+</style>
+<link rel='stylesheet' id='jquery-selectBox-css' href='https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/css/jquery.selectBox.css?ver=1.2.0' type='text/css' media='all' />
+<link rel='stylesheet' id='woocommerce_prettyPhoto_css-css' href='//www.casalinda.ec/wp-content/plugins/woocommerce/assets/css/prettyPhoto.css?ver=3.1.6' type='text/css' media='all' />
+<link rel='stylesheet' id='yith-wcwl-main-css' href='https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/css/style.css?ver=4.12.0' type='text/css' media='all' />
+<style id='yith-wcwl-main-inline-css' type='text/css'>
+ :root { --color-add-to-wishlist-background: #333333; --color-add-to-wishlist-text: #FFFFFF; --color-add-to-wishlist-border: #333333; --color-add-to-wishlist-background-hover: #333333; --color-add-to-wishlist-text-hover: #FFFFFF; --color-add-to-wishlist-border-hover: #333333; --rounded-corners-radius: 16px; --add-to-cart-rounded-corners-radius: 16px; --color-headers-background: #F4F4F4; --feedback-duration: 3s } 
+ :root { --color-add-to-wishlist-background: #333333; --color-add-to-wishlist-text: #FFFFFF; --color-add-to-wishlist-border: #333333; --color-add-to-wishlist-background-hover: #333333; --color-add-to-wishlist-text-hover: #FFFFFF; --color-add-to-wishlist-border-hover: #333333; --rounded-corners-radius: 16px; --add-to-cart-rounded-corners-radius: 16px; --color-headers-background: #F4F4F4; --feedback-duration: 3s } 
+/*# sourceURL=yith-wcwl-main-inline-css */
+</style>
+<link rel='stylesheet' id='xoo-wsc-fonts-css' href='https://www.casalinda.ec/wp-content/plugins/side-cart-woocommerce/assets/css/xoo-wsc-fonts.css?ver=2.7.2' type='text/css' media='all' />
+<link rel='stylesheet' id='xoo-wsc-style-css' href='https://www.casalinda.ec/wp-content/plugins/side-cart-woocommerce/assets/css/xoo-wsc-style.css?ver=2.7.2' type='text/css' media='all' />
+<style id='xoo-wsc-style-inline-css' type='text/css'>
+
+
+
+ 
+
+.xoo-wsc-footer{
+	background-color: #ffffff;
+	color: #000000;
+	padding: 10px 20px;
+	box-shadow: 0 -5px 10px #0000001a;
+}
+
+.xoo-wsc-footer, .xoo-wsc-footer a, .xoo-wsc-footer .amount{
+	font-size: 18px;
+}
+
+.xoo-wsc-btn .amount{
+	color: #000000}
+
+.xoo-wsc-btn:hover .amount{
+	color: #000000;
+}
+
+.xoo-wsc-ft-buttons-cont{
+	grid-template-columns: auto;
+}
+
+.xoo-wsc-basket{
+	bottom: 40px;
+	right: 10px;
+	background-color: #ffffff;
+	color: #00a786;
+	box-shadow: 0 1px 4px 0;
+	border-radius: 50%;
+	display: flex;
+	width: 60px;
+	height: 60px;
+}
+
+
+.xoo-wsc-bki{
+	font-size: 30px}
+
+.xoo-wsc-items-count{
+	top: -9px;
+	left: -8px;
+}
+
+.xoo-wsc-items-count, .xoo-wsch-items-count{
+	background-color: #f28f22;
+	color: #ffffff;
+}
+
+.xoo-wsc-container, .xoo-wsc-slider{
+	max-width: 320px;
+	right: -320px;
+	top: 0;bottom: 0;
+	bottom: 0;
+	font-family: }
+
+
+.xoo-wsc-cart-active .xoo-wsc-container, .xoo-wsc-slider-active .xoo-wsc-slider{
+	right: 0;
+}
+
+
+.xoo-wsc-cart-active .xoo-wsc-basket{
+	right: 320px;
+}
+
+.xoo-wsc-slider{
+	right: -320px;
+}
+
+span.xoo-wsch-close {
+    font-size: 16px;
+}
+
+	.xoo-wsch-top{
+		justify-content: center;
+	}
+	span.xoo-wsch-close {
+	    right: 10px;
+	}
+
+.xoo-wsch-text{
+	font-size: 20px;
+}
+
+.xoo-wsc-header{
+	color: #000000;
+	background-color: #ffffff;
+	border-bottom: 2px solid #eee;
+	padding: 15px 15px;
+}
+
+
+.xoo-wsc-body{
+	background-color: #ffffff;
+}
+
+.xoo-wsc-products:not(.xoo-wsc-pattern-card), .xoo-wsc-products:not(.xoo-wsc-pattern-card) span.amount, .xoo-wsc-products:not(.xoo-wsc-pattern-card) a{
+	font-size: 16px;
+	color: #000000;
+}
+
+.xoo-wsc-products:not(.xoo-wsc-pattern-card) .xoo-wsc-product{
+	padding: 20px 15px;
+	margin: 0;
+	border-radius: 0px;
+	box-shadow: 0 0;
+	background-color: transparent;
+}
+
+.xoo-wsc-sum-col{
+	justify-content: center;
+}
+
+
+/** Shortcode **/
+.xoo-wsc-sc-count{
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.xoo-wsc-sc-bki{
+	font-size: 28px;
+	color: #000000;
+}
+.xoo-wsc-sc-cont{
+	color: #000000;
+}
+
+
+.xoo-wsc-product dl.variation {
+	display: block;
+}
+
+
+.xoo-wsc-product-cont{
+	padding: 10px 10px;
+}
+
+.xoo-wsc-products:not(.xoo-wsc-pattern-card) .xoo-wsc-img-col{
+	width: 30%;
+}
+
+.xoo-wsc-pattern-card .xoo-wsc-img-col img{
+	max-width: 100%;
+	height: auto;
+}
+
+.xoo-wsc-products:not(.xoo-wsc-pattern-card) .xoo-wsc-sum-col{
+	width: 70%;
+}
+
+.xoo-wsc-pattern-card .xoo-wsc-product-cont{
+	width: 50% 
+}
+
+@media only screen and (max-width: 600px) {
+	.xoo-wsc-pattern-card .xoo-wsc-product-cont  {
+		width: 50%;
+	}
+}
+
+
+.xoo-wsc-pattern-card .xoo-wsc-product{
+	border: 0;
+	box-shadow: 0px 10px 15px -12px #0000001a;
+}
+
+
+.xoo-wsc-sm-front{
+	background-color: #eee;
+}
+.xoo-wsc-pattern-card, .xoo-wsc-sm-front{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+.xoo-wsc-pattern-card, .xoo-wsc-img-col img, .xoo-wsc-img-col, .xoo-wsc-sm-back-cont{
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.xoo-wsc-sm-back{
+	background-color: #fff;
+}
+.xoo-wsc-pattern-card, .xoo-wsc-pattern-card a, .xoo-wsc-pattern-card .amount{
+	font-size: 16px;
+}
+
+.xoo-wsc-sm-front, .xoo-wsc-sm-front a, .xoo-wsc-sm-front .amount{
+	color: #000;
+}
+
+.xoo-wsc-sm-back, .xoo-wsc-sm-back a, .xoo-wsc-sm-back .amount{
+	color: #000;
+}
+
+
+.magictime {
+    animation-duration: 0.5s;
+}
+
+
+
+span.xoo-wsch-items-count{
+	height: 20px;
+	line-height: 20px;
+	width: 20px;
+}
+
+span.xoo-wsch-icon{
+	font-size: 30px
+}
+
+.xoo-wsc-smr-del{
+	font-size: 16px
+}
+/*# sourceURL=xoo-wsc-style-inline-css */
+</style>
+<link rel='stylesheet' id='mebel-style-css' href='https://www.casalinda.ec/wp-content/themes/mebel/style.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='g-montserrat-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/fonts/montserrat/montserrat.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/bootstrap.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap-dropdownhover-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/bootstrap-dropdownhover.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/font-awesome.css?ver=6.9.1' type='text/css' media='all' />
+<style id='font-awesome-inline-css' type='text/css'>
+[data-font="FontAwesome"]:before {font-family: 'FontAwesome' !important;content: attr(data-icon) !important;speak: none !important;font-weight: normal !important;font-variant: normal !important;text-transform: none !important;line-height: 1 !important;font-style: normal !important;-webkit-font-smoothing: antialiased !important;-moz-osx-font-smoothing: grayscale !important;}
+/*# sourceURL=font-awesome-inline-css */
+</style>
+<link rel='stylesheet' id='owl-carousel-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/owl.carousel.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='animate-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/animate.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='magnific-popup-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/magnific-popup.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='mebel-core-style-css' href='https://www.casalinda.ec/wp-content/themes/mebel/dist/css/style.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='js_composer_front-css' href='https://www.casalinda.ec/wp-content/plugins/js_composer/assets/css/js_composer.min.css?ver=6.7.0' type='text/css' media='all' />
+<script type="text/javascript" src="https://www.casalinda.ec/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/mebel-core/assets/js/jquery.countdown.js?ver=1.10010" id="mebel_countdown_js-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.10.4.3" id="wc-jquery-blockui-js" data-wp-strategy="defer"></script>
+<script type="text/javascript" id="wc-add-to-cart-js-extra">
+/* <![CDATA[ */
+var wc_add_to_cart_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_view_cart":"Ver carrito","cart_url":"https://www.casalinda.ec/carrito/","is_cart":"","cart_redirect_after_add":"no"};
+//# sourceURL=wc-add-to-cart-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=10.4.3" id="wc-add-to-cart-js" data-wp-strategy="defer"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.10.4.3" id="wc-js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" id="woocommerce-js-extra">
+/* <![CDATA[ */
+var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_password_show":"Mostrar contrase\u00f1a","i18n_password_hide":"Ocultar contrase\u00f1a"};
+//# sourceURL=woocommerce-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=10.4.3" id="woocommerce-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/js_composer/assets/js/vendors/woocommerce-add-to-cart.js?ver=6.7.0" id="vc_woocommerce-add-to-cart-js-js"></script>
+<link rel="https://api.w.org/" href="https://www.casalinda.ec/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.casalinda.ec/wp-json/wp/v2/pages/1706" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.casalinda.ec/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.9.1" />
+<meta name="generator" content="WooCommerce 10.4.3" />
+<link rel='shortlink' href='https://www.casalinda.ec/' />
+
+<!-- Google Tag Manager for WordPress by gtm4wp.com -->
+<!-- GTM Container placement set to automatic -->
+<script data-cfasync="false" data-pagespeed-no-defer>
+	var dataLayer_content = {"pagePostType":"frontpage","pagePostType2":"single-page","pagePostAuthor":"cesarfchavez"};
+	dataLayer.push( dataLayer_content );
+</script>
+<script data-cfasync="false" data-pagespeed-no-defer>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WZP7H9T');
+</script>
+<!-- End Google Tag Manager for WordPress by gtm4wp.com -->
+            <style>
+                #head-v1 .mebel-menu .top-menu{
+                    background-color: #00a786;
+                    color: #ffffff;
+                }
+                #head-v1 .mebel-menu .top-menu .top-right-side-wrapper .top-right-side .user-logout > a{
+                    color: #ffffff;
+                }
+                #head-v1 .mebel-menu .main-menu{
+                    background-color: #ffffff;
+                }
+                /**
+                color
+                 */
+                #head-v1 .mebel-menu .main-menu ul.navbar-nav > li > a,
+                #head-v1 .main-menu-right-side .search-wrapper{
+                    color: #00a786;
+                }
+                /**
+                hover & active color
+                 */
+                #head-v1 .mebel-menu .main-menu ul.navbar-nav li.current-menu-ancestor > a,
+                #head-v1 .mebel-menu .main-menu ul.navbar-nav > li:hover > a,
+                #head-v1 .mebel-menu .main-menu ul.navbar-nav li.active > a
+                {
+                    color: #f28f22;
+                }
+                #head-v1 .mebel-menu .main-menu ul.navbar-nav > li > a:before{
+                    background-color: #f28f22;
+                }
+            </style>
+
+        	<noscript><style>.woocommerce-product-gallery{ opacity: 1 !important; }</style></noscript>
+	<meta name="generator" content="Powered by WPBakery Page Builder - drag and drop page builder for WordPress."/>
+	<style type="text/css">
+			.site-title a,
+		.site-description {
+			color: #f28f22;
+		}
+		</style>
+	<meta name="generator" content="Powered by Slider Revolution 6.5.11 - responsive, Mobile-Friendly Slider Plugin for WordPress with comfortable drag and drop interface." />
+<link rel="icon" href="https://www.casalinda.ec/wp-content/uploads/2021/12/favicon-casa-linda.png" sizes="32x32" />
+<link rel="icon" href="https://www.casalinda.ec/wp-content/uploads/2021/12/favicon-casa-linda.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://www.casalinda.ec/wp-content/uploads/2021/12/favicon-casa-linda.png" />
+<meta name="msapplication-TileImage" content="https://www.casalinda.ec/wp-content/uploads/2021/12/favicon-casa-linda.png" />
+<script type="text/javascript">function setREVStartSize(e){
+			//window.requestAnimationFrame(function() {				 
+				window.RSIW = window.RSIW===undefined ? window.innerWidth : window.RSIW;	
+				window.RSIH = window.RSIH===undefined ? window.innerHeight : window.RSIH;	
+				try {								
+					var pw = document.getElementById(e.c).parentNode.offsetWidth,
+						newh;
+					pw = pw===0 || isNaN(pw) ? window.RSIW : pw;
+					e.tabw = e.tabw===undefined ? 0 : parseInt(e.tabw);
+					e.thumbw = e.thumbw===undefined ? 0 : parseInt(e.thumbw);
+					e.tabh = e.tabh===undefined ? 0 : parseInt(e.tabh);
+					e.thumbh = e.thumbh===undefined ? 0 : parseInt(e.thumbh);
+					e.tabhide = e.tabhide===undefined ? 0 : parseInt(e.tabhide);
+					e.thumbhide = e.thumbhide===undefined ? 0 : parseInt(e.thumbhide);
+					e.mh = e.mh===undefined || e.mh=="" || e.mh==="auto" ? 0 : parseInt(e.mh,0);		
+					if(e.layout==="fullscreen" || e.l==="fullscreen") 						
+						newh = Math.max(e.mh,window.RSIH);					
+					else{					
+						e.gw = Array.isArray(e.gw) ? e.gw : [e.gw];
+						for (var i in e.rl) if (e.gw[i]===undefined || e.gw[i]===0) e.gw[i] = e.gw[i-1];					
+						e.gh = e.el===undefined || e.el==="" || (Array.isArray(e.el) && e.el.length==0)? e.gh : e.el;
+						e.gh = Array.isArray(e.gh) ? e.gh : [e.gh];
+						for (var i in e.rl) if (e.gh[i]===undefined || e.gh[i]===0) e.gh[i] = e.gh[i-1];
+											
+						var nl = new Array(e.rl.length),
+							ix = 0,						
+							sl;					
+						e.tabw = e.tabhide>=pw ? 0 : e.tabw;
+						e.thumbw = e.thumbhide>=pw ? 0 : e.thumbw;
+						e.tabh = e.tabhide>=pw ? 0 : e.tabh;
+						e.thumbh = e.thumbhide>=pw ? 0 : e.thumbh;					
+						for (var i in e.rl) nl[i] = e.rl[i]<window.RSIW ? 0 : e.rl[i];
+						sl = nl[0];									
+						for (var i in nl) if (sl>nl[i] && nl[i]>0) { sl = nl[i]; ix=i;}															
+						var m = pw>(e.gw[ix]+e.tabw+e.thumbw) ? 1 : (pw-(e.tabw+e.thumbw)) / (e.gw[ix]);					
+						newh =  (e.gh[ix] * m) + (e.tabh + e.thumbh);
+					}
+					var el = document.getElementById(e.c);
+					if (el!==null && el) el.style.height = newh+"px";					
+					el = document.getElementById(e.c+"_wrapper");
+					if (el!==null && el) {
+						el.style.height = newh+"px";
+						el.style.display = "block";
+					}
+				} catch(e){
+					console.log("Failure at Presize of Slider:" + e)
+				}					   
+			//});
+		  };</script>
+		<style type="text/css" id="wp-custom-css">
+			.tx-site-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#head-v1 .mebel-menu .top-menu .top-right-side-wrapper .top-right-side .right-side {
+    display: none;
+}
+
+#tx-trigger-effects > button > i{
+	font-size: 25px;
+}
+
+.woocommerce form .form-row .input-checkbox {
+    margin: 7px 0px 0px 0px;
+}
+
+#payment > div > div > p > label > span.woocommerce-terms-and-conditions-checkbox-text {
+	margin-left: 20px;
+}
+
+.yith-wcwl-add-to-wishlist {
+    display: none;
+}
+
+table tbody tr td a {
+    color: #00a786;
+}
+
+.woocommerce table.shop_table tr td.product-remove a.remove {
+    color: #00a786 !important;
+    border: solid 1px #00a786;
+}
+
+.woocommerce-cart table.cart td.actions .coupon .input-text {
+    border: solid 1px #00a786;
+    color: #00a786;
+}
+.woocommerce-cart .cart-collaterals .cart_totals .wc-proceed-to-checkout a.button.alt {
+	background: #00a786;
+}
+
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
+	background-color: #00a786;
+}
+
+.woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover {
+    background-color: #017a62;
+}
+.woocommerce .woocommerce-info a {
+    color: #00a786;
+}
+.woocommerce .woocommerce-info {
+    border-top: solid 3px #00a786;
+}
+.woocommerce .woocommerce-info:before {
+    color: #00a786;
+}
+
+.woocommerce div.product p.price, .woocommerce div.product span.price {
+	color: #00a786;
+}
+
+.label {
+	color: #00a786;
+	font-size: 100%;
+}
+
+.summary form.cart table.variations tbody tr td.value {
+padding: 5px;	
+}
+#footerv2 .site-info {
+    background-color: #00a786;
+}
+
+/* table tbody tr td {
+    text-align: center;
+    padding: 1px;
+    border: solid #00a786;
+} */
+
+#customer_details > div.col-1 > div.woocommerce-account-fields > p > label > span {
+	margin-left: 20px;
+}
+
+.grecaptcha-badge {
+	display: none !important;
+}
+
+.woocommerce-cart .cart-collaterals .cart_totals .woocommerce-shipping-destination {
+	display: none;
+}
+
+#mebel-menu > div.top-menu > div > div.col-lg-6.col-md-6.col-sm-6.col-xs-6.top-left-side-wrapper > div > a > img{
+	max-width: 120px;
+}
+#head-v1 .mebel-menu .main-menu .main-menu-right-side-wrapper .main-menu-right-side .header-cart-wrapper {
+    display: none;
+}
+
+.sticky-buttons.-medium .sb-icon {
+    width: 60px !important;
+	height: 60px !important;
+	line-height: 60px !important;
+    font-size: 30px !important;
+}		</style>
+		<style type="text/css" data-type="vc_shortcodes-custom-css">.vc_custom_1669734538508{background-color: #f18e22 !important;}.vc_custom_1460020847540{background-color: #f5f5f5 !important;background-position: center !important;background-repeat: no-repeat !important;background-size: cover !important;}.vc_custom_1656612645372{background-image: url(https://www.casalinda.ec/wp-content/uploads/2016/03/BG-1.png?id=1836) !important;background-position: center !important;background-repeat: no-repeat !important;background-size: cover !important;}.vc_custom_1657228163803{background-color: #00a786 !important;}.vc_custom_1657140659261{margin-bottom: -25px !important;}.vc_custom_1657140927417{margin-bottom: -25px !important;}.vc_custom_1657140937209{margin-bottom: -25px !important;}.vc_custom_1657140944881{margin-bottom: -25px !important;}.vc_custom_1657140953286{margin-bottom: -25px !important;}.vc_custom_1657140960937{margin-bottom: -25px !important;}</style><noscript><style> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript><link rel='stylesheet' id='rs-plugin-settings-css' href='https://www.casalinda.ec/wp-content/plugins/revslider/public/assets/css/rs6.css?ver=6.5.11' type='text/css' media='all' />
+<style id='rs-plugin-settings-inline-css' type='text/css'>
+#rs-demo-id {}
+/*# sourceURL=rs-plugin-settings-inline-css */
+</style>
+
+</head>
+
+<body data-rsssl=1 class="home wp-singular page-template-default page page-id-1706 wp-embed-responsive wp-theme-mebel theme-mebel woocommerce-no-js wpb-js-composer js-comp-ver-6.7.0 vc_responsive">
+
+<div class="tx-site-container " id="tx-site-container">
+
+<!--   start mobile menu -->
+    <nav class="tx-menu tx-effect-1" id="menu-1">
+        <div class="menu-primary-menu-container"><ul id="menu-primary-menu" class="menu"><li id="menu-item-2777" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-1706 current_page_item menu-item-2777"><a href="https://www.casalinda.ec/" aria-current="page" title="												">Inicio</a></li>
+<li id="menu-item-2761" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2761"><a href="https://www.casalinda.ec/nosotros/" title="												">Nosotros</a></li>
+<li id="menu-item-2971" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2971"><a href="https://www.casalinda.ec/tienda/">Tienda</a></li>
+<li id="menu-item-2879" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2879"><a href="#">Distribución</a>
+<ul class="sub-menu">
+	<li id="menu-item-2957" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2957"><a href="https://www.casalinda.ec/distribuidores/">Distribuidores</a></li>
+	<li id="menu-item-3455" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3455"><a href="https://www.casalinda.ec/productos-distribuidores/">Productos distribuidores</a></li>
+</ul>
+</li>
+<li id="menu-item-2903" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2903"><a href="https://www.casalinda.ec/locales/">Locales</a></li>
+<li id="menu-item-2764" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2764"><a href="https://www.casalinda.ec/contacto/" title="												">Contacto</a></li>
+</ul></div>    </nav>
+<!--    end mobile menu -->
+    <div class="tx-site-pusher">
+        <div class="tx-site-content">
+            <div class="tx-site-content-inner">
+
+
+
+
+
+    <div id="page" class="site">
+    <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+    <header id="head-v1" class="site-header" role="banner">
+
+        <div class="mebel-menu" id="mebel-menu">
+            <div class="top-menu">
+                <div class="container">
+                    <div class="col-lg-6 col-md-6 col-sm-6  col-xs-6 top-left-side-wrapper">
+                        <div class="top-left-side site-branding">
+                            <a href="https://www.casalinda.ec/">
+                                                                    <img width="234" height="146" src="https://www.casalinda.ec/wp-content/uploads/2022/07/logocasalinda.png" class="attachment-full size-full" alt="" decoding="async" />                                                            </a>
+
+                        </div><!-- .site-branding -->
+                    </div>
+<!--                end of the /.top-left-side-wrapper-->
+                    <div class="col-lg-6 col-md-6 col-sm-6  col-xs-6 top-right-side-wrapper">
+                        <div class="top-right-side">
+                            <div class="right-side top-menu-currency">
+                                <select name="currency" id="currency" style="background-image:url(https://www.casalinda.ec/wp-content/themes/mebel/dist/images/down-caret.png);">
+                                    <option value="usd" selected>USD</option>
+                                    <option value="eur">EUR</option>
+                                </select>
+                            </div>
+    <!--                        /.top-menu-currency-->
+                            <div class="right-side top-menu-language" >
+                                <select name="language" id="language" style="background-image:url(https://www.casalinda.ec/wp-content/themes/mebel/dist/images/down-caret.png);">
+                                    <option value="eng" selected>ENG</option>
+                                    <option value="FRC">FRC</option>
+                                </select>
+                            </div>
+    <!--                        /.top-menu-language-->
+                            <div class="right-side top-menu-login">
+                                <div class="top-login">
+                                                                        <span class="user-login">Login</span>
+                                        <div id="header-login" class="header-login">
+                                                <div class="login-form-wrapper">
+        <h2>Login</h2>
+        <form name="loginform" id="loginform" action="https://www.casalinda.ec/wp-login.php" method="post"><p class="login-username">
+				<label for="user_login">Email address</label>
+				<input type="text" name="log" id="user_login" autocomplete="username" class="input" value="" size="20" />
+			</p><p class="login-password">
+				<label for="user_pass">Password</label>
+				<input type="password" name="pwd" id="user_pass" autocomplete="current-password" spellcheck="false" class="input" value="" size="20" />
+			</p><p class="login-remember"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> Remember Me</label></p><p class="login-submit">
+				<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary" value="Login" />
+				<input type="hidden" name="redirect_to" value="https://www.casalinda.ec/wp-admin/" />
+			</p></form>        <h4><a href="/registration">Register</a></h4>
+    </div>                                        </div>
+
+
+                                                                    </div>
+                            </div>
+<!--                            /.top-menu-login -->
+                            <div class="mebel-res-menu-icon-wrapper mebel-visible-xs">
+                                <div id="tx-trigger-effects">
+                                    <button data-effect="tx-effect-1"><i class="fa fa-bars"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+    <!--                    end of the /.top-right-side-->
+                    </div>
+<!--                end of the /.top-right-side-wrapper-->
+                </div>
+<!--                end of /.container-->
+            </div>
+<!--            end of the /.row/.top-menu-->
+            <div id="sticky-header" class="main-menu">
+                <div  class="container" data-hover="dropdown" data-animations="zoomIn zoomIn zoomIn zoomIn">
+                    <div class="row">
+                    <div class="col-lg-10 col-md-10 col-sm-12 main-menu-left-side-wrapper">
+                        <nav id="mebel-mainnav" class="navbar navbar-default mebel-mainnav" >
+                            <div class="container">
+                                <div id="mebel-main-nav" class="navbar-collapse collapse mebel-nav"><ul id="menu-primary-menu-1" class="nav navbar-nav"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-1706 current_page_item menu-item-2777 active"><a title="Inicio" href="https://www.casalinda.ec/"><span class="glyphicon 												"></span>&nbsp;Inicio</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2761"><a title="Nosotros" href="https://www.casalinda.ec/nosotros/"><span class="glyphicon 												"></span>&nbsp;Nosotros</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2971"><a title="Tienda" href="https://www.casalinda.ec/tienda/">Tienda</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2879 dropdown"><a title="Distribución" href="#" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true">Distribución <span class="caret"></span></a>
+<ul role="menu" class=" dropdown-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2957"><a title="Distribuidores" href="https://www.casalinda.ec/distribuidores/">Distribuidores</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3455"><a title="Productos distribuidores" href="https://www.casalinda.ec/productos-distribuidores/">Productos distribuidores</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2903"><a title="Locales" href="https://www.casalinda.ec/locales/">Locales</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2764"><a title="Contacto" href="https://www.casalinda.ec/contacto/"><span class="glyphicon 												"></span>&nbsp;Contacto</a></li>
+</ul></div>                            </div>
+                            <!-- end of the nav/.container -->
+
+                        </nav><!-- #site-navigation -->
+
+                    </div>
+<!--                    end of the /.main-menu-left-side-wrapper-->
+                    <div class="col-lg-2 col-md-2 col-sm-12 main-menu-right-side-wrapper">
+                        <div class="main-menu-right-side">
+                            <div class="search-wrapper">
+                                <span>
+                                    <i class="fa fa-search fa-fw"></i>
+                                </span>
+                            </div>
+<!--                            end of the /.search-wrapper-->
+                            <div class="header-cart-wrapper">
+                                <a href="/cart" class="cart-holder">
+                                    
+
+            <div class="cart-contents">
+                <div class="cart-contents-wrapper">
+                    <span class="product-icon"> <img src="https://www.casalinda.ec/wp-content/themes/mebel/dist/images/cart.png" alt=""> </span>
+                    <span class="product-count"> <i> 0 </i>  </span>
+                </div>
+            </div>
+                                            </a>
+                            </div>
+<!--                            end of the /.cart-wrapper-->
+                        </div>
+                    </div>
+<!--                    end of the /.main-menu-right-side-wrapper-->
+                    <div class="mebel-search">
+                        <form role="search" method="get" id="searchform" class="searchform" action="https://www.casalinda.ec/" >
+        <div class="search-wrapper">
+            <label class="screen-reader-text" for="s">Search for:</label>
+            <input placeholder="Escriba y presione Enter" class="search-input" type="text" value="" name="s" id="s" />
+            <button type="submit" id="searchsubmit" class="submit-btn"><i class="fa fa-search fa-fw"></i></button>
+        </div>
+    </form>                    </div>
+                    <div class="shop-cart-widget">
+                        
+<!-- Modal -->
+<div class="cart-modal" id="cart-slide-content">
+    <div class="slide-content-wrapper" >
+        <div class="slide-content">
+
+            <div class="slide-header">
+                <h4 class="cart-total">
+
+                    <a class="cart-contents" href="https://www.casalinda.ec/carrito/" title="Ver el carrito">0 items - <span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>0.00</bdi></span></a>
+
+
+                    <span>en el carrito</span>
+                </h4>
+                <button type="button" class="close" ><span aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="slide-body">
+
+                <div class="widget woocommerce widget_shopping_cart"><h2 class="widgettitle">Carrito</h2><div class="widget_shopping_cart_content"></div></div>
+            </div>
+            <!-- end of the modal body -->
+
+
+
+            <div class="slide-footer">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+                    </div>
+                    </div>
+                </div>
+<!--                end of /.container-->
+            </div>
+<!--            end of the /.row/.main-menu-->
+        </div>
+<!--        end of the /.mebel-menu/#mebel-menu-->
+
+    </header><!-- #masthead -->
+
+
+<!--    end of the header varaiton default or head-v1-->
+
+    <div id="content" class="site-content">
+
+
+
+
+	<div class="container mebel-container" id="mebel-container">
+		<div class="row">
+		<div class="col-lg-12 mebel-content full-width-page">
+			<div id="primary" class="content-area">
+				<main id="main" class="site-main" role="main">
+
+					
+<article id="post-1706" class="post-1706 page type-page status-publish hentry">
+
+
+	<div class="entry-content">
+		<div class="vc_row wpb_row vc_row-fluid slider-v1"><div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner"><div class="wpb_wrapper">
+			<!-- START Slider 1 REVOLUTION SLIDER 6.5.11 --><p class="rs-p-wp-fix"></p>
+			<rs-module-wrap id="rev_slider_3_1_wrapper" data-source="gallery" style="visibility:hidden;background:transparent;padding:0;margin:0px auto;margin-top:0;margin-bottom:0;">
+				<rs-module id="rev_slider_3_1" style="" data-version="6.5.11">
+					<rs-slides>
+						<rs-slide style="position: absolute;" data-key="rs-22" data-title="Slide" data-in="o:0;" data-out="a:false;">
+							<img fetchpriority="high" decoding="async" src="//www.casalinda.ec/wp-content/plugins/revslider/public/assets/assets/dummy.png" title="SLIDER2 1920x650px" width="1920" height="650" class="rev-slidebg tp-rs-img rs-lazyload" data-lazyload="//www.casalinda.ec/wp-content/uploads/2022/06/SLIDER2-1920x650px.jpg" data-bg="p:left center;" data-no-retina>
+<!---->						</rs-slide>
+					</rs-slides>
+				</rs-module>
+				<script type="text/javascript">
+					setREVStartSize({c: 'rev_slider_3_1',rl:[1240,1024,778,480],el:[650],gw:[1920],gh:[650],type:'standard',justify:'',layout:'fullwidth',mh:"0"});if (window.RS_MODULES!==undefined && window.RS_MODULES.modules!==undefined && window.RS_MODULES.modules["revslider31"]!==undefined) {window.RS_MODULES.modules["revslider31"].once = false;window.revapi3 = undefined;if (window.RS_MODULES.checkMinimal!==undefined) window.RS_MODULES.checkMinimal()}
+				</script>
+			</rs-module-wrap>
+			<!-- END REVOLUTION SLIDER -->
+</div></div></div></div><div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid vc_custom_1669734538508 vc_row-has-fill"><div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_row wpb_row vc_inner vc_row-fluid"><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 10px"><span class="vc_empty_space_inner"></span></div></div></div></div><div class="wpb_column vc_column_container vc_col-sm-10"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div></div></div></div></div></div><div class="vc_row-full-width vc_clearfix"></div><div data-vc-full-width="true" data-vc-full-width-init="false" data-vc-stretch-content="true" class="vc_row wpb_row vc_row-fluid vc_row-no-padding"><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140659261">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/comedor" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/comedor.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/comedor.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/comedor-100x100.png 100w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/comedor">Comedor</a></h3>
+
+		</div>
+	</div>
+</div></div></div><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140927417">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/dormitorio" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/dormitorio.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/dormitorio.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/dormitorio-100x100.png 100w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/dormitorio">Dormitorio</a></h3>
+
+		</div>
+	</div>
+</div></div></div><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140937209">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/bano" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img loading="lazy" decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/bano.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/bano.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/bano-100x100.png 100w" sizes="auto, (max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/bano">Baño</a></h3>
+
+		</div>
+	</div>
+</div></div></div><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140944881">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/sala" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img loading="lazy" decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/sala.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/sala.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/sala-100x100.png 100w" sizes="auto, (max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/sala">Sala</a></h3>
+
+		</div>
+	</div>
+</div></div></div><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140953286">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/cocina" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img loading="lazy" decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/cocina.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/cocina.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/cocina-100x100.png 100w" sizes="auto, (max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/cocina">Cocina</a></h3>
+
+		</div>
+	</div>
+</div></div></div><div class="wpb_column vc_column_container vc_col-sm-2"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 32px"><span class="vc_empty_space_inner"></span></div>
+	<div  class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1657140960937">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<a href="https://www.casalinda.ec/categoria-producto/cortineria" target="_self" class="vc_single_image-wrapper   vc_box_border_grey"><img loading="lazy" decoding="async" width="150" height="150" src="https://www.casalinda.ec/wp-content/uploads/2022/07/cortineria.png" class="vc_single_image-img attachment-full" alt="" srcset="https://www.casalinda.ec/wp-content/uploads/2022/07/cortineria.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/07/cortineria-100x100.png 100w" sizes="auto, (max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><a href="https://www.casalinda.ec/categoria-producto/cortineria">Cortinería</a></h3>
+
+		</div>
+	</div>
+</div></div></div></div><div class="vc_row-full-width vc_clearfix"></div><div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid mebel-featured-product-wrapper vc_custom_1460020847540 vc_row-has-fill"><div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner"><div class="wpb_wrapper">
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;">Productos destacados</h3>
+
+		</div>
+	</div>
+<div class="woocommerce columns-5 "><ul class="products columns-5">
+<li class="post-3335 product type-product status-publish has-post-thumbnail product_cat-dormitorio pa_color-aklla pa_color-nayarak pa_color-ziry pa_color-zulia pa_tamano-1-1-2-plazas pa_tamano-2-1-2-plazas pa_tamano-2-plazas first instock featured taxable shipping-taxable purchasable product-type-variable">
+	<a href="https://www.casalinda.ec/tienda/cobertor-para-cama-2/" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">	<div class="product-meta-wrapper">
+		<img loading="lazy" decoding="async" width="300" height="300" src="https://www.casalinda.ec/wp-content/uploads/2022/06/cobertor-zulia-300x300.png" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="COBERTOR PARA CAMA" srcset="https://www.casalinda.ec/wp-content/uploads/2022/06/cobertor-zulia-300x300.png 300w, https://www.casalinda.ec/wp-content/uploads/2022/06/cobertor-zulia-150x150.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/06/cobertor-zulia-100x100.png 100w" sizes="auto, (max-width: 300px) 100vw, 300px" /><h2 class="woocommerce-loop-product__title">COBERTOR PARA CAMA</h2>
+	<span class="price"><span class="woocommerce-Price-amount amount" aria-hidden="true"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>40.00</bdi></span> <span aria-hidden="true">-</span> <span class="woocommerce-Price-amount amount" aria-hidden="true"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>63.00</bdi></span><span class="screen-reader-text">Rango de precios: desde &#36;40.00 hasta &#36;63.00</span></span>
+	</div>
+	</a><div class="product-quick-info-wrapper">
+	<div class="product-quick-info">
+		
+<div
+	class="yith-wcwl-add-to-wishlist add-to-wishlist-3335 yith-wcwl-add-to-wishlist--link-style wishlist-fragment on-first-load"
+	data-fragment-ref="3335"
+	data-fragment-options="{&quot;base_url&quot;:&quot;&quot;,&quot;product_id&quot;:3335,&quot;parent_product_id&quot;:0,&quot;product_type&quot;:&quot;variable&quot;,&quot;is_single&quot;:false,&quot;in_default_wishlist&quot;:false,&quot;show_view&quot;:false,&quot;browse_wishlist_text&quot;:&quot;Explorar la lista de deseos&quot;,&quot;already_in_wishslist_text&quot;:&quot;\u00a1El producto ya est\u00e1 en tu lista de deseos!&quot;,&quot;product_added_text&quot;:&quot;\u00a1Producto a\u00f1adido!&quot;,&quot;available_multi_wishlist&quot;:false,&quot;disable_wishlist&quot;:false,&quot;show_count&quot;:false,&quot;ajax_loading&quot;:false,&quot;loop_position&quot;:&quot;after_add_to_cart&quot;,&quot;item&quot;:&quot;add_to_wishlist&quot;}"
+>
+			
+			<!-- ADD TO WISHLIST -->
+			
+<div class="yith-wcwl-add-button">
+		<a
+		href="?add_to_wishlist=3335&#038;_wpnonce=be7729ccf1"
+		class="add_to_wishlist single_add_to_wishlist"
+		data-product-id="3335"
+		data-product-type="variable"
+		data-original-product-id="0"
+		data-title=""
+		rel="nofollow"
+	>
+		<svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+</svg>		<span></span>
+	</a>
+</div>
+
+			<!-- COUNT TEXT -->
+			
+			</div>
+ <div class="cart-icon-wrapper"><a rel="nofollow" href="https://www.casalinda.ec/tienda/cobertor-para-cama-2/" data-quantity="1" data-product_id="3335" data-product_sku="CDOCO2BR3EA9WIE" class="button product_type_variable add_to_cart_button"><i class='fa fa-shopping-cart fa-fw'></i></a></div> <div class="quick-view-icon-wrapper"><a href="#" class="quick-view-icon yith-wcqv-button button " data-product_id="3335"><span class="quick-view-icon"><i class="fa fa-eye"></i></span></a></div>	</div>
+	<!-- end of the /.product-quick-info--->
+</div>
+<!-- end of the /.product-quick-info-wrapper --></li>
+<li class="post-3339 product type-product status-publish has-post-thumbnail product_cat-bano product_cat-cortineria pa_color-izhi pa_color-sisa pa_color-taki pa_color-xaman pa_tamano-180-x-175cm  instock featured taxable shipping-taxable purchasable product-type-variable">
+	<a href="https://www.casalinda.ec/tienda/cortina-de-bano/" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">	<div class="product-meta-wrapper">
+		<img loading="lazy" decoding="async" width="300" height="300" src="https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-300x300.jpg" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="CORTINA DE BAÑO" srcset="https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-300x300.jpg 300w, https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-150x150.jpg 150w, https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-768x768.jpg 768w, https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-600x600.jpg 600w, https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI-100x100.jpg 100w, https://www.casalinda.ec/wp-content/uploads/2022/06/cortina-IZHI.jpg 1000w" sizes="auto, (max-width: 300px) 100vw, 300px" /><h2 class="woocommerce-loop-product__title">CORTINA DE BAÑO</h2>
+	<span class="price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>22.50</bdi></span></span>
+	</div>
+	</a><div class="product-quick-info-wrapper">
+	<div class="product-quick-info">
+		
+<div
+	class="yith-wcwl-add-to-wishlist add-to-wishlist-3339 yith-wcwl-add-to-wishlist--link-style wishlist-fragment on-first-load"
+	data-fragment-ref="3339"
+	data-fragment-options="{&quot;base_url&quot;:&quot;&quot;,&quot;product_id&quot;:3339,&quot;parent_product_id&quot;:0,&quot;product_type&quot;:&quot;variable&quot;,&quot;is_single&quot;:false,&quot;in_default_wishlist&quot;:false,&quot;show_view&quot;:false,&quot;browse_wishlist_text&quot;:&quot;Explorar la lista de deseos&quot;,&quot;already_in_wishslist_text&quot;:&quot;\u00a1El producto ya est\u00e1 en tu lista de deseos!&quot;,&quot;product_added_text&quot;:&quot;\u00a1Producto a\u00f1adido!&quot;,&quot;available_multi_wishlist&quot;:false,&quot;disable_wishlist&quot;:false,&quot;show_count&quot;:false,&quot;ajax_loading&quot;:false,&quot;loop_position&quot;:&quot;after_add_to_cart&quot;,&quot;item&quot;:&quot;add_to_wishlist&quot;}"
+>
+			
+			<!-- ADD TO WISHLIST -->
+			
+<div class="yith-wcwl-add-button">
+		<a
+		href="?add_to_wishlist=3339&#038;_wpnonce=be7729ccf1"
+		class="add_to_wishlist single_add_to_wishlist"
+		data-product-id="3339"
+		data-product-type="variable"
+		data-original-product-id="0"
+		data-title=""
+		rel="nofollow"
+	>
+		<svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+</svg>		<span></span>
+	</a>
+</div>
+
+			<!-- COUNT TEXT -->
+			
+			</div>
+ <div class="cart-icon-wrapper"><a rel="nofollow" href="https://www.casalinda.ec/tienda/cortina-de-bano/" data-quantity="1" data-product_id="3339" data-product_sku="" class="button product_type_variable add_to_cart_button"><i class='fa fa-shopping-cart fa-fw'></i></a></div> <div class="quick-view-icon-wrapper"><a href="#" class="quick-view-icon yith-wcqv-button button " data-product_id="3339"><span class="quick-view-icon"><i class="fa fa-eye"></i></span></a></div>	</div>
+	<!-- end of the /.product-quick-info--->
+</div>
+<!-- end of the /.product-quick-info-wrapper --></li>
+<li class="post-3332 product type-product status-publish has-post-thumbnail product_cat-comedor product_cat-sala pa_color-alisha-amarillo pa_color-alisha-rojo pa_color-atena-amarillo pa_color-campsis-azul pa_color-faisal-trama-hera-verde pa_color-kerani-tomate pa_color-llanera-blanco pa_color-solei-terracota pa_color-ventoux-cafe pa_tamano-45-x-45cm  instock featured taxable shipping-taxable purchasable product-type-variable">
+	<a href="https://www.casalinda.ec/tienda/funda-de-cojin/" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">	<div class="product-meta-wrapper">
+		<img loading="lazy" decoding="async" width="300" height="300" src="https://www.casalinda.ec/wp-content/uploads/2022/06/funda-cojin-kerani-tomate-300x300.png" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="FUNDA DE COJIN" srcset="https://www.casalinda.ec/wp-content/uploads/2022/06/funda-cojin-kerani-tomate-300x300.png 300w, https://www.casalinda.ec/wp-content/uploads/2022/06/funda-cojin-kerani-tomate-150x150.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/06/funda-cojin-kerani-tomate-100x100.png 100w" sizes="auto, (max-width: 300px) 100vw, 300px" /><h2 class="woocommerce-loop-product__title">FUNDA DE COJIN</h2>
+	<span class="price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>5.00</bdi></span></span>
+	</div>
+	</a><div class="product-quick-info-wrapper">
+	<div class="product-quick-info">
+		
+<div
+	class="yith-wcwl-add-to-wishlist add-to-wishlist-3332 yith-wcwl-add-to-wishlist--link-style wishlist-fragment on-first-load"
+	data-fragment-ref="3332"
+	data-fragment-options="{&quot;base_url&quot;:&quot;&quot;,&quot;product_id&quot;:3332,&quot;parent_product_id&quot;:0,&quot;product_type&quot;:&quot;variable&quot;,&quot;is_single&quot;:false,&quot;in_default_wishlist&quot;:false,&quot;show_view&quot;:false,&quot;browse_wishlist_text&quot;:&quot;Explorar la lista de deseos&quot;,&quot;already_in_wishslist_text&quot;:&quot;\u00a1El producto ya est\u00e1 en tu lista de deseos!&quot;,&quot;product_added_text&quot;:&quot;\u00a1Producto a\u00f1adido!&quot;,&quot;available_multi_wishlist&quot;:false,&quot;disable_wishlist&quot;:false,&quot;show_count&quot;:false,&quot;ajax_loading&quot;:false,&quot;loop_position&quot;:&quot;after_add_to_cart&quot;,&quot;item&quot;:&quot;add_to_wishlist&quot;}"
+>
+			
+			<!-- ADD TO WISHLIST -->
+			
+<div class="yith-wcwl-add-button">
+		<a
+		href="?add_to_wishlist=3332&#038;_wpnonce=be7729ccf1"
+		class="add_to_wishlist single_add_to_wishlist"
+		data-product-id="3332"
+		data-product-type="variable"
+		data-original-product-id="0"
+		data-title=""
+		rel="nofollow"
+	>
+		<svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+</svg>		<span></span>
+	</a>
+</div>
+
+			<!-- COUNT TEXT -->
+			
+			</div>
+ <div class="cart-icon-wrapper"><a rel="nofollow" href="https://www.casalinda.ec/tienda/funda-de-cojin/" data-quantity="1" data-product_id="3332" data-product_sku="CCJFUNBE3FLAAZM" class="button product_type_variable add_to_cart_button"><i class='fa fa-shopping-cart fa-fw'></i></a></div> <div class="quick-view-icon-wrapper"><a href="#" class="quick-view-icon yith-wcqv-button button " data-product_id="3332"><span class="quick-view-icon"><i class="fa fa-eye"></i></span></a></div>	</div>
+	<!-- end of the /.product-quick-info--->
+</div>
+<!-- end of the /.product-quick-info-wrapper --></li>
+<li class="post-3307 product type-product status-publish has-post-thumbnail product_cat-cocina pa_color-bej-azul pa_color-brisa-lila pa_color-ceto-azul pa_color-ikal-azul pa_color-imox-azul pa_color-jardin-palo-de-rosa pa_color-roasted-azul pa_color-roasted-cafe pa_color-wara-azul pa_tamano-60-x-40cm  instock featured taxable shipping-taxable purchasable product-type-variable">
+	<a href="https://www.casalinda.ec/tienda/juego-x-2-limpion-de-cocina/" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">	<div class="product-meta-wrapper">
+		<img loading="lazy" decoding="async" width="300" height="300" src="https://www.casalinda.ec/wp-content/uploads/2022/06/juego-limpion-bej-300x300.png" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="JUEGO X 2 LIMPION DE COCINA." srcset="https://www.casalinda.ec/wp-content/uploads/2022/06/juego-limpion-bej-300x300.png 300w, https://www.casalinda.ec/wp-content/uploads/2022/06/juego-limpion-bej-150x150.png 150w, https://www.casalinda.ec/wp-content/uploads/2022/06/juego-limpion-bej-100x100.png 100w" sizes="auto, (max-width: 300px) 100vw, 300px" /><h2 class="woocommerce-loop-product__title">JUEGO X 2 LIMPION DE COCINA.</h2>
+	<span class="price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>3.50</bdi></span></span>
+	</div>
+	</a><div class="product-quick-info-wrapper">
+	<div class="product-quick-info">
+		
+<div
+	class="yith-wcwl-add-to-wishlist add-to-wishlist-3307 yith-wcwl-add-to-wishlist--link-style wishlist-fragment on-first-load"
+	data-fragment-ref="3307"
+	data-fragment-options="{&quot;base_url&quot;:&quot;&quot;,&quot;product_id&quot;:3307,&quot;parent_product_id&quot;:0,&quot;product_type&quot;:&quot;variable&quot;,&quot;is_single&quot;:false,&quot;in_default_wishlist&quot;:false,&quot;show_view&quot;:false,&quot;browse_wishlist_text&quot;:&quot;Explorar la lista de deseos&quot;,&quot;already_in_wishslist_text&quot;:&quot;\u00a1El producto ya est\u00e1 en tu lista de deseos!&quot;,&quot;product_added_text&quot;:&quot;\u00a1Producto a\u00f1adido!&quot;,&quot;available_multi_wishlist&quot;:false,&quot;disable_wishlist&quot;:false,&quot;show_count&quot;:false,&quot;ajax_loading&quot;:false,&quot;loop_position&quot;:&quot;after_add_to_cart&quot;,&quot;item&quot;:&quot;add_to_wishlist&quot;}"
+>
+			
+			<!-- ADD TO WISHLIST -->
+			
+<div class="yith-wcwl-add-button">
+		<a
+		href="?add_to_wishlist=3307&#038;_wpnonce=be7729ccf1"
+		class="add_to_wishlist single_add_to_wishlist"
+		data-product-id="3307"
+		data-product-type="variable"
+		data-original-product-id="0"
+		data-title=""
+		rel="nofollow"
+	>
+		<svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"></path>
+</svg>		<span></span>
+	</a>
+</div>
+
+			<!-- COUNT TEXT -->
+			
+			</div>
+ <div class="cart-icon-wrapper"><a rel="nofollow" href="https://www.casalinda.ec/tienda/juego-x-2-limpion-de-cocina/" data-quantity="1" data-product_id="3307" data-product_sku="CACLMGTL3CR1ROS" class="button product_type_variable add_to_cart_button"><i class='fa fa-shopping-cart fa-fw'></i></a></div> <div class="quick-view-icon-wrapper"><a href="#" class="quick-view-icon yith-wcqv-button button " data-product_id="3307"><span class="quick-view-icon"><i class="fa fa-eye"></i></span></a></div>	</div>
+	<!-- end of the /.product-quick-info--->
+</div>
+<!-- end of the /.product-quick-info-wrapper --></li>
+</ul>
+</div></div></div></div></div><div class="vc_row-full-width vc_clearfix"></div><div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid vc_custom_1657228163803 vc_row-has-fill"><div class="wpb_column vc_column_container vc_col-sm-8"><div class="vc_column-inner"><div class="wpb_wrapper">
+	<div class="wpb_text_column wpb_content_element " >
+		<div class="wpb_wrapper">
+			<h3 style="text-align: center;"><span style="color: #ffffff;">Precios especiales para productos al por mayor</span></h3>
+
+		</div>
+	</div>
+<div class="vc_row wpb_row vc_inner vc_row-fluid"><div class="wpb_column vc_column_container vc_col-sm-4"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div><div class="wpb_column vc_column_container vc_col-sm-4"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div><div class="wpb_column vc_column_container vc_col-sm-4"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div></div></div></div></div><div class="wpb_column vc_column_container vc_col-sm-4"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_empty_space"   style="height: 10px"><span class="vc_empty_space_inner"></span></div><div class="vc_btn3-container vc_btn3-center" ><a class="vc_general vc_btn3 vc_btn3-size-md vc_btn3-shape-rounded vc_btn3-style-modern vc_btn3-color-white" href="https://www.casalinda.ec/contacto/" title="Contacto">Cotiza aquí</a></div></div></div></div></div><div class="vc_row-full-width vc_clearfix"></div>
+	</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+			</footer><!-- .entry-footer -->
+</article><!-- #post-## -->
+
+				</main><!-- #main -->
+			</div><!-- #primary -->
+		</div>
+		<!--		end of the /.mebel-content-->
+		</div>
+<!--		end of the /.row-->
+	</div>
+<!--	end of the /.container /.mebel-container /#mebel-container-->
+
+</div><!-- #content -->
+<!--start tag in in the header variation in template-parts/head- v1/v2/.....-->
+
+<footer id="footerv2" class="site-footer" role="contentinfo">
+<!--    footer top area-->
+    <div class="footer-widget-area footer-top">
+        <div class="container">
+            <div class="col-lg-6 footer-top-widget info-widget footer2-left-column">
+                                    <div class="mebel-footer-info-wrapper">
+                        <div class="mebel-footer-info">
+                            <section id="media_image-3" class="widget widget_media_image"><a href="https://casalinda.ec"><img width="155" height="100" src="https://www.casalinda.ec/wp-content/uploads/2022/07/CASA-LINDA-logo.png" class="image wp-image-3948  attachment-155x100 size-155x100" alt="" style="max-width: 100%; height: auto;" decoding="async" loading="lazy" /></a></section><section id="text-3" class="widget widget_text">			<div class="textwidget"><p style="text-align: justify;">Somos referentes y líderes a nivel nacional e internacional de la Industria Textil en diseño y moda para el hogar, con una marca reconocida en el mercado por brindar productos de tendencia, con alta calidad.</p>
+</div>
+		</section>                        </div>
+                    </div>
+                            </div>
+<!--            end of the /.info-widget-->
+            <div class="col-lg-3 footer-top-widget footer2-middle-column">
+                                    <div class="mebel-footer-category">
+                        <section id="nav_menu-2" class="widget widget_nav_menu"><h2 class="widget_title">Menú</h2><div class="menu-footer-information-container"><ul id="menu-footer-information" class="menu"><li id="menu-item-3755" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-1706 current_page_item menu-item-3755"><a href="https://www.casalinda.ec/" aria-current="page">Inicio</a></li>
+<li id="menu-item-3757" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3757"><a href="https://www.casalinda.ec/nosotros/">Nosotros</a></li>
+<li id="menu-item-3754" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3754"><a href="https://www.casalinda.ec/tienda/">Tienda</a></li>
+<li id="menu-item-3753" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3753"><a href="https://www.casalinda.ec/locales/">Locales</a></li>
+<li id="menu-item-3756" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3756"><a href="https://www.casalinda.ec/contacto/">Contacto</a></li>
+</ul></div></section>                    </div>
+                            </div>
+<!--            end of the /.category-widget-->
+            <div class="col-lg-3 footer-top-widget footer2-right-column">
+                                    <div class="mebel-footer-information">
+                        <section id="block-12" class="widget widget_block">
+<h5 class="wp-block-heading"><strong>Síguenos</strong></h5>
+</section><section id="block-10" class="widget widget_block">
+<ul class="wp-block-social-links is-layout-flex wp-block-social-links-is-layout-flex"><li class="wp-social-link wp-social-link-instagram  wp-block-social-link"><a href="https://www.instagram.com/casalindaecuado/" class="wp-block-social-link-anchor"><svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12,4.622c2.403,0,2.688,0.009,3.637,0.052c0.877,0.04,1.354,0.187,1.671,0.31c0.42,0.163,0.72,0.358,1.035,0.673 c0.315,0.315,0.51,0.615,0.673,1.035c0.123,0.317,0.27,0.794,0.31,1.671c0.043,0.949,0.052,1.234,0.052,3.637 s-0.009,2.688-0.052,3.637c-0.04,0.877-0.187,1.354-0.31,1.671c-0.163,0.42-0.358,0.72-0.673,1.035 c-0.315,0.315-0.615,0.51-1.035,0.673c-0.317,0.123-0.794,0.27-1.671,0.31c-0.949,0.043-1.233,0.052-3.637,0.052 s-2.688-0.009-3.637-0.052c-0.877-0.04-1.354-0.187-1.671-0.31c-0.42-0.163-0.72-0.358-1.035-0.673 c-0.315-0.315-0.51-0.615-0.673-1.035c-0.123-0.317-0.27-0.794-0.31-1.671C4.631,14.688,4.622,14.403,4.622,12 s0.009-2.688,0.052-3.637c0.04-0.877,0.187-1.354,0.31-1.671c0.163-0.42,0.358-0.72,0.673-1.035 c0.315-0.315,0.615-0.51,1.035-0.673c0.317-0.123,0.794-0.27,1.671-0.31C9.312,4.631,9.597,4.622,12,4.622 M12,3 C9.556,3,9.249,3.01,8.289,3.054C7.331,3.098,6.677,3.25,6.105,3.472C5.513,3.702,5.011,4.01,4.511,4.511 c-0.5,0.5-0.808,1.002-1.038,1.594C3.25,6.677,3.098,7.331,3.054,8.289C3.01,9.249,3,9.556,3,12c0,2.444,0.01,2.751,0.054,3.711 c0.044,0.958,0.196,1.612,0.418,2.185c0.23,0.592,0.538,1.094,1.038,1.594c0.5,0.5,1.002,0.808,1.594,1.038 c0.572,0.222,1.227,0.375,2.185,0.418C9.249,20.99,9.556,21,12,21s2.751-0.01,3.711-0.054c0.958-0.044,1.612-0.196,2.185-0.418 c0.592-0.23,1.094-0.538,1.594-1.038c0.5-0.5,0.808-1.002,1.038-1.594c0.222-0.572,0.375-1.227,0.418-2.185 C20.99,14.751,21,14.444,21,12s-0.01-2.751-0.054-3.711c-0.044-0.958-0.196-1.612-0.418-2.185c-0.23-0.592-0.538-1.094-1.038-1.594 c-0.5-0.5-1.002-0.808-1.594-1.038c-0.572-0.222-1.227-0.375-2.185-0.418C14.751,3.01,14.444,3,12,3L12,3z M12,7.378 c-2.552,0-4.622,2.069-4.622,4.622S9.448,16.622,12,16.622s4.622-2.069,4.622-4.622S14.552,7.378,12,7.378z M12,15 c-1.657,0-3-1.343-3-3s1.343-3,3-3s3,1.343,3,3S13.657,15,12,15z M16.804,6.116c-0.596,0-1.08,0.484-1.08,1.08 s0.484,1.08,1.08,1.08c0.596,0,1.08-0.484,1.08-1.08S17.401,6.116,16.804,6.116z"></path></svg><span class="wp-block-social-link-label screen-reader-text">Instagram</span></a></li>
+
+<li class="wp-social-link wp-social-link-facebook  wp-block-social-link"><a href="https://www.facebook.com/CasalindaEcuador" class="wp-block-social-link-anchor"><svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z"></path></svg><span class="wp-block-social-link-label screen-reader-text">Facebook</span></a></li>
+
+<li class="wp-social-link wp-social-link-tiktok  wp-block-social-link"><a href="https://vm.tiktok.com/ZMLa1cwAH/" class="wp-block-social-link-anchor"><svg width="24" height="24" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M16.708 0.027c1.745-0.027 3.48-0.011 5.213-0.027 0.105 2.041 0.839 4.12 2.333 5.563 1.491 1.479 3.6 2.156 5.652 2.385v5.369c-1.923-0.063-3.855-0.463-5.6-1.291-0.76-0.344-1.468-0.787-2.161-1.24-0.009 3.896 0.016 7.787-0.025 11.667-0.104 1.864-0.719 3.719-1.803 5.255-1.744 2.557-4.771 4.224-7.88 4.276-1.907 0.109-3.812-0.411-5.437-1.369-2.693-1.588-4.588-4.495-4.864-7.615-0.032-0.667-0.043-1.333-0.016-1.984 0.24-2.537 1.495-4.964 3.443-6.615 2.208-1.923 5.301-2.839 8.197-2.297 0.027 1.975-0.052 3.948-0.052 5.923-1.323-0.428-2.869-0.308-4.025 0.495-0.844 0.547-1.485 1.385-1.819 2.333-0.276 0.676-0.197 1.427-0.181 2.145 0.317 2.188 2.421 4.027 4.667 3.828 1.489-0.016 2.916-0.88 3.692-2.145 0.251-0.443 0.532-0.896 0.547-1.417 0.131-2.385 0.079-4.76 0.095-7.145 0.011-5.375-0.016-10.735 0.025-16.093z" /></svg><span class="wp-block-social-link-label screen-reader-text">TikTok</span></a></li></ul>
+</section>                    </div>
+                            </div>
+<!--            end of the /.information-widget-->
+        </div>
+<!--        end of the /.container-->
+    </div>
+<!--    end of the footer top area-->
+<!--    footer bottom area-->
+    <div class="site-info">
+        <div class="container">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 copyright-wrapper">
+                                    © Casalinda. Todos los derechos reservados. | Desarrollado por <a href="https://www.wicomecuador.com" target="_blank">WICOMECUADOR</a>
+
+                            </div>
+<!--            end of the footer bottom left side -->
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            </div>
+<!--            end of the footer bottom right side -->
+        </div>
+<!--        end of the /.container-->
+
+    </div><!-- .site-info -->
+<!--    end of the fotter bottom area-->
+</footer><!-- #mebel-footer -->
+
+
+</div><!-- #page -->
+</div>
+<!--            end of the /.tx-site-content-inner-->
+</div>
+<!--            end of the /.tx-site-content-->
+</div>
+<!--            end of the /.tx-site-pusher-->
+
+<!--start tag in in the header variation in template-parts/head- v1/v2/.....-->
+</div>
+<!--end of the /.tx-site-container/#tx-site-container-->
+
+		<script type="text/javascript">
+			window.RS_MODULES = window.RS_MODULES || {};
+			window.RS_MODULES.modules = window.RS_MODULES.modules || {};
+			window.RS_MODULES.waiting = window.RS_MODULES.waiting || [];
+			window.RS_MODULES.defered = true;
+			window.RS_MODULES.moduleWaiting = window.RS_MODULES.moduleWaiting || {};
+			window.RS_MODULES.type = 'compiled';
+		</script>
+		<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/mebel/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<div class="xoo-wsc-markup-notices"></div>
+<div class="xoo-wsc-markup">
+	<div class="xoo-wsc-modal">
+
+		
+<div class="xoo-wsc-container">
+
+	<div class="xoo-wsc-basket">
+
+					<span class="xoo-wsc-items-count">0</span>
+		
+
+		<span class="xoo-wsc-bki xoo-wsc-icon-basket1"></span>
+
+		
+	</div>
+
+	<div class="xoo-wsc-header">
+
+		
+		
+<div class="xoo-wsch-top">
+
+			<div class="xoo-wsc-notice-container" data-section="cart"><ul class="xoo-wsc-notices"></ul></div>	
+			<div class="xoo-wsch-basket">
+			<span class="xoo-wscb-icon xoo-wsc-icon-bag2"></span>
+			<span class="xoo-wscb-count">0</span>
+		</div>
+	
+			<span class="xoo-wsch-text">Carrito</span>
+	
+			<span class="xoo-wsch-close xoo-wsc-icon-cross"></span>
+	
+</div>
+		
+	</div>
+
+
+	<div class="xoo-wsc-body">
+
+		
+		
+<div class="xoo-wsc-empty-cart"><span>El carrito está vacío</span><a class="xoo-wsc-btn button btn" href="https://www.casalinda.ec/tienda/">Regresar a la tienda</a></div>
+		
+	</div>
+
+	<div class="xoo-wsc-footer">
+
+		
+		
+
+
+
+
+<div class="xoo-wsc-ft-buttons-cont">
+
+	<a href="/tienda" class="xoo-wsc-ft-btn xoo-wsc-btn button btn xoo-wsc-ft-btn-continue" >Seguir comprando</a>
+</div>
+
+
+		
+	</div>
+
+	<span class="xoo-wsc-loader"></span>
+	<span class="xoo-wsc-icon-spinner8 xoo-wsc-loader-icon"></span>
+
+</div>
+		<span class="xoo-wsc-opac"></span>
+
+	</div>
+</div><script>
+    var navbar = jQuery("#head-v1 #sticky-header"),
+        distance = navbar.offset().top,
+        $window = jQuery(window);
+
+    if(window.innerWidth > 1200) {
+    $window.scroll(function() {
+        if ($window.scrollTop() >= distance) {
+            navbar.removeClass("navbar-fixed-top").addClass("navbar-fixed-top");
+        } else {
+            navbar.removeClass("navbar-fixed-top");
+        }
+    });
+    }
+    </script>		<!-- Click to Chat - https://holithemes.com/plugins/click-to-chat/  v4.37 -->
+			<style id="ht-ctc-entry-animations">.ht_ctc_entry_animation{animation-duration:0.4s;animation-fill-mode:both;animation-delay:0s;animation-iteration-count:1;}			@keyframes ht_ctc_anim_corner {0% {opacity: 0;transform: scale(0);}100% {opacity: 1;transform: scale(1);}}.ht_ctc_an_entry_corner {animation-name: ht_ctc_anim_corner;animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);transform-origin: bottom var(--side, right);}
+			</style>						<div class="ht-ctc ht-ctc-chat ctc-analytics ctc_wp_desktop style-3_1  ht_ctc_entry_animation ht_ctc_an_entry_corner " id="ht-ctc-chat"  
+				style="display: none;  position: fixed; bottom: 70px; left: 15px;"   >
+								<div class="ht_ctc_style ht_ctc_chat_style">
+				<style id="ht-ctc-s3">
+.ht-ctc .ctc_s_3_1:hover svg stop{stop-color:#25D366;}.ht-ctc .ctc_s_3_1:hover .ht_ctc_padding,.ht-ctc .ctc_s_3_1:hover .ctc_cta_stick{background-color:#25D366 !important;box-shadow:0px 0px 11px rgba(0,0,0,.5);}
+</style>
+
+<div title = &#039;WhatsApp&#039; style="display:flex;justify-content:center;align-items:center; " class="ctc_s_3_1 ctc_s3_1 ctc_nb" data-nb_top="-4px" data-nb_right="-4px">
+	<p class="ctc-analytics ctc_cta ctc_cta_stick ht-ctc-cta " style="padding: 0px 16px; line-height: 1.6; font-size: 15px; background-color: #25d366; color: #ffffff; border-radius:10px; margin:0 10px;  display: none; ">WhatsApp</p>
+	<div class="ctc-analytics ht_ctc_padding" style="background-color: #25D366; padding: 14px; border-radius: 50%; box-shadow: 0px 0px 11px rgba(0,0,0,.5);">
+		<svg style="pointer-events:none; display:block; height:40px; width:40px;" width="40px" height="40px" viewBox="0 0 1219.547 1225.016">
+            <path style="fill: #E0E0E0;" fill="#E0E0E0" d="M1041.858 178.02C927.206 63.289 774.753.07 612.325 0 277.617 0 5.232 272.298 5.098 606.991c-.039 106.986 27.915 211.42 81.048 303.476L0 1225.016l321.898-84.406c88.689 48.368 188.547 73.855 290.166 73.896h.258.003c334.654 0 607.08-272.346 607.222-607.023.056-162.208-63.052-314.724-177.689-429.463zm-429.533 933.963h-.197c-90.578-.048-179.402-24.366-256.878-70.339l-18.438-10.93-191.021 50.083 51-186.176-12.013-19.087c-50.525-80.336-77.198-173.175-77.16-268.504.111-278.186 226.507-504.503 504.898-504.503 134.812.056 261.519 52.604 356.814 147.965 95.289 95.36 147.728 222.128 147.688 356.948-.118 278.195-226.522 504.543-504.693 504.543z"/>
+            <linearGradient id="htwaicona-chat" gradientUnits="userSpaceOnUse" x1="609.77" y1="1190.114" x2="609.77" y2="21.084">
+                <stop id="s3_1_offset_1" offset="0" stop-color="#25D366"/>
+                <stop id="s3_1_offset_2" offset="1" stop-color="#25D366"/>
+            </linearGradient>
+            <path style="fill: url(#htwaicona-chat);" fill="url(#htwaicona-chat)" d="M27.875 1190.114l82.211-300.18c-50.719-87.852-77.391-187.523-77.359-289.602.133-319.398 260.078-579.25 579.469-579.25 155.016.07 300.508 60.398 409.898 169.891 109.414 109.492 169.633 255.031 169.57 409.812-.133 319.406-260.094 579.281-579.445 579.281-.023 0 .016 0 0 0h-.258c-96.977-.031-192.266-24.375-276.898-70.5l-307.188 80.548z"/>
+            <image overflow="visible" opacity=".08" width="682" height="639" transform="translate(270.984 291.372)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" style="fill: #FFF;" fill="#FFF" d="M462.273 349.294c-11.234-24.977-23.062-25.477-33.75-25.914-8.742-.375-18.75-.352-28.742-.352-10 0-26.25 3.758-39.992 18.766-13.75 15.008-52.5 51.289-52.5 125.078 0 73.797 53.75 145.102 61.242 155.117 7.5 10 103.758 166.266 256.203 226.383 126.695 49.961 152.477 40.023 179.977 37.523s88.734-36.273 101.234-71.297c12.5-35.016 12.5-65.031 8.75-71.305-3.75-6.25-13.75-10-28.75-17.5s-88.734-43.789-102.484-48.789-23.75-7.5-33.75 7.516c-10 15-38.727 48.773-47.477 58.773-8.75 10.023-17.5 11.273-32.5 3.773-15-7.523-63.305-23.344-120.609-74.438-44.586-39.75-74.688-88.844-83.438-103.859-8.75-15-.938-23.125 6.586-30.602 6.734-6.719 15-17.508 22.5-26.266 7.484-8.758 9.984-15.008 14.984-25.008 5-10.016 2.5-18.773-1.25-26.273s-32.898-81.67-46.234-111.326z"/>
+            <path style="fill: #FFFFFF;" fill="#FFF" d="M1036.898 176.091C923.562 62.677 772.859.185 612.297.114 281.43.114 12.172 269.286 12.039 600.137 12 705.896 39.633 809.13 92.156 900.13L7 1211.067l318.203-83.438c87.672 47.812 186.383 73.008 286.836 73.047h.255.003c330.812 0 600.109-269.219 600.25-600.055.055-160.343-62.328-311.108-175.649-424.53zm-424.601 923.242h-.195c-89.539-.047-177.344-24.086-253.93-69.531l-18.227-10.805-188.828 49.508 50.414-184.039-11.875-18.867c-49.945-79.414-76.312-171.188-76.273-265.422.109-274.992 223.906-498.711 499.102-498.711 133.266.055 258.516 52 352.719 146.266 94.195 94.266 146.031 219.578 145.992 352.852-.118 274.999-223.923 498.749-498.899 498.749z"/>
+        </svg>	</div>
+</div>
+				</div>
+			</div>
+							<span class="ht_ctc_chat_data" data-settings="{&quot;number&quot;:&quot;593989370970&quot;,&quot;pre_filled&quot;:&quot;&quot;,&quot;dis_m&quot;:&quot;show&quot;,&quot;dis_d&quot;:&quot;show&quot;,&quot;css&quot;:&quot;cursor: pointer; z-index: 99999999;&quot;,&quot;pos_d&quot;:&quot;position: fixed; bottom: 70px; left: 15px;&quot;,&quot;pos_m&quot;:&quot;position: fixed; bottom: 70px; left: 15px;&quot;,&quot;side_d&quot;:&quot;left&quot;,&quot;side_m&quot;:&quot;left&quot;,&quot;schedule&quot;:&quot;no&quot;,&quot;se&quot;:150,&quot;ani&quot;:&quot;no-animation&quot;,&quot;url_structure_d&quot;:&quot;web&quot;,&quot;url_target_d&quot;:&quot;_blank&quot;,&quot;ga&quot;:&quot;yes&quot;,&quot;gtm&quot;:&quot;1&quot;,&quot;fb&quot;:&quot;yes&quot;,&quot;webhook_format&quot;:&quot;json&quot;,&quot;g_init&quot;:&quot;default&quot;,&quot;g_an_event_name&quot;:&quot;chat: {number}&quot;,&quot;gtm_event_name&quot;:&quot;Click to Chat&quot;,&quot;pixel_event_name&quot;:&quot;Click to Chat by HoliThemes&quot;}" data-rest="d3155d6896"></span>
+				<link href="https://fonts.googleapis.com/css?family=Roboto:400&display=swap" rel="stylesheet" property="stylesheet" media="all" type="text/css" >
+
+	<script type='text/javascript'>
+		(function () {
+			var c = document.body.className;
+			c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+			document.body.className = c;
+		})();
+	</script>
+	<script type="text/javascript">
+		if(typeof revslider_showDoubleJqueryError === "undefined") {function revslider_showDoubleJqueryError(sliderID) {console.log("You have some jquery.js library include that comes after the Slider Revolution files js inclusion.");console.log("To fix this, you can:");console.log("1. Set 'Module General Options' -> 'Advanced' -> 'jQuery & OutPut Filters' -> 'Put JS to Body' to on");console.log("2. Find the double jQuery.js inclusion and remove it");return "Double Included jQuery Library";}}
+</script>
+<script type="text/javascript" id="ht_ctc_app_js-js-extra">
+/* <![CDATA[ */
+var ht_ctc_chat_var = {"number":"593989370970","pre_filled":"","dis_m":"show","dis_d":"show","css":"cursor: pointer; z-index: 99999999;","pos_d":"position: fixed; bottom: 70px; left: 15px;","pos_m":"position: fixed; bottom: 70px; left: 15px;","side_d":"left","side_m":"left","schedule":"no","se":"150","ani":"no-animation","url_structure_d":"web","url_target_d":"_blank","ga":"yes","gtm":"1","fb":"yes","webhook_format":"json","g_init":"default","g_an_event_name":"chat: {number}","gtm_event_name":"Click to Chat","pixel_event_name":"Click to Chat by HoliThemes"};
+var ht_ctc_variables = {"g_an_event_name":"chat: {number}","gtm_event_name":"Click to Chat","pixel_event_type":"trackCustom","pixel_event_name":"Click to Chat by HoliThemes","g_an_params":["g_an_param_1","g_an_param_2"],"g_an_param_1":{"key":"event_category","value":"Click to Chat for WhatsApp"},"g_an_param_2":{"key":"event_label","value":"{title}, {url}"},"pixel_params":["pixel_param_1","pixel_param_2","pixel_param_3","pixel_param_4"],"pixel_param_1":{"key":"Category","value":"Click to Chat for WhatsApp"},"pixel_param_2":{"key":"ID","value":"{number}"},"pixel_param_3":{"key":"Title","value":"{title}"},"pixel_param_4":{"key":"URL","value":"{url}"},"gtm_params":["gtm_param_1","gtm_param_2","gtm_param_3","gtm_param_4","gtm_param_5"],"gtm_param_1":{"key":"type","value":"chat"},"gtm_param_2":{"key":"number","value":"{number}"},"gtm_param_3":{"key":"title","value":"{title}"},"gtm_param_4":{"key":"url","value":"{url}"},"gtm_param_5":{"key":"ref","value":"dataLayer push"}};
+//# sourceURL=ht_ctc_app_js-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/click-to-chat-for-whatsapp/new/inc/assets/js/app.js?ver=4.37" id="ht_ctc_app_js-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-includes/js/dist/hooks.min.js?ver=dd5603f07f9220ed27f1" id="wp-hooks-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
+<script type="text/javascript" id="wp-i18n-js-after">
+/* <![CDATA[ */
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=6.1.4" id="swv-js"></script>
+<script type="text/javascript" id="contact-form-7-js-translations">
+/* <![CDATA[ */
+( function( domain, translations ) {
+	var localeData = translations.locale_data[ domain ] || translations.locale_data.messages;
+	localeData[""].domain = domain;
+	wp.i18n.setLocaleData( localeData, domain );
+} )( "contact-form-7", {"translation-revision-date":"2025-12-01 15:45:40+0000","generator":"GlotPress\/4.0.3","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","plural-forms":"nplurals=2; plural=n != 1;","lang":"es"},"This contact form is placed in the wrong place.":["Este formulario de contacto est\u00e1 situado en el lugar incorrecto."],"Error:":["Error:"]}},"comment":{"reference":"includes\/js\/index.js"}} );
+//# sourceURL=contact-form-7-js-translations
+/* ]]> */
+</script>
+<script type="text/javascript" id="contact-form-7-js-before">
+/* <![CDATA[ */
+var wpcf7 = {
+    "api": {
+        "root": "https:\/\/www.casalinda.ec\/wp-json\/",
+        "namespace": "contact-form-7\/v1"
+    },
+    "cached": 1
+};
+//# sourceURL=contact-form-7-js-before
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/contact-form-7/includes/js/index.js?ver=6.1.4" id="contact-form-7-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/revslider/public/assets/js/rbtools.min.js?ver=6.5.11" defer async id="tp-tools-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/revslider/public/assets/js/rs6.min.js?ver=6.5.11" defer async id="revmin-js"></script>
+<script type="text/javascript" id="awdr-main-js-extra">
+/* <![CDATA[ */
+var awdr_params = {"ajaxurl":"https://www.casalinda.ec/wp-admin/admin-ajax.php","nonce":"ad50a950ae","enable_update_price_with_qty":"show_when_matched","refresh_order_review":"0","custom_target_simple_product":"","custom_target_variable_product":"","js_init_trigger":"","awdr_opacity_to_bulk_table":"","awdr_dynamic_bulk_table_status":"0","awdr_dynamic_bulk_table_off":"on","custom_simple_product_id_selector":"","custom_variable_product_id_selector":""};
+//# sourceURL=awdr-main-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woo-discount-rules/v2/Assets/Js/site_main.js?ver=2.6.13" id="awdr-main-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woo-discount-rules/v2/Assets/Js/awdr-dynamic-price.js?ver=2.6.13" id="awdr-dynamic-price-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/duracelltomi-google-tag-manager/dist/js/gtm4wp-contact-form-7-tracker.js?ver=1.22.3" id="gtm4wp-contact-form-7-tracker-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/navigation.js?ver=20151215" id="mebel-navigation-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/skip-link-focus-fix.js?ver=20151215" id="mebel-skip-link-focus-fix-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/bootstrap.js?ver=6.9.1" id="bootstrap-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/bootstrap-dropdownhover.js?ver=6.9.1" id="bootstrap-dropdownhover-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/owl.carousel.js?ver=6.9.1" id="owl-carousel-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/mebel-owl.js?ver=6.9.1" id="owl-custom-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/classie.js?ver=6.9.1" id="classie-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/jquery.magnific-popup.js?ver=6.9.1" id="magnific-popup-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/wow.js?ver=6.9.1" id="wow-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/tabCat.js?ver=6.9.1" id="tab-localization-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/minimit.js?ver=6.9.1" id="mimimit-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/themes/mebel/dist/js/main.js?ver=6.9.1" id="mebeljs-core-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/sourcebuster/sourcebuster.min.js?ver=10.4.3" id="sourcebuster-js-js"></script>
+<script type="text/javascript" id="wc-order-attribution-js-extra">
+/* <![CDATA[ */
+var wc_order_attribution = {"params":{"lifetime":1.0000000000000000818030539140313095458623138256371021270751953125e-5,"session":30,"base64":false,"ajaxurl":"https://www.casalinda.ec/wp-admin/admin-ajax.php","prefix":"wc_order_attribution_","allowTracking":true},"fields":{"source_type":"current.typ","referrer":"current_add.rf","utm_campaign":"current.cmp","utm_source":"current.src","utm_medium":"current.mdm","utm_content":"current.cnt","utm_id":"current.id","utm_term":"current.trm","utm_source_platform":"current.plt","utm_creative_format":"current.fmt","utm_marketing_tactic":"current.tct","session_entry":"current_add.ep","session_start_time":"current_add.fd","session_pages":"session.pgs","session_count":"udata.vst","user_agent":"udata.uag"}};
+//# sourceURL=wc-order-attribution-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/frontend/order-attribution.min.js?ver=10.4.3" id="wc-order-attribution-js"></script>
+<script type="text/javascript" id="xoo-wsc-main-js-js-extra">
+/* <![CDATA[ */
+var xoo_wsc_params = {"adminurl":"https://www.casalinda.ec/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","qtyUpdateDelay":"500","notificationTime":"5000","html":{"successNotice":"\u003Cul class=\"xoo-wsc-notices\"\u003E\u003Cli class=\"xoo-wsc-notice-success\"\u003E\u003Cspan class=\"xoo-wsc-icon-check_circle\"\u003E\u003C/span\u003E%s%\u003C/li\u003E\u003C/ul\u003E","errorNotice":"\u003Cul class=\"xoo-wsc-notices\"\u003E\u003Cli class=\"xoo-wsc-notice-error\"\u003E\u003Cspan class=\"xoo-wsc-icon-cross\"\u003E\u003C/span\u003E%s%\u003C/li\u003E\u003C/ul\u003E"},"strings":{"maxQtyError":"Solo %s% en existencias","stepQtyError":"Solo se pueden comprar cantidades en m\u00faltiplos de %s%","calculateCheckout":"Por favor, usa el formulario de pago para calcular el env\u00edo","couponEmpty":"Por favor, introduce el c\u00f3digo de promoci\u00f3n"},"isCheckout":"","isCart":"","sliderAutoClose":"1","shippingEnabled":"1","couponsEnabled":"1","autoOpenCart":"yes","addedToCart":"","ajaxAddToCart":"yes","skipAjaxForData":[],"showBasket":"always_show","flyToCart":"no","productFlyClass":"","refreshCart":"no","fetchDelay":"200","triggerClass":"","productLayout":"rows","cardAnimate":{"enable":"yes","type":"slideUp","event":"back_hover","duration":"0.5"},"menuCartHideOnEmpty":[],"shortcodeEls":{"subtotal":".xoo-wsc-sc-subt","count":".xoo-wsc-sc-count","icon":".xoo-wsc-sc-bki"}};
+//# sourceURL=xoo-wsc-main-js-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/side-cart-woocommerce/assets/js/xoo-wsc-main.js?ver=2.7.2" id="xoo-wsc-main-js-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=6LfaeO8gAAAAAGNJhV0A7e52X0Iy_hO_GTqb2Z6Q&amp;ver=3.0" id="google-recaptcha-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0" id="wp-polyfill-js"></script>
+<script type="text/javascript" id="wpcf7-recaptcha-js-before">
+/* <![CDATA[ */
+var wpcf7_recaptcha = {
+    "sitekey": "6LfaeO8gAAAAAGNJhV0A7e52X0Iy_hO_GTqb2Z6Q",
+    "actions": {
+        "homepage": "homepage",
+        "contactform": "contactform"
+    }
+};
+//# sourceURL=wpcf7-recaptcha-js-before
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/contact-form-7/modules/recaptcha/index.js?ver=6.1.4" id="wpcf7-recaptcha-js"></script>
+<script type="text/javascript" id="wc-cart-fragments-js-extra">
+/* <![CDATA[ */
+var wc_cart_fragments_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","cart_hash_key":"wc_cart_hash_2c0914d32c392efa1ae6c3e1e34b00fb","fragment_name":"wc_fragments_2c0914d32c392efa1ae6c3e1e34b00fb","request_timeout":"5000"};
+//# sourceURL=wc-cart-fragments-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=10.4.3" id="wc-cart-fragments-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js?ver=6.7.0" id="wpb_composer_front_js-js"></script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/js/jquery.selectBox.min.js?ver=1.2.0" id="jquery-selectBox-js"></script>
+<script type="text/javascript" src="//www.casalinda.ec/wp-content/plugins/woocommerce/assets/js/prettyPhoto/jquery.prettyPhoto.min.js?ver=3.1.6" id="wc-prettyPhoto-js" data-wp-strategy="defer"></script>
+<script type="text/javascript" id="jquery-yith-wcwl-js-extra">
+/* <![CDATA[ */
+var yith_wcwl_l10n = {"ajax_url":"/wp-admin/admin-ajax.php","redirect_to_cart":"no","yith_wcwl_button_position":"add-to-cart","multi_wishlist":"","hide_add_button":"1","enable_ajax_loading":"","ajax_loader_url":"https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/images/ajax-loader-alt.svg","remove_from_wishlist_after_add_to_cart":"1","is_wishlist_responsive":"1","time_to_close_prettyphoto":"3000","fragments_index_glue":".","reload_on_found_variation":"1","mobile_media_query":"768","labels":{"cookie_disabled":"Lo siento, pero esta caracter\u00edstica solo est\u00e1 disponible si las cookies de tu navegador est\u00e1n activadas.","added_to_cart_message":"\u003Cdiv class=\"woocommerce-notices-wrapper\"\u003E\u003Cdiv class=\"woocommerce-message\" role=\"alert\"\u003EProducto a\u00f1adido al carrito con \u00e9xito\u003C/div\u003E\u003C/div\u003E"},"actions":{"add_to_wishlist_action":"add_to_wishlist","remove_from_wishlist_action":"remove_from_wishlist","reload_wishlist_and_adding_elem_action":"reload_wishlist_and_adding_elem","load_mobile_action":"load_mobile","delete_item_action":"delete_item","save_title_action":"save_title","save_privacy_action":"save_privacy","load_fragments":"load_fragments"},"nonce":{"add_to_wishlist_nonce":"be7729ccf1","remove_from_wishlist_nonce":"bb5a6fb78f","reload_wishlist_and_adding_elem_nonce":"692d5ae1fe","load_mobile_nonce":"0f755f3930","delete_item_nonce":"6278f223e7","save_title_nonce":"bbf860df82","save_privacy_nonce":"d8eec83ce7","load_fragments_nonce":"c94d350ce0"},"redirect_after_ask_estimate":"","ask_estimate_redirect_url":"https://www.casalinda.ec"};
+var yith_wcwl_l10n = {"ajax_url":"/wp-admin/admin-ajax.php","redirect_to_cart":"no","yith_wcwl_button_position":"add-to-cart","multi_wishlist":"","hide_add_button":"1","enable_ajax_loading":"","ajax_loader_url":"https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/images/ajax-loader-alt.svg","remove_from_wishlist_after_add_to_cart":"1","is_wishlist_responsive":"1","time_to_close_prettyphoto":"3000","fragments_index_glue":".","reload_on_found_variation":"1","mobile_media_query":"768","labels":{"cookie_disabled":"Lo siento, pero esta caracter\u00edstica solo est\u00e1 disponible si las cookies de tu navegador est\u00e1n activadas.","added_to_cart_message":"\u003Cdiv class=\"woocommerce-notices-wrapper\"\u003E\u003Cdiv class=\"woocommerce-message\" role=\"alert\"\u003EProducto a\u00f1adido al carrito con \u00e9xito\u003C/div\u003E\u003C/div\u003E"},"actions":{"add_to_wishlist_action":"add_to_wishlist","remove_from_wishlist_action":"remove_from_wishlist","reload_wishlist_and_adding_elem_action":"reload_wishlist_and_adding_elem","load_mobile_action":"load_mobile","delete_item_action":"delete_item","save_title_action":"save_title","save_privacy_action":"save_privacy","load_fragments":"load_fragments"},"nonce":{"add_to_wishlist_nonce":"be7729ccf1","remove_from_wishlist_nonce":"bb5a6fb78f","reload_wishlist_and_adding_elem_nonce":"692d5ae1fe","load_mobile_nonce":"0f755f3930","delete_item_nonce":"6278f223e7","save_title_nonce":"bbf860df82","save_privacy_nonce":"d8eec83ce7","load_fragments_nonce":"c94d350ce0"},"redirect_after_ask_estimate":"","ask_estimate_redirect_url":"https://www.casalinda.ec"};
+var yith_wcwl_l10n = {"ajax_url":"/wp-admin/admin-ajax.php","redirect_to_cart":"no","yith_wcwl_button_position":"add-to-cart","multi_wishlist":"","hide_add_button":"1","enable_ajax_loading":"","ajax_loader_url":"https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/images/ajax-loader-alt.svg","remove_from_wishlist_after_add_to_cart":"1","is_wishlist_responsive":"1","time_to_close_prettyphoto":"3000","fragments_index_glue":".","reload_on_found_variation":"1","mobile_media_query":"768","labels":{"cookie_disabled":"Lo siento, pero esta caracter\u00edstica solo est\u00e1 disponible si las cookies de tu navegador est\u00e1n activadas.","added_to_cart_message":"\u003Cdiv class=\"woocommerce-notices-wrapper\"\u003E\u003Cdiv class=\"woocommerce-message\" role=\"alert\"\u003EProducto a\u00f1adido al carrito con \u00e9xito\u003C/div\u003E\u003C/div\u003E"},"actions":{"add_to_wishlist_action":"add_to_wishlist","remove_from_wishlist_action":"remove_from_wishlist","reload_wishlist_and_adding_elem_action":"reload_wishlist_and_adding_elem","load_mobile_action":"load_mobile","delete_item_action":"delete_item","save_title_action":"save_title","save_privacy_action":"save_privacy","load_fragments":"load_fragments"},"nonce":{"add_to_wishlist_nonce":"be7729ccf1","remove_from_wishlist_nonce":"bb5a6fb78f","reload_wishlist_and_adding_elem_nonce":"692d5ae1fe","load_mobile_nonce":"0f755f3930","delete_item_nonce":"6278f223e7","save_title_nonce":"bbf860df82","save_privacy_nonce":"d8eec83ce7","load_fragments_nonce":"c94d350ce0"},"redirect_after_ask_estimate":"","ask_estimate_redirect_url":"https://www.casalinda.ec"};
+var yith_wcwl_l10n = {"ajax_url":"/wp-admin/admin-ajax.php","redirect_to_cart":"no","yith_wcwl_button_position":"add-to-cart","multi_wishlist":"","hide_add_button":"1","enable_ajax_loading":"","ajax_loader_url":"https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/images/ajax-loader-alt.svg","remove_from_wishlist_after_add_to_cart":"1","is_wishlist_responsive":"1","time_to_close_prettyphoto":"3000","fragments_index_glue":".","reload_on_found_variation":"1","mobile_media_query":"768","labels":{"cookie_disabled":"Lo siento, pero esta caracter\u00edstica solo est\u00e1 disponible si las cookies de tu navegador est\u00e1n activadas.","added_to_cart_message":"\u003Cdiv class=\"woocommerce-notices-wrapper\"\u003E\u003Cdiv class=\"woocommerce-message\" role=\"alert\"\u003EProducto a\u00f1adido al carrito con \u00e9xito\u003C/div\u003E\u003C/div\u003E"},"actions":{"add_to_wishlist_action":"add_to_wishlist","remove_from_wishlist_action":"remove_from_wishlist","reload_wishlist_and_adding_elem_action":"reload_wishlist_and_adding_elem","load_mobile_action":"load_mobile","delete_item_action":"delete_item","save_title_action":"save_title","save_privacy_action":"save_privacy","load_fragments":"load_fragments"},"nonce":{"add_to_wishlist_nonce":"be7729ccf1","remove_from_wishlist_nonce":"bb5a6fb78f","reload_wishlist_and_adding_elem_nonce":"692d5ae1fe","load_mobile_nonce":"0f755f3930","delete_item_nonce":"6278f223e7","save_title_nonce":"bbf860df82","save_privacy_nonce":"d8eec83ce7","load_fragments_nonce":"c94d350ce0"},"redirect_after_ask_estimate":"","ask_estimate_redirect_url":"https://www.casalinda.ec"};
+var yith_wcwl_l10n = {"ajax_url":"/wp-admin/admin-ajax.php","redirect_to_cart":"no","yith_wcwl_button_position":"add-to-cart","multi_wishlist":"","hide_add_button":"1","enable_ajax_loading":"","ajax_loader_url":"https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/images/ajax-loader-alt.svg","remove_from_wishlist_after_add_to_cart":"1","is_wishlist_responsive":"1","time_to_close_prettyphoto":"3000","fragments_index_glue":".","reload_on_found_variation":"1","mobile_media_query":"768","labels":{"cookie_disabled":"Lo siento, pero esta caracter\u00edstica solo est\u00e1 disponible si las cookies de tu navegador est\u00e1n activadas.","added_to_cart_message":"\u003Cdiv class=\"woocommerce-notices-wrapper\"\u003E\u003Cdiv class=\"woocommerce-message\" role=\"alert\"\u003EProducto a\u00f1adido al carrito con \u00e9xito\u003C/div\u003E\u003C/div\u003E"},"actions":{"add_to_wishlist_action":"add_to_wishlist","remove_from_wishlist_action":"remove_from_wishlist","reload_wishlist_and_adding_elem_action":"reload_wishlist_and_adding_elem","load_mobile_action":"load_mobile","delete_item_action":"delete_item","save_title_action":"save_title","save_privacy_action":"save_privacy","load_fragments":"load_fragments"},"nonce":{"add_to_wishlist_nonce":"be7729ccf1","remove_from_wishlist_nonce":"bb5a6fb78f","reload_wishlist_and_adding_elem_nonce":"692d5ae1fe","load_mobile_nonce":"0f755f3930","delete_item_nonce":"6278f223e7","save_title_nonce":"bbf860df82","save_privacy_nonce":"d8eec83ce7","load_fragments_nonce":"c94d350ce0"},"redirect_after_ask_estimate":"","ask_estimate_redirect_url":"https://www.casalinda.ec"};
+//# sourceURL=jquery-yith-wcwl-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.casalinda.ec/wp-content/plugins/yith-woocommerce-wishlist/assets/js/jquery.yith-wcwl.min.js?ver=4.12.0" id="jquery-yith-wcwl-js"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://www.casalinda.ec/wp-includes/js/wp-emoji-release.min.js?ver=6.9.1"}}
+</script>
+<script type="module">
+/* <![CDATA[ */
+/*! This file is auto-generated */
+const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
+//# sourceURL=https://www.casalinda.ec/wp-includes/js/wp-emoji-loader.min.js
+/* ]]> */
+</script>
+<script type="text/javascript" id="rs-initialisation-scripts">
+		var	tpj = jQuery;
+
+		var	revapi3;
+
+		if(window.RS_MODULES === undefined) window.RS_MODULES = {};
+		if(RS_MODULES.modules === undefined) RS_MODULES.modules = {};
+		RS_MODULES.modules["revslider31"] = {once: RS_MODULES.modules["revslider31"]!==undefined ? RS_MODULES.modules["revslider31"].once : undefined, init:function() {
+			window.revapi3 = window.revapi3===undefined || window.revapi3===null || window.revapi3.length===0  ? document.getElementById("rev_slider_3_1") : window.revapi3;
+			if(window.revapi3 === null || window.revapi3 === undefined || window.revapi3.length==0) { window.revapi3initTry = window.revapi3initTry ===undefined ? 0 : window.revapi3initTry+1; if (window.revapi3initTry<20) requestAnimationFrame(function() {RS_MODULES.modules["revslider31"].init()}); return;}
+			window.revapi3 = jQuery(window.revapi3);
+			if(window.revapi3.revolution==undefined){ revslider_showDoubleJqueryError("rev_slider_3_1"); return;}
+			revapi3.revolutionInit({
+					revapi:"revapi3",
+					DPR:"dpr",
+					sliderLayout:"fullwidth",
+					visibilityLevels:"1240,1024,778,480",
+					gridwidth:1920,
+					gridheight:650,
+					lazyType:"smart",
+					perspective:600,
+					perspectiveType:"global",
+					editorheight:"650,767.988,960,720",
+					responsiveLevels:"1240,1024,778,480",
+					progressBar:{disableProgressBar:true},
+					navigation: {
+						onHoverStop:false
+					},
+					viewPort: {
+						global:true,
+						globalDist:"-200px",
+						enable:false
+					},
+					fallbacks: {
+						allowHTML5AutoPlayOnAndroid:true
+					},
+			});
+			
+		}} // End of RevInitScript
+
+		if (window.RS_MODULES.checkMinimal!==undefined) { window.RS_MODULES.checkMinimal();};
+	</script>
+
+</body>
+</html>
+
+
+<!-- Page supported by LiteSpeed Cache 7.7 on 2026-02-05 19:18:10 -->
